@@ -40,7 +40,7 @@ class DbEnvironment extends EnvironmentBase {
     $images = [];
     foreach ($data as $key => $db_version) {
       $images["$db_version"]['image'] = "drupalci/$db_version";
-      Output::writeLn("<comment>Adding image: <options=bold>drupalci/$db_version</options=bold></commet>");
+      Output::writeLn("<comment>Adding image: <options=bold>drupalci/$db_version</options=bold></comment>");
     }
     return $images;
   }
