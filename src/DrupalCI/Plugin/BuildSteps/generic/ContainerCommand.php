@@ -44,7 +44,7 @@ class ContainerCommand extends PluginBase {
             Output::writeLn("<info>Command created as exec id " . substr($exec_id, 0, 8) . "</info>");
             $result = $manager->execstart($exec_id, function ($result, $type) {
               if ($type === 1) {
-                Output::writeLn("<info>$result</info>");
+                Output::write("$result");
               }
               else {
                 Output::error('Error', $result);
