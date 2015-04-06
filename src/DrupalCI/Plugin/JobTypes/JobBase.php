@@ -339,6 +339,7 @@ class JobBase extends ContainerBase implements JobInterface {
   }
 
   public function startServiceContainerDaemons($type) {
+    $needs_sleep = FALSE;
     $docker = $this->getDocker();
     $manager = $docker->getContainerManager();
     $instances = array();
@@ -379,6 +380,11 @@ class JobBase extends ContainerBase implements JobInterface {
       $this->serviceContainers[$type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
       Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
+      $needs_sleep = TRUE;
+    }
+    if ($needs_sleep) {
+      Output::writeln("Sleeping 10 seconds to allow services to start.");
+      sleep(10);
     }
   }
 
