@@ -153,26 +153,7 @@ class SimpletestJob extends JobBase {
     'DCI_TESTGROUPS' => '--all',
     'DCI_SQLite' => '/tmp/.ht.sqlite',
     'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/var/www/html/results'
-
-
-
-      // %DCI_SQLite% --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban"
+    'DCI_XMLOutput' => '/var/www/html/results',
+    "DCI_PHPInterpreter" => "/root/.phpenv/shims/php"
   );
-
-  /**
-   * @array Storage property for the default job definition array for this job type
-   */
-  public $defaultDefinition;
-
-  /**
-   * @return array
-   */
-  protected function getDefaultDefinition() {
-    if (is_null($this->defaultDefinition)) {
-      // Build the 'default' job definition for this job type.
-      //$this->setDefaultDefinition($this->buildDefaultDefinition());
-    }
-    return $this->defaultDefinition;
-  }
 }
