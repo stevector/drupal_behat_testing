@@ -51,7 +51,6 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines platform defaults which apply for all jobs.  (Can still be overridden by per-job defaults)
   public $platformDefaults = array(
     "DCI_CodeBase" => "./",
-    "DCI_PHPInterpreter" => "/root/.phpenv/shims/php"
     // DCI_CheckoutDir defaults to a random directory in the system temp directory.
   );
 
@@ -259,17 +258,19 @@ class JobBase extends ContainerBase implements JobInterface {
     $config = $configs[$container['image']];
     // TODO: Allow classes to modify the default configuration before processing
     // Add service container links
-    $links = $this->createContainerLinks();
+    $links = $this->createContainerLinks($config);
     if (!empty($links)) {
       $existing = (!empty($config['HostConfig']['Links'])) ? $config['HostConfig']['Links'] : array();
       $config['HostConfig']['Links'] = $existing + $links;
+      // Set a default CMD in case the container config does not set one.
+      if (empty($config['Cmd'])) {
+        $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
+      }
     }
     // Add volumes
-    $volumes = $this->createContainerVolumes();
+    $volumes = $this->createContainerVolumes($config);
     if (!empty($volumes)) {
-      //foreach ($volumes as $dir => $volume) {
         $config['HostConfig']['Binds'] = $volumes;
-      //}
     }
     $instance = new Container($config);
     $manager->create($instance);
@@ -285,25 +286,32 @@ class JobBase extends ContainerBase implements JobInterface {
     Output::writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
   }
 
-  protected function createContainerLinks() {
+  protected function createContainerLinks($config) {
     $links = array();
     if (empty($this->serviceContainers)) {
       return $links;
     }
-    $config = $this->serviceContainers;
-    foreach ($config as $type => $containers) {
+    $targets = $this->serviceContainers;
+    foreach ($targets as $type => $containers) {
       foreach ($containers as $key => $container) {
         $links[] = "${container['name']}:${container['name']}";
       }
     }
+    if (!empty($config['Links'])) {
+      $links[] = $config['links'];
+    }
     return $links;
   }
 
-  protected function createContainerVolumes() {
+  protected function createContainerVolumes($config) {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    $volumes = array("$working:/data");
+    if (empty($config['Mountpoint'])) {
+      $config['Mountpoint'] = '/data';
+    }
+    $volumes = array("$working:" . $config['Mountpoint']);
+
     // TODO: Map results directory
     return $volumes;
   }
@@ -331,6 +339,7 @@ class JobBase extends ContainerBase implements JobInterface {
   }
 
   public function startServiceContainerDaemons($type) {
+    $needs_sleep = FALSE;
     $docker = $this->getDocker();
     $manager = $docker->getContainerManager();
     $instances = array();
@@ -371,6 +380,11 @@ class JobBase extends ContainerBase implements JobInterface {
       $this->serviceContainers[$type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
       Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
+      $needs_sleep = TRUE;
+    }
+    if ($needs_sleep) {
+      Output::writeln("Sleeping 10 seconds to allow services to start.");
+      sleep(10);
     }
   }
 
@@ -382,6 +396,9 @@ class JobBase extends ContainerBase implements JobInterface {
       $ports = new PortCollection($config['exposed_ports']);
       $container->setExposedPorts($ports);
     }
+    if (!empty($config['Cmd'])) {
+      $container->setCmd($config['Cmd']);
+    }
     // TODO: Process Tmpfs configuration
   }
 
@@ -389,9 +406,4 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->errorStatus;
   }
 
-  public function getTemplate() {
-    // Based on $job->jobtype, returns the parsed drupalci.yml file from DrupalCI/Plugin/JobTypes/<jobtype>
-    // This could potentially be an annotation, but I'm wondering about code readability
-
-  }
 }

@@ -145,31 +145,15 @@ class SimpletestJob extends JobBase {
     'DCI_PHPVersion' => '5.4',
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => '8.0.x',
-    'DCI_GitCheckoutDepth' => 1,
-    'DCI_RunScript' => "/data/core/scripts/run-tests.sh ",
+    'DCI_GitCheckoutDepth' => '1',
+    'DCI_RunScript' => "/var/www/html/core/scripts/run-tests.sh ",
     'DCI_DBUser' => 'drupaltestbot',
     'DCI_DBPassword' => 'drupaltestbotpw',
     'DCI_DBURL' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
     'DCI_TESTGROUPS' => '--all',
-    'DCI_SQLite' => TRUE,
-
-
-      // %DCI_SQLite% --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban"
+    'DCI_SQLite' => '/tmp/.ht.sqlite',
+    'DCI_Concurrency' => 4,
+    'DCI_XMLOutput' => '/var/www/html/results',
+    "DCI_PHPInterpreter" => "/root/.phpenv/shims/php"
   );
-
-  /**
-   * @array Storage property for the default job definition array for this job type
-   */
-  public $defaultDefinition;
-
-  /**
-   * @return array
-   */
-  protected function getDefaultDefinition() {
-    if (is_null($this->defaultDefinition)) {
-      // Build the 'default' job definition for this job type.
-      //$this->setDefaultDefinition($this->buildDefaultDefinition());
-    }
-    return $this->defaultDefinition;
-  }
 }

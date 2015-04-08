@@ -1,0 +1,17 @@
+# Job Definition Template for the DrupalCI 'PHPUnit' Job Type
+environment:
+  web:
+    - %DCI_PHPVersion%
+setup:
+  checkout:
+    # DCI_UseLocalCodebase plugin can override the checkout array to look like:
+    # - protocol: local
+    #   source_dir: %DCI_SourceDirectory%
+    - protocol: git
+      repo: %DCI_CoreRepository%
+      branch: %DCI_CoreBranch%
+      depth: %DCI_GitCheckoutDepth%
+      checkout_dir: .
+execute:
+  command:
+    - %DCI_RunScript%

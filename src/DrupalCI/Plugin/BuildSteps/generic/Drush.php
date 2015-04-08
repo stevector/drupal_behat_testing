@@ -7,7 +7,9 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\generic;
-use DrupalCI\Plugin\PluginBase;
+
+use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
+use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
  * @PluginID("drush")
@@ -17,13 +19,8 @@ class Drush extends ContainerCommand {
   /**
    * {@inheritdoc}
    */
-  public function run($input) {
-    $cmd = $this->buildDrushCommand($input);
-    parent::run($cmd);
+  public function run(JobInterface $job, $command) {
+    $cmd = "/.composer/vendor/bin/drush " . $command;
+    parent::run($job, $cmd);
   }
-
-  protected function buildDrushCommand($input) {
-    // TODO: Code to interpret the input and output an actual valid drush command
-  }
-
 }
