@@ -10,6 +10,7 @@ RUN sudo chown -R root:root $HOME/.phpenv
 RUN phpenv rehash
 RUN phpenv global 5.4.39
 RUN echo | pecl install mongo
+RUN echo | pecl install apc
 RUN cp -f /root/.phpenv/shims/php /usr/bin/php
 
 # Fix date.timezone warning
