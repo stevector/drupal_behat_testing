@@ -19,5 +19,8 @@ RUN cp -f /root/.phpenv/shims/php /usr/bin/php
 RUN find /root/.phpenv/ -iname php.ini -exec sh -c 'echo "date.timezone=UTC" >> {}' \;
 RUN echo "date.timezone=UTC" >> /etc/php5/cli/php.ini
 
+# Disable xdebug
+RUN find $HOME/ -name xdebug.ini -exec sed -i 's/^/;/g' {} \;
+
 EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]
