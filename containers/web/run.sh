@@ -54,7 +54,7 @@ DCI_DBPASS:        Default is 'drupaltestbotpw'
 DCI_DBCONTAINER:   Default is 'drupaltestbot-db-mysql-5.5'
 DCI_PHPVERSION:    Default is '5.4'
 DCI_CONCURRENCY:   Default is '4'  #How many cpus to use per run
-DCI_RUNSCRIPT:     Default is '/root/.phpenv/shims/php RUNNER --php /root/.phpenv/shims/php --url 'http://localhost' --color --concurrency  DCI_CONCURRENCY  --verbose --xml '/var/workspace/results'  DCI_TESTGROUPS  | tee /var/www/test.stdout ' "
+DCI_RUNSCRIPT:     Default is '/root/.phpenv/shims/php RUNNER --php /root/.phpenv/shims/php --url 'http://localhost' --color --concurrency  DCI_CONCURRENCY  --verbose --xml '/var/workspace/results'  DCI_TESTGROUPS  | tee /var/www/html/test.stdout ' "
 echo -e "\n\nExamples:\t\e[38;5;148msudo {VARIABLES} ./run.sh\e[39m "
 echo -e "
 Run Action and Node tests, 2 LOCAL patches, using 4 CPUs, against D8:
@@ -457,8 +457,8 @@ VERBO=\"${VERBO}\"
 #Let the tests start
 echo "------------------------ STARTING DOCKER CONTAINER ---------------------------"
 [ ! -z "$DCI_CMD" ] && echo "-------- Interactive mode activated! Use: /start.sh to run tests -------------"
-DCI_RUNCMD="/usr/bin/time -p docker run ${DCI_DBLINK} --name=${DCI_IDENTIFIER} -v=${DCI_WORKSPACE}:/var/workspace:rw -v=${DCI_BUILDSDIR}/${DCI_IDENTIFIER}/:/var/www:rw -p 80 ${DCI_INTERACTIVE} -t drupalci/web-${DCI_PHPVERSION} ${DCI_CMD}"
-/usr/bin/time -p docker run ${DCI_DBLINK} --name=${DCI_IDENTIFIER} -v=${DCI_WORKSPACE}:/var/workspace:rw -v=${DCI_BUILDSDIR}/${DCI_IDENTIFIER}/:/var/www:rw -p 80 ${DCI_INTERACTIVE} -t ${DCI_ENTRYPOINT} drupalci/web-${DCI_PHPVERSION} ${DCI_CMD}
+DCI_RUNCMD="/usr/bin/time -p docker run ${DCI_DBLINK} --name=${DCI_IDENTIFIER} -v=${DCI_WORKSPACE}:/var/workspace:rw -v=${DCI_BUILDSDIR}/${DCI_IDENTIFIER}/:/var/www/html:rw -p 80 ${DCI_INTERACTIVE} -t drupalci/web-${DCI_PHPVERSION} ${DCI_CMD}"
+/usr/bin/time -p docker run ${DCI_DBLINK} --name=${DCI_IDENTIFIER} -v=${DCI_WORKSPACE}:/var/workspace:rw -v=${DCI_BUILDSDIR}/${DCI_IDENTIFIER}/:/var/www/html:rw -p 80 ${DCI_INTERACTIVE} -t ${DCI_ENTRYPOINT} drupalci/web-${DCI_PHPVERSION} ${DCI_CMD}
 
 echo
 echo "Saving image ${DCI_IDENTIFIER} at $(date -u):"

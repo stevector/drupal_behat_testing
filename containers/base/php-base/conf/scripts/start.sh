@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-#GET ALL INFO FROM /var/www/test.info:
-source /var/www/test.info
+#GET ALL INFO FROM /var/www/html/test.info:
+source /var/www/html/test.info
 alias php='/root/.phpenv/shims/php'
 
 export PATH=$HOME/bin:/root/.phpenv/shims:$PATH
@@ -21,7 +21,7 @@ else
   apachectl start 2>/dev/null
 fi
 
-cd /var/www/
+cd /var/www/html/
 echo ""
 
 # --dburl is the effective database connection that is being used for all tests.  Can be any database driver supported by core
@@ -47,7 +47,7 @@ if (( $DCI_DRUPALVERSION >= 8 )) && [[ $DCI_INSTALLER = "none" ]];
         DBADDR=${DB_PORT_3306_TCP_ADDR}
       ;;
     esac
-    EXTRA="--sqlite /var/www/test.sqlite --keep-results"
+    EXTRA="--sqlite /var/www/html/test.sqlite --keep-results"
     if [ $DCI_DBTYPE = "mongodb" ]
     then
       cp modules/mongodb/drivers/mongodb/Install/settings.php sites/default/settings.testing.php
@@ -75,14 +75,14 @@ if (( $DCI_DRUPALVERSION >= 8 )) && [[ $DCI_INSTALLER = "none" ]];
     EXTRA=""
 fi
 # We are going to write into files make sure it exist:
-mkdir -p /var/www/sites/default/files/  /var/www/sites/simpletest
-chown -fR www-data /var/www/sites/default/files/ /var/www/sites/simpletest
+mkdir -p /var/www/html/sites/default/files/  /var/www/html/sites/simpletest
+chown -fR www-data /var/www/html/sites/default/files/ /var/www/html/sites/simpletest
 
 # Run the test suite.
 echo ""
 echo "Operation [run tests]..."
-echo "export TERM=linux && cd /var/www && ${DCI_RUNSCRIPT} ${EXTRA} ${DCI_TESTGROUPS} | tee /var/www/test.stdout"
-sudo -E -u www-data -H sh -c "export TERM=linux && cd /var/www && ${DCI_RUNSCRIPT} ${EXTRA} ${DCI_TESTGROUPS} | tee /var/www/test.stdout"
+echo "export TERM=linux && cd /var/www/html && ${DCI_RUNSCRIPT} ${EXTRA} ${DCI_TESTGROUPS} | tee /var/www/html/test.stdout"
+sudo -E -u www-data -H sh -c "export TERM=linux && cd /var/www/html && ${DCI_RUNSCRIPT} ${EXTRA} ${DCI_TESTGROUPS} | tee /var/www/html/test.stdout"
 
 #No ugly xml please:
 #for i in $(ls results/* ); do tidy -xml -m -i -q "$i"; done
