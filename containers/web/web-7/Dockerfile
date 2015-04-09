@@ -11,6 +11,7 @@ RUN phpenv rehash
 RUN phpenv global master
 # TODO: pecl mongo not working yet
 # RUN echo | pecl install mongo
+# TODO: test apcu on php 7
 # RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7
 RUN cp -f /root/.phpenv/shims/php /usr/bin/php
 
