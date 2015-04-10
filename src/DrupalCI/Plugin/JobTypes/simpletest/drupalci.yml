@@ -16,9 +16,11 @@ setup:
       checkout_dir: .
   # Create the directory where we will store our results
   mkdir: /var/www/html/results
+  command:
+    - chown -fR www-data:www-data /var/www/html/sites /tmp/.ht.sqlite /var/www/html/results
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:
 execute:
   command:
-    - cd /var/www/html && php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%

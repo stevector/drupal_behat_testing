@@ -16,6 +16,7 @@ RUN apt-get clean && apt-get update
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
 RUN apt-get install -y \
+    build-essential \
     bison \
     ccache \
     curl \
@@ -69,7 +70,8 @@ RUN apt-get install -y \
     supervisor \
     sqlite3
 
-RUN apt-get clean && apt-get autoremove -y
+RUN apt-get clean && apt-get autoremove -y && \
+    rm /etc/cron.d/php5
 
 ##
 # PHPENV.
@@ -91,6 +93,11 @@ RUN chmod 755 /root/
 #RUN mv /usr/bin/make /usr/bin/make-system
 #RUN echo "/usr/bin/make-system -j8 -l8" > /usr/bin/make
 #RUN chmod +x /usr/bin/make
+
+
+RUN echo "--with-gettext=shared" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-intl" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-wddx" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options
 
 ##
 # Composer.
