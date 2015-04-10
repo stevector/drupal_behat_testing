@@ -128,7 +128,7 @@ class CompileDefinition extends PluginBase {
     // Process DCI_* variable substitution into test definition template
 
     array_walk_recursive($definition, function (&$value) use ($replacements) {
-      $value = strtr($value, $replacements);
+      $value = str_ireplace(array_keys($replacements), array_values($replacements), $value);
     });
     $job->setBuildVars($dci_variables + $job->getBuildVars());
     $job->setDefinition($definition);
