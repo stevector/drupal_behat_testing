@@ -70,7 +70,8 @@ RUN apt-get install -y \
     supervisor \
     sqlite3
 
-RUN apt-get clean && apt-get autoremove -y
+RUN apt-get clean && apt-get autoremove -y && \
+    rm /etc/cron.d/php5
 
 ##
 # PHPENV.
