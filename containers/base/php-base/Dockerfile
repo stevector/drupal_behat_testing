@@ -16,6 +16,7 @@ RUN apt-get clean && apt-get update
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
 RUN apt-get install -y \
+    build-essential \
     bison \
     ccache \
     curl \
