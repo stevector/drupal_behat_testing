@@ -93,7 +93,7 @@ class CompileDefinition extends PluginBase {
     $replacements = [];
     $plugin_manager = $this->getPreprocessPluginManager();
     foreach ($dci_variables as $key => $value) {
-      if (preg_match('/^DCI_(.+)$i/', $key, $matches)) {
+      if (preg_match('/^DCI_(.+)$/i', $key, $matches)) {
         $name = strtolower($matches[1]);
         if ($plugin_manager->hasPlugin('variable', $name)) {
           /** @var \DrupalCI\Plugin\Preprocess\VariableInterface $plugin */
