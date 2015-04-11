@@ -10,9 +10,10 @@
 #
 # Author:       Ricardo Amaro (mail_at_ricardoamaro.com)
 # Contributors: Jeremy Thorson jthorson
+# Contributors: Rudy Grigar (basic)
 #
 # Bugs/Issues:  Use the issue queue on drupal.org
-#               IRC #drupal-infrastructure
+#               IRC #drupal-testing
 #
 # Docs:         README.md for complete information
 #
@@ -50,12 +51,18 @@ else
 	swapon /var/swapfile
 	/bin/echo "/var/swapfile swap swap defaults 0 0" >>/etc/fstab
 	apt-get update
-	apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl
+	apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl
 	apt-get autoclean
         echo "Installing docker"
         curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
         usermod -a -G docker vagrant
 	cd /home/vagrant/drupalci_testbot
+  echo "Installing composer"
+  curl -sS https://getcomposer.org/installer | php
+  echo "Running php composer.phar update"
+  php composer.phar update
+  echo "Creating drupalci symlink"
+  ln -s /home/vagrant/drupalci_testbot/drupalci /usr/local/bin/drupalci
 	touch PROVISIONED
 fi
 
@@ -64,4 +71,3 @@ echo "Box started up, run *vagrant halt* to stop."
 echo
 echo "To access the box and run tests, run:"
 echo "- vagrant ssh"
-echo "- cd drupalci_testbot"

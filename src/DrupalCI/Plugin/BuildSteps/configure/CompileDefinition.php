@@ -93,7 +93,7 @@ class CompileDefinition extends PluginBase {
     $replacements = [];
     $plugin_manager = $this->getPreprocessPluginManager();
     foreach ($dci_variables as $key => $value) {
-      if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
+      if (preg_match('/^DCI_(.+)$/i', $key, $matches)) {
         $name = strtolower($matches[1]);
         if ($plugin_manager->hasPlugin('variable', $name)) {
           /** @var \DrupalCI\Plugin\Preprocess\VariableInterface $plugin */
@@ -126,9 +126,10 @@ class CompileDefinition extends PluginBase {
     }
 
     // Process DCI_* variable substitution into test definition template
-
-    array_walk_recursive($definition, function (&$value) use ($replacements) {
-      $value = strtr($value, $replacements);
+    $search = array_keys($replacements);
+    $replace = array_values($replacements);
+    array_walk_recursive($definition, function (&$value) use ($search, $replace) {
+      $value = str_ireplace($search, $replace, $value);
     });
     $job->setBuildVars($dci_variables + $job->getBuildVars());
     $job->setDefinition($definition);
