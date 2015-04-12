@@ -78,7 +78,7 @@ RUN apt-get clean && apt-get autoremove -y && \
 ##
 
 RUN git clone --depth 1 https://github.com/CHH/phpenv.git /tmp/phpenv
-RUN /tmp/phpenv/bin/phpenv-install.sh /opt/phpenv
+RUN PHPENV_ROOT="/opt/phpenv" /tmp/phpenv/bin/phpenv-install.sh
 RUN scp /tmp/phpenv/extensions/* /opt/phpenv/libexec/
 
 RUN echo 'eval "$(phpenv init -)"' >> /root/.bashrc
