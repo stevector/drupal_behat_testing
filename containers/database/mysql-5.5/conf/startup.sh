@@ -3,7 +3,7 @@
 if [ ! -f /var/lib/mysql/ibdata1 ];
     then
     echo "rebuilding /var/lib/mysql/ibdata1"
-    mysql_install_db
+    mysql_install_db --user=mysql --basedir=/usr/ --ldata=/var/lib/mysql/
     /usr/bin/mysqld_safe &
     PID="${!}"
     sleep 5s

@@ -6,7 +6,7 @@ RUN apt-get -y install mysql-server netcat
 
 RUN apt-get clean && apt-get autoclean && apt-get -y autoremove
 
-COPY ./conf/my.cnf /etc/my.cnf
+COPY ./conf/my.cnf /etc/mysql/my.cnf
 
 RUN rm -rf /var/lib/mysql/*
 
