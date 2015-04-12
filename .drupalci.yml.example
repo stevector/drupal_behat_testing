@@ -36,5 +36,5 @@ setup:
 install:
     command:
 #      - /usr/local/bin/composer global require drush/drush:dev-master
-       - cd /data && php /data/core/scripts/run-tests.sh --sqlite /tmp/.ht.sqlite --die-on-fail --php /root/.phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban
+       - cd /data && php /data/core/scripts/run-tests.sh --sqlite /tmp/.ht.sqlite --die-on-fail --php /opt/phpenv/shims/php --dburl sqlite://tmp/.ht.sqlite ban
 

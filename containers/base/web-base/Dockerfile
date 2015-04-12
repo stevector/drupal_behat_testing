@@ -25,10 +25,10 @@ RUN apt-get clean && apt-get autoremove -y
 ##
 
 # Remove fpm since apxs2 (apache) support is being compiled.
-RUN sed -i '/--enable-fpm/d' /root/.phpenv/plugins/php-build/share/php-build/default_configure_options
-RUN echo "--with-apxs2=/usr/bin/apxs2" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options
-RUN echo "--with-pdo-pgsql" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options
-RUN sudo /root/.phpenv/plugins/php-build/install.sh
+RUN sed -i '/--enable-fpm/d' /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+RUN echo "--with-apxs2=/usr/bin/apxs2" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+RUN echo "--with-pdo-pgsql" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+RUN sudo /opt/phpenv/plugins/php-build/install.sh
 
 ##
 # Apache Configuration.
