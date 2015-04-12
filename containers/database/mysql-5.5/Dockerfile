@@ -1,11 +1,12 @@
 FROM drupalci/db-base
 MAINTAINER drupalci
 
-COPY ./conf/my.cnf /etc/my.cnf
 # Packages.
 RUN apt-get -y install mysql-server netcat
 
 RUN apt-get clean && apt-get autoclean && apt-get -y autoremove
+
+COPY ./conf/my.cnf /etc/my.cnf
 
 RUN rm -rf /var/lib/mysql/*
 
