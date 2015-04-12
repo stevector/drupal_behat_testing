@@ -154,6 +154,6 @@ class SimpletestJob extends JobBase {
     'DCI_SQLite' => '/tmp/.ht.sqlite',
     'DCI_Concurrency' => 4,
     'DCI_XMLOutput' => '/var/www/html/results',
-    "DCI_PHPInterpreter" => "/root/.phpenv/shims/php"
+    "DCI_PHPInterpreter" => "/opt/phpenv/shims/php"
   );
 }

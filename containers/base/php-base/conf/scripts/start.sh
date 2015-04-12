@@ -2,9 +2,9 @@
 
 #GET ALL INFO FROM /var/www/html/test.info:
 source /var/www/html/test.info
-alias php='/root/.phpenv/shims/php'
+alias php='/opt/phpenv/shims/php'
 
-export PATH=$HOME/bin:/root/.phpenv/shims:$PATH
+export PATH=$HOME/bin:/opt/phpenv/shims:$PATH
 
 # We need the newest drush version
 export DRUSH="/.composer/vendor/drush/drush/drush"

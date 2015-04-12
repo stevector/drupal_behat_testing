@@ -78,13 +78,13 @@ RUN apt-get clean && apt-get autoremove -y && \
 ##
 
 RUN git clone --depth 1 https://github.com/CHH/phpenv.git /tmp/phpenv
-RUN /tmp/phpenv/bin/phpenv-install.sh
-RUN scp /tmp/phpenv/extensions/* /root/.phpenv/libexec/
+RUN PHPENV_ROOT="/opt/phpenv" /tmp/phpenv/bin/phpenv-install.sh
+RUN scp /tmp/phpenv/extensions/* /opt/phpenv/libexec/
 
 RUN echo 'eval "$(phpenv init -)"' >> /root/.bashrc
-ENV PATH /root/.phpenv/shims:/root/.phpenv/bin:$PATH
+ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 
-RUN git clone --depth 1 https://github.com/CHH/php-build.git /root/.phpenv/plugins/php-build
+RUN git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
 
 # TODO: Make sure we can read phpenv in a better way
 RUN chmod 755 /root/
@@ -95,9 +95,9 @@ RUN chmod 755 /root/
 #RUN chmod +x /usr/bin/make
 
 
-RUN echo "--with-gettext=shared" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options && \
-    echo "--enable-intl" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options && \
-    echo "--enable-wddx" >> /root/.phpenv/plugins/php-build/share/php-build/default_configure_options
+RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
 ##
 # Composer.
