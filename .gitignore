@@ -9,3 +9,4 @@ PROVISIONED
 .settings
 ./vendor
 drupalci.phar
+*~
