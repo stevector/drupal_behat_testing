@@ -81,8 +81,6 @@ class RunCommand extends DrupalCICommandBase {
     $job->setBuildId($build_id);
 
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
-    // TODO: Add 'prepare results' once code is complete & tested
-    //foreach (['compile_definition', 'validate_definition', 'setup_directories', 'prepare_results_placeholders'] as $step) {
     foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
@@ -100,7 +98,6 @@ class RunCommand extends DrupalCICommandBase {
       if (empty($step)) { continue; }
       foreach ($step as $plugin => $data) {
         $this->buildstepsPluginManager()->getPlugin($build_step, $plugin)->run($job, $data);
-        // TODO: Progress build on results server
         if ($job->getErrorState()) {
           // Step returned an error.  Halt execution.
           // TODO: Graceful handling of early exit states.
@@ -110,7 +107,6 @@ class RunCommand extends DrupalCICommandBase {
         }
       }
     }
-    // TODO: Progress build on results server
   }
 
   /**

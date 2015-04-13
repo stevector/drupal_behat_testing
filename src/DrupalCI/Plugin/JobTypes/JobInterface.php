@@ -132,8 +132,4 @@ interface JobInterface {
   public function setBuildID($id);
 
   public function getBuildID();
-
-  public function getResultServerId();
-
-  public function setResultServerId($id);
 }

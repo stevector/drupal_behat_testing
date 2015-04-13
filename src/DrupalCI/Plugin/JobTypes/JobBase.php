@@ -45,26 +45,6 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines the job definition file
   protected $jobDefinitionFile;
 
-  // Stores the Results server id for a job
-  protected $resultServerId = NULL;
-
-  /**
-   * @param mixed $resultServerId
-   */
-  public function setResultServerId($resultServerId)
-  {
-    $this->resultServerId = $resultServerId;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getResultServerId()
-  {
-    return $this->resultServerId;
-  }
-
-
   // Defines argument variable names which are valid for this job type
   public $availableArguments = array();
 
