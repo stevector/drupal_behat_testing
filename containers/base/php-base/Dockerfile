@@ -95,9 +95,7 @@ RUN chmod 755 /root/
 #RUN chmod +x /usr/bin/make
 
 
-RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
-    echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
-    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
 ##
 # Composer.
