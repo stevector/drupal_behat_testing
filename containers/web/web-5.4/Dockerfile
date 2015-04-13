@@ -4,6 +4,9 @@ MAINTAINER drupalci
 ##
 # PHP 5.4.31
 ##
+RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
 RUN sudo php-build -i development --pear 5.4.39 /opt/phpenv/versions/5.4.39
 RUN sudo chown -R root:root /opt/phpenv
