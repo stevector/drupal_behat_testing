@@ -24,6 +24,7 @@
         "symfony/console": "~2.5",
         "symfony/finder": "~2.5.3",
         "nickschuch/privatetravis": "0.0.2",
+        "drupalci/results-api": "dev-master",
         "symfony/yaml": "2.5.*",
         "symfony/process": "2.5.*",
         "doctrine/common": "*.*",
