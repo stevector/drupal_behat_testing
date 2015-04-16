@@ -155,6 +155,6 @@ class SimpletestJob extends JobBase {
     'DCI_Concurrency' => 4,
     'DCI_XMLOutput' => '/var/www/html/results',
     "DCI_PHPInterpreter" => "/opt/phpenv/shims/php",
-    "DCI_Color" => true,
+    "DCI_Color" => 'true',
   );
 }
