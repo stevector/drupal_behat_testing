@@ -36,7 +36,7 @@ RUN find /opt/phpenv/ -name xdebug.ini -exec sed -i 's/^/;/g' {} \; && \
   echo "apc.enable_cli = 1" >> /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini && \
   echo "apc.mmap_file_mask = /tmp/apc.XXXXXX" >> /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini && \
   echo "apc.rfc1867 = 1" >> /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini && \
-  echo "apc.include_once_override = 0 " >> /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini
+  echo "apc.include_once_override = 0 " >> /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini && \
   echo "extension=gettext.so" >> /opt/phpenv/versions/5.4.39/etc/conf.d/gettext.ini
 
 EXPOSE 80
