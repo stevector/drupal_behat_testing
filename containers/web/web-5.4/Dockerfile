@@ -7,10 +7,6 @@ MAINTAINER drupalci
 RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
-RUN sudo apt-get -y install software-properties-common && \
-    sudo add-apt-repository -y ppa:costamagnagianfranco/ettercap-stable-backports && \
-    sudo apt-get update && \
-    sudo apt-get -y install curl
 
 RUN sudo php-build -i development --pear 5.4.39 /opt/phpenv/versions/5.4.39
 RUN sudo chown -R root:root /opt/phpenv
