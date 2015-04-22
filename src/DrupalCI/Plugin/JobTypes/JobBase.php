@@ -258,20 +258,14 @@ class JobBase extends ContainerBase implements JobInterface {
     $config = $configs[$container['image']];
     // TODO: Allow classes to modify the default configuration before processing
     // Add service container links
-    $links = $this->createContainerLinks($config);
-    if (!empty($links)) {
-      $existing = (!empty($config['HostConfig']['Links'])) ? $config['HostConfig']['Links'] : array();
-      $config['HostConfig']['Links'] = $existing + $links;
-      // Set a default CMD in case the container config does not set one.
-      if (empty($config['Cmd'])) {
-        $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
-      }
-    }
+    $this->createContainerLinks($config);
     // Add volumes
-    $volumes = $this->createContainerVolumes($config);
-    if (!empty($volumes)) {
-        $config['HostConfig']['Binds'] = $volumes;
+    $this->createContainerVolumes($config);
+    // Set a default CMD in case the container config does not set one.
+    if (empty($config['Cmd'])) {
+      $this->setDefaultCommand($config);
     }
+
     $instance = new Container($config);
     $manager->create($instance);
 
@@ -286,34 +280,29 @@ class JobBase extends ContainerBase implements JobInterface {
     Output::writeln("<comment>Container <options=bold>${container['name']}</options=bold> created from image <options=bold>${container['image']}</options=bold> with ID <options=bold>$short_id</options=bold></comment>");
   }
 
-  protected function createContainerLinks($config) {
+  protected function setDefaultCommand(&$config) {
+    $config['Cmd'] = ['/bin/bash', '-c', '/daemon.sh'];
+  }
+
+  protected function createContainerLinks(&$config) {
     $links = array();
     if (empty($this->serviceContainers)) {
-      return $links;
+      return;
     }
     $targets = $this->serviceContainers;
     foreach ($targets as $type => $containers) {
       foreach ($containers as $key => $container) {
-        $links[] = "${container['name']}:${container['name']}";
+        $config['HostConfig']['Links'][] = "${container['name']}:${container['name']}";
       }
     }
-    if (!empty($config['Links'])) {
-      $links[] = $config['links'];
-    }
-    return $links;
   }
 
-  protected function createContainerVolumes($config) {
+  protected function createContainerVolumes(&$config) {
     $volumes = array();
     // Map working directory
     $working = $this->workingDirectory;
-    if (empty($config['Mountpoint'])) {
-      $config['Mountpoint'] = '/data';
-    }
-    $volumes = array("$working:" . $config['Mountpoint']);
-
-    // TODO: Map results directory
-    return $volumes;
+    $mount_point = (empty($config['Mountpoint'])) ? "/data" : $config['Mountpoint'];
+    $config['HostConfig']['Binds'][] = "$working:$mount_point";
   }
 
   public function getContainerConfiguration($image = NULL) {

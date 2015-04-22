@@ -34,8 +34,7 @@ class InitDependenciesCommand extends DrupalCICommandBase {
    */
   public function execute(InputInterface $input, OutputInterface $output) {
     $output->writeln("<info>Executing init:dependencies</info>");
-    $output->writeln('<comment>TODO: Implement init:dependency command.</comment>');
-    $output->writeln('');
+    $output->writeln('Currently not implemented.');
     # Check for presence of various binaries
     # curl
     # php

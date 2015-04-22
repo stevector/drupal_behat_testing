@@ -15,6 +15,11 @@ RUN apt-get clean && apt-get update
 # Make the PHP compiles go faster.
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
+
+RUN apt-get -y install software-properties-common && \
+    add-apt-repository -y ppa:costamagnagianfranco/ettercap-stable-backports && \
+    apt-get update
+
 RUN apt-get install -y \
     build-essential \
     bison \

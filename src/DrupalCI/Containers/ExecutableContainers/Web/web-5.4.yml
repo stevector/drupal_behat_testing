@@ -1,4 +1,12 @@
-Image:            drupalci/web-5.4
-Cmd: ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
-Mountpoint: "/var/www/html"
-tmpfs:            TRUE
+Image:             drupalci/web-5.4
+Cmd:              ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+Mountpoint:       "/var/www/html"
+#ExposedPorts:
+#  80/tcp: []
+#  9000/udp: []
+#HostConfig:
+#  PortBindings:
+#    80/tcp:
+#      HostPort: []
+#    9000/udp:
+#      HostPort: []
