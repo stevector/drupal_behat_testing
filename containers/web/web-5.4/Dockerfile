@@ -20,6 +20,12 @@ RUN ln -s /opt/phpenv/shims/php /usr/bin/php
 RUN find /opt/phpenv/ -iname php.ini -exec sh -c 'echo "date.timezone=UTC" >> {}' \;
 RUN echo "date.timezone=UTC" >> /etc/php5/cli/php.ini
 
+## Upgrade curl
+RUN apt-get -y install software-properties-common && \
+    add-apt-repository -y ppa:n-muench/programs-ppa2 && \
+    apt-get update && \
+    apt-get install -y curl
+
 # Disable xdebug
 RUN find /opt/phpenv/ -name xdebug.ini -exec sed -i 's/^/;/g' {} \; && \
   find /opt/phpenv/ -name php.ini -exec sed -i 's/^display_errors = On/;display_errors = On/g' {} \; && \

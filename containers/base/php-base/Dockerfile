@@ -16,10 +16,6 @@ RUN apt-get clean && apt-get update
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
 
-RUN apt-get -y install software-properties-common && \
-    add-apt-repository -y ppa:costamagnagianfranco/ettercap-stable-backports && \
-    apt-get update
-
 RUN apt-get install -y \
     build-essential \
     bison \
@@ -68,6 +64,7 @@ RUN apt-get install -y \
     ncurses-dev \
     php5-dev \
     re2c \
+    software-properties-common \
     sqlite3 \
     sudo \
     unixODBC-dev \
