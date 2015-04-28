@@ -16,10 +16,6 @@ RUN apt-get clean && apt-get update
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
 
-RUN apt-get -y install software-properties-common && \
-    add-apt-repository -y ppa:costamagnagianfranco/ettercap-stable-backports && \
-    apt-get update
-
 RUN apt-get install -y \
     build-essential \
     bison \
@@ -68,6 +64,7 @@ RUN apt-get install -y \
     ncurses-dev \
     php5-dev \
     re2c \
+    software-properties-common \
     sqlite3 \
     sudo \
     unixODBC-dev \
@@ -91,15 +88,14 @@ ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 
 RUN git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
 
-# TODO: Make sure we can read phpenv in a better way
-RUN chmod 755 /root/
-
 # Small hack for running the php compilation with more than one cpu core
 #RUN mv /usr/bin/make /usr/bin/make-system
 #RUN echo "/usr/bin/make-system -j8 -l8" > /usr/bin/make
 #RUN chmod +x /usr/bin/make
 
-
+##
+# Adding with-gettext flag
+##
 RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
 ##
