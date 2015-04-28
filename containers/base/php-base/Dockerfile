@@ -88,15 +88,14 @@ ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 
 RUN git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
 
-# TODO: Make sure we can read phpenv in a better way
-RUN chmod 755 /root/
-
 # Small hack for running the php compilation with more than one cpu core
 #RUN mv /usr/bin/make /usr/bin/make-system
 #RUN echo "/usr/bin/make-system -j8 -l8" > /usr/bin/make
 #RUN chmod +x /usr/bin/make
 
-
+##
+# Adding with-gettext flag
+##
 RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
 ##
