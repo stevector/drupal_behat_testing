@@ -15,9 +15,11 @@ setup:
       depth: %DCI_GitCheckoutDepth%
       checkout_dir: .
   # Create the directory where we will store our results
-  mkdir: /var/www/html/results
+  mkdir:
+    - /var/www/html/results
+    - /var/www/html/results/xml
   command:
-    - chown -fR www-data:www-data /var/www/html/sites /tmp/.ht.sqlite /var/www/html/results
+    - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:
