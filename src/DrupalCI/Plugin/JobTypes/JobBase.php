@@ -351,13 +351,16 @@ class JobBase extends ContainerBase implements JobInterface {
       }
       // Container not running, so we'll need to create it.
       Output::writeln("<comment>No active <options=bold>${image['image']}</options=bold> service container instances found. Generating new service container.</comment>");
-      // Instantiate container
-      $container = new Container(['Image' => $image['image']]);
+
       // Get container configuration, which defines parameters such as exposed ports, etc.
-      $config = $this->getContainerConfiguration($image['image']);
+      $configs = $this->getContainerConfiguration($image['image']);
+      $config = $configs[$image['image']];
       // TODO: Allow classes to modify the default configuration before processing
-      // Configure the container
-      $this->configureContainer($container, $config[$image['image']]);
+      // Instantiate container
+      $container = new Container($config);
+      if (!empty($config['name'])) {
+        $container->setName($config['name']);
+      }
       // Create the docker container instance, running as a daemon.
       // TODO: Ensure there are no stopped containers with the same name (currently throws fatal)
       $manager->run($container, function($output, $type) {
@@ -375,20 +378,6 @@ class JobBase extends ContainerBase implements JobInterface {
       Output::writeln("Sleeping 10 seconds to allow services to start.");
       sleep(10);
     }
-  }
-
-  protected function configureContainer(Container $container, array $config) {
-    if (!empty($config['name'])) {
-      $container->setName($config['name']);
-    }
-    if (!empty($config['exposed_ports'])) {
-      $ports = new PortCollection($config['exposed_ports']);
-      $container->setExposedPorts($ports);
-    }
-    if (!empty($config['Cmd'])) {
-      $container->setCmd($config['Cmd']);
-    }
-    // TODO: Process Tmpfs configuration
   }
 
   public function getErrorState() {
