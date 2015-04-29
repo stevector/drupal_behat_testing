@@ -7,6 +7,7 @@
 
 namespace DrupalCI\Console\Command;
 
+use DrupalCI\Console\Helpers\ConfigHelper;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,7 +52,16 @@ class RunCommand extends DrupalCICommandBase {
     $definition = $input->getArgument('definition');
     // The definition argument is optional, so we need to set a default definition file if it's not provided.
     if (!$definition) {
-      $definition = "./drupalci.yml";
+      // See if we've defined a default job type in our local configuration overrides
+      $confighelper = new ConfigHelper();
+      $local_overrides = $confighelper->getCurrentConfigSetParsed();
+      if (!empty($local_overrides['DCI_JobType'])) {
+        $definition = $local_overrides['DCI_JobType'];
+      }
+      else {
+        // Default to a drupalci.yml file in the local directory
+        $definition = "./drupalci.yml";
+      }
     }
     // Populate the job type and definition file variables
     if (substr(trim($definition), -4) == ".yml") {
