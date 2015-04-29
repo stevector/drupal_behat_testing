@@ -16,6 +16,8 @@ HostConfig:
     "3306/tcp":
       - "HostPort": "3306"
         "HostIP": "0.0.0.0"
+  "Binds":
+    - "/var/lib/drupalci/database/mysql-5-5:/var/lib/mysql"
 
 # e.g. Map Container port 80 to any available port
 #ExposedPorts:
