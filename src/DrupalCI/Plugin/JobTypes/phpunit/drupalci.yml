@@ -14,4 +14,4 @@ setup:
       checkout_dir: .
 execute:
   command:
-    - %DCI_RunScript%
+    - %DCI_RunScript% %DCI_RunOptions% %DCI_RunTarget%

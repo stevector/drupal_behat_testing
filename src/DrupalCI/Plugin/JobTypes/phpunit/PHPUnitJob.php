@@ -59,6 +59,8 @@ class PHPUnitJob extends JobBase {
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => '8.0.x',
     'DCI_GitCheckoutDepth' => '1',
-    'DCI_RunScript' => "/var/www/html/core/vendor/phpunit/phpunit/phpunit --bootstrap=/var/www/html/core/tests/bootstrap.php --list-groups /var/www/html/core/tests/Drupal/Tests",
+    'DCI_RunScript' => "/var/www/html/core/vendor/phpunit/phpunit/phpunit",
+    'DCI_RunOptions' => "--bootstrap /var/www/html/core/tests/bootstrap.php",
+    'DCI_RunTarget' => "/var/www/html/core/tests/Drupal/Tests"
   );
 }
