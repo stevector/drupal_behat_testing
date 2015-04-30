@@ -5,6 +5,9 @@ MAINTAINER drupalci
 # PHP 5.5.23
 ##
 
+RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+
 RUN sudo php-build -i development --pear 5.5.23 /opt/phpenv/versions/5.5.23 && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
@@ -13,12 +16,18 @@ RUN sudo php-build -i development --pear 5.5.23 /opt/phpenv/versions/5.5.23 && \
 RUN echo | pecl install mongo && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7
 
+## Upgrade curl to version 7.38
+RUN apt-get -y install software-properties-common && \
+    add-apt-repository -y ppa:n-muench/programs-ppa2 && \
+    apt-get update && \
+    apt-get install -y curl
+
 ##
 # copying ini for compiled php
 ##
 COPY ./conf/cli-php.ini /etc/php5/cli/php.ini
 COPY ./conf/opt-php.ini /opt/phpenv/versions/5.5.23/etc/php.ini
-COPY ./conf/opt-apc.ini /opt/phpenv/versions/5.5.23/etc/conf.d/apc.ini
+COPY ./conf/opt-apcu.ini /opt/phpenv/versions/5.5.23/etc/conf.d/apcu.ini
 COPY ./conf/opt-gettext.ini /opt/phpenv/versions/5.5.23/etc/conf.d/gettext.ini
 COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/5.5.23/etc/conf.d/xdebug.ini
 
