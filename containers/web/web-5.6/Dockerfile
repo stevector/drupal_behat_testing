@@ -2,23 +2,35 @@ FROM       drupalci/web-base
 MAINTAINER drupalci
 
 ##
-# PHP 5.6.0
+# PHP 5.6.7
 ##
 
-RUN sudo php-build -i development --pear 5.6.7 /opt/phpenv/versions/5.6.7
-RUN sudo chown -R root:root /opt/phpenv
-RUN phpenv rehash
-RUN phpenv global 5.6.7
-RUN echo | pecl install mongo
-RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7
-RUN ln -s /opt/phpenv/shims/php /usr/bin/php
+RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
 
-# Fix date.timezone warning
-RUN find /opt/phpenv/ -iname php.ini -exec sh -c 'echo "date.timezone=UTC" >> {}' \;
-RUN echo "date.timezone=UTC" >> /etc/php5/cli/php.ini
+RUN sudo php-build -i development --pear 5.6.7 /opt/phpenv/versions/5.6.7 && \
+    sudo chown -R root:root /opt/phpenv && \
+    phpenv rehash && \
+    phpenv global 5.6.7 && \
+    ln -s /opt/phpenv/shims/php /usr/bin/php
+RUN echo | pecl install mongo && \
+    echo | pecl install channel://pecl.php.net/APCu-4.0.7
 
-# Disable xdebug
-RUN find /opt/phpenv/ -name xdebug.ini -exec sed -i 's/^/;/g' {} \;
+## Upgrade curl to version 7.38
+RUN apt-get -y install software-properties-common && \
+    add-apt-repository -y ppa:n-muench/programs-ppa2 && \
+    apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean && apt-get autoremove -y
+
+##
+# copying php.ini for compiled php
+##
+COPY ./conf/cli-php.ini /etc/php5/cli/php.ini
+COPY ./conf/opt-php.ini /opt/phpenv/versions/5.6.7/etc/php.ini
+COPY ./conf/opt-apcu.ini /opt/phpenv/versions/5.6.7/etc/conf.d/apcu.ini
+COPY ./conf/opt-gettext.ini /opt/phpenv/versions/5.6.7/etc/conf.d/gettext.ini
+COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/5.6.7/etc/conf.d/xdebug.ini
 
 EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]
