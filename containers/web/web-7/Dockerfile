@@ -30,7 +30,7 @@ COPY ./conf/cli-php.ini /etc/php5/cli/php.ini
 COPY ./conf/opt-php.ini /opt/phpenv/versions/master/etc/php.ini
 COPY ./conf/opt-apcu.ini /opt/phpenv/versions/master/etc/conf.d/apcu.ini
 COPY ./conf/opt-gettext.ini /opt/phpenv/versions/master/etc/conf.d/gettext.ini
-COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/master/etc/conf.d/xdebug.ini
+#COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/master/etc/conf.d/xdebug.ini
 
 EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]
