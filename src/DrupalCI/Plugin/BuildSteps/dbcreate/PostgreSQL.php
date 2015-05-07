@@ -19,6 +19,7 @@ class PostgreSQL extends ContainerCommand {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
+
     $parts = parse_url($job->getBuildvar('DCI_DBURL'));
     $host = $parts['host'];
     $user = $parts['user'];
