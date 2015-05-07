@@ -4,6 +4,8 @@ export LANGUAGE=en_US:en
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
+chown -R postgres:postgres /var/lib/postgresql
+
 PGVERSION=$(/usr/bin/psql --version | awk '{print $3}' | head -n1 | cut  -c 1-3)
 echo "PGSQL VERSION: ${PGVERSION}"
 
