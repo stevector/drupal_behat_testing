@@ -37,5 +37,7 @@ EXPOSE 5432
 USER postgres
 
 COPY ./conf/startup.sh /opt/startup.sh
+# copy over the updated PostgreSQL config that has been tuned for 4 Gigs of RAM
+COPY ./conf/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
 
 CMD ["/bin/bash", "/opt/startup.sh"]
