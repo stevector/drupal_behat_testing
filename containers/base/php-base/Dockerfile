@@ -63,6 +63,7 @@ RUN apt-get install -y \
     mysql-client \
     ncurses-dev \
     php5-dev \
+    postgresql-client \
     re2c \
     software-properties-common \
     sqlite3 \
