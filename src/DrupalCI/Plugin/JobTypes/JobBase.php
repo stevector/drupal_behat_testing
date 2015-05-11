@@ -114,7 +114,7 @@ class JobBase extends ContainerBase implements JobInterface {
 
   // Retrieves a single build variable for this job
   public function getBuildvar($build_var) {
-    return $this->buildVars[$build_var];
+    return isset($this->buildVars[$build_var]) ? $this->buildVars[$build_var] : NULL;
   }
 
   // Sets a single build variable for this job

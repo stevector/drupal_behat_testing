@@ -21,6 +21,11 @@ class DbEnvironment extends EnvironmentBase {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
+    // We don't need to initialize any service container for SQLite.
+    if ($job->getBuildvar('DCI_DBTYPE') === 'sqlite') {
+      return;
+    }
+
     // Data format: 'mysql-5.5' or array('mysql-5.5', 'pgsql-9.3')
     // $data May be a string if one version required, or array if multiple
     // Normalize data to the array format, if necessary
