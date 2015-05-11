@@ -64,6 +64,7 @@ RUN apt-get install -y \
     ncurses-dev \
     php5-dev \
     postgresql-client \
+    postgresql-client-common \
     re2c \
     software-properties-common \
     sqlite3 \
