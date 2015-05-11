@@ -62,7 +62,7 @@ class JobBase extends ContainerBase implements JobInterface {
   // CONFIG_FILE_LOCATION is a colon-separated nested location for the
   // equivalent var in a job definition file.
   public $requiredArguments = array(
-    // eg:   'DCI_DBTYPE' => 'environment:db'
+    // eg:   'DCI_DBVersion' => 'environment:db'
   );
 
   // Placeholder which holds the parsed job definition file for this job
