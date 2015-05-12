@@ -54,23 +54,38 @@ else
   apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl \
          mysql-client postgresql-client postgresql-client-common
   apt-get autoclean
-        echo "Installing docker"
-        curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
-        usermod -a -G docker vagrant
+
+  echo "Installing docker"
+  curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
+  usermod -a -G docker vagrant
   cd /home/vagrant/drupalci_testbot
+
   echo "Installing composer"
   curl -sS https://getcomposer.org/installer | php
   echo "Running php composer.phar update"
   php composer.phar update
+
   echo "Creating drupalci symlink"
   ln -s /home/vagrant/drupalci_testbot /opt/drupalci_testbot
-  mkdir -p /var/lib/drupalci/web
-  mkdir -p /var/lib/drupalci/database/mariadb-5.5
-  mkdir -p /var/lib/drupalci/database/mariadb-10.0
-  mkdir -p /var/lib/drupalci/database/mysql-5.5
-  mkdir -p /var/lib/drupalci/database/pgsql-9.1
-  mkdir -p /var/lib/drupalci/database/pgsql-9.4
-  chown -R 102:102 /var/lib/drupalci/database
+
+  echo "Creating directories for docker binds"
+  DCIPATH="/var/lib/drupalci"
+  mkdir -p $DCIPATH
+  mkdir -p $DCIPATH/web
+  mkdir -p $DCIPATH/database/mariadb-5.5
+  mkdir -p $DCIPATH/database/mariadb-10.0
+  mkdir -p $DCIPATH/database/mysql-5.5
+  mkdir -p $DCIPATH/database/pgsql-9.1
+  mkdir -p $DCIPATH/database/pgsql-9.4
+
+  echo "Changing ownership for the directories"
+  # setting the uid:gid to www-data
+  chown -R 33:33 $DCIPATH/web
+  # setting the uid:gid to database (mysql/postgres)
+  chown -R 102:102 $DCIPATH/database
+
+  #TODO: update/change cli php.ini
+
   touch PROVISIONED
 fi
 
@@ -78,4 +93,5 @@ chown -fR vagrant:vagrant /home/vagrant
 echo "Box started up, run *vagrant halt* to stop."
 echo
 echo "To access the box and run tests, run:"
-echo "- vagrant ssh
+echo "- vagrant ssh"
+
