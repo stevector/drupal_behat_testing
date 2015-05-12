@@ -85,6 +85,8 @@ else
   chown -R 102:102 $DCIPATH/database
 
   #TODO: update/change cli php.ini
+  sed -i 's/; sys_temp_dir = "\/tmp"/sys_temp_dir = "\/var\/lib\/drupalci\/web\/"/g' /etc/php5/cli/php.ini
+  sed -i 's/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g' /etc/php5/cli/php.ini
 
   touch PROVISIONED
 fi
