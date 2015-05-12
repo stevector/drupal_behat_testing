@@ -50,8 +50,9 @@ else
 	mkswap /var/swapfile
 	swapon /var/swapfile
 	/bin/echo "/var/swapfile swap swap defaults 0 0" >>/etc/fstab
-	apt-get update
-	apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl
+	apt-get update && apt-get upgrade -y
+	apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl \
+         mysql-client postgresql-client postgresql-client-common
 	apt-get autoclean
         echo "Installing docker"
         curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
@@ -62,7 +63,14 @@ else
   echo "Running php composer.phar update"
   php composer.phar update
   echo "Creating drupalci symlink"
-  ln -s /home/vagrant/drupalci_testbot/drupalci /usr/local/bin/drupalci
+  ln -s /home/vagrant/drupalci_testbot /opt/drupalci_testbot
+  mkdir -p /var/lib/drupalci/web
+  mkdir -p /var/lib/drupalci/database/mariadb-5.5
+  mkdir -p /var/lib/drupalci/database/mariadb-10.0
+  mkdir -p /var/lib/drupalci/database/mysql-5.5
+  mkdir -p /var/lib/drupalci/database/pgsql-9.1
+  mkdir -p /var/lib/drupalci/database/pgsql-9.4
+  chown -R 102:102 /var/lib/drupalci/database
 	touch PROVISIONED
 fi
 
