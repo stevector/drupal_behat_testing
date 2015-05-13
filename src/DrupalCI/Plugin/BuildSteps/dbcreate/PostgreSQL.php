@@ -27,7 +27,7 @@ class PostgreSQL extends ContainerCommand {
     $db_name = $data ?: ltrim($parts['path'], '/');
 
     // Create role, database, and schema for PostgreSQL commands.
-    $createdb = "PGPASSWORD=$pass PGUSER=$user createdb -E 'UTF-8' -O $user -h $host -U $user $db_name";
+    $createdb = "PGPASSWORD=$pass PGUSER=$user createdb -E 'UTF-8' -O $user -h $host $db_name";
 
     parent::run($job, $createdb);
   }
