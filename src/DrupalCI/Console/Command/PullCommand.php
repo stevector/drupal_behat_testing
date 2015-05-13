@@ -66,7 +66,7 @@ class PullCommand extends DrupalCICommandBase {
       // Initialize the Counting on how far we are away from completing the docker pull process
       $current_transfer = 0;
       $total_transfer = 0;
-      foreach($progressInformation as $value ) {
+      foreach ($progressInformation as $value ) {
         $current_transfer = $current_transfer + $value['current'];
         $total_transfer = $total_transfer + $value['total'];
       }
@@ -80,9 +80,10 @@ class PullCommand extends DrupalCICommandBase {
       }
 
       // Start the progress bar and advance it all the time we run the output function
+      $advance = ($current_transfer > $total_transfer) ? $total_transfer : $current_transfer;
       $progressbar = new ProgressBar(Output::getOutput(), $total_transfer);
       $progressbar->start();
-      $progressbar->advance($current_transfer);
+      $progressbar->advance($advance);
 
       // foreach($progressInformation as $status){
       //   if(isset($status['status']) && isset($status['id'])){

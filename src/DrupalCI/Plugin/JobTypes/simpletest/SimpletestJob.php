@@ -37,12 +37,11 @@ class SimpletestJob extends JobBase {
    * definition.
    */
   public $requiredArguments = array(
-    // DCI_DBTYPE defines the database type (mysql, pgsql, etc). In a parsed
+    // DCI_DBVersion defines the database type (mysql, pgsql, etc). In a parsed
     // yml job definition file, this information would be stored in the value
     // at array('environment' => array('db' => VALUE)); thus the traversal path
     // value is the array keys 'environment:db'
     /* Temporarily hiding to prevent validation fails while testing during development
-    'DCI_DBType' => 'environment:db',
     'DCI_DBVersion' => 'environment:db',
     'DCI_PHPVersion' => 'environment:web',
     'DCI_DrupalBranch' => 'variables:DCI_DrupalBranch',
