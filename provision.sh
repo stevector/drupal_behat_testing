@@ -71,6 +71,10 @@ else
   echo "Creating directories for docker binds"
   DCIPATH="/var/lib/drupalci"
   mkdir -p $DCIPATH
+
+  ## TMPFS
+  #sudo mount -t tmpfs -o size=1G tmpfs /var/lib/drupalci
+
   mkdir -p $DCIPATH/web
   mkdir -p $DCIPATH/database/mariadb-5.5
   mkdir -p $DCIPATH/database/mariadb-10.0
