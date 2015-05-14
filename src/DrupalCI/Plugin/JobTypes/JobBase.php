@@ -96,6 +96,27 @@ class JobBase extends ContainerBase implements JobInterface {
   // Holds build variables which need to be persisted between build steps
   public $buildVars = array();
 
+  // Stores a drupalci_results server node ID for this job
+  public $resultServerID;
+
+  /**
+   * @param mixed $resultsServerID
+   */
+  public function setResultServerID($resultServerID)
+  {
+    $this->resultServerID = $resultServerID;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getResultServerID()
+  {
+    return $this->resultServerID;
+  }
+
+
+
   /**
    * Stores the calling command's output buffer
    *

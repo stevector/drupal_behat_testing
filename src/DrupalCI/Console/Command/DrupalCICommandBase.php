@@ -45,7 +45,7 @@ class DrupalCICommandBase extends SymfonyCommand {
 
     }
 
-    public function getDocker()
+  public function getDocker()
     {
         $client = Client::createWithEnv();
         if (null === $this->docker) {
