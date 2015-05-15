@@ -31,7 +31,7 @@ class PrepResults extends PluginBase {
 
     // The results node could be defined further upstream, and passed in an environment variable
     $upstream_id = $job->getBuildvar('DCI_JobID');
-    $results_server = $job->getBuildvar('DCI_ResultServer');
+    $results_server = $job->getBuildvar('DCI_ResultsServer');
     if (!empty($upstream_id) && !empty($results_server)) {
       // Results node is already assumed to be created.  Add it to our job.
       $results = $job->getResultsServerID();
