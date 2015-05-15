@@ -29,6 +29,35 @@ class PrepResults extends PluginBase {
       return;
     }
 
+    // The results node could be defined further upstream, and passed in an environment variable
+    $upstream_id = $job->getBuildvar('DCI_JobID');
+    $results_server = $job->getBuildvar('DCI_ResultServer');
+    if (!empty($upstream_id) && !empty($results_server)) {
+      // Results node is already assumed to be created.  Add it to our job.
+      $results = $job->getResultsServerID();
+      $results[$results_server] = $upstream_id;
+      $job->setResultsServerID($results);
+      return;
+    }
+
+    // We don't have an upstream results node or server, so need to generate it here.
+    $this->generateResultNode($job, $definition);
+
+  }
+
+  protected function loadConfig($source) {
+    $config = array();
+    if ($content = file_get_contents($source)) {
+      $parsed = Yaml::parse($content);
+      $config['results']['host'] = $parsed['results']['host'];
+      $config['results']['username'] = $parsed['results']['username'];
+      $config['results']['password'] = $parsed['results']['password'];
+    }
+    return $config;
+  }
+
+  protected function generateResultNode(JobInterface $job, $definition) {
+
     $data = $definition['publish']['drupalci_results'];
     $api = $job->getResultsAPI();
 
@@ -61,14 +90,4 @@ class PrepResults extends PluginBase {
     }
   }
 
-  protected function loadConfig($source) {
-    $config = array();
-    if ($content = file_get_contents($source)) {
-      $parsed = Yaml::parse($content);
-      $config['results']['host'] = $parsed['results']['host'];
-      $config['results']['username'] = $parsed['results']['username'];
-      $config['results']['password'] = $parsed['results']['password'];
-    }
-    return $config;
-  }
 }
