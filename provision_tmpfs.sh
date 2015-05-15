@@ -1,12 +1,13 @@
 #!/bin/bash
-
+set -uex
 echo "Creating directories for docker binds"
+echo "adding tmpfs mount"
 DCIPATH="/var/lib/drupalci"
 
 if [ -d $DCIPATH ];
 then
   DATE="$(date +'%Y%m%d%H%M')"
-  mv $DCIPATH $DCIPATHi-$DATE
+  mv $DCIPATH $DCIPATH-$DATE
 fi
 
 mkdir -p $DCIPATH
