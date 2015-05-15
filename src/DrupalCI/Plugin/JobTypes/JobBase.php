@@ -9,6 +9,7 @@ namespace DrupalCI\Plugin\JobTypes;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use DrupalCI\Console\Output;
+use DrupalCIResultsApi\Api;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 use DrupalCI\Console\Jobs\ContainerBase;
@@ -95,6 +96,69 @@ class JobBase extends ContainerBase implements JobInterface {
 
   // Holds build variables which need to be persisted between build steps
   public $buildVars = array();
+
+  // Holds our DrupalCIResultsAPI API
+  protected $resultsAPI = NULL;
+
+  /**
+   * @param API
+   */
+  public function setResultsAPI($resultsAPI)
+  {
+    $this->resultsAPI = $resultsAPI;
+  }
+
+  /**
+   * @return API
+   */
+  public function getResultsAPI()
+  {
+    if (is_null($this->resultsAPI)) {
+      $api = new API();
+      $this->setResultsAPI($api);
+    }
+    return $this->resultsAPI;
+  }
+
+  public function configureResultsAPI($instance) {
+    $api = $this->getResultsAPI();
+    if (!empty($instance['config'])) {
+      $config = $this->loadAPIConfig($instance['config']);
+    }
+    else {
+      $config['results'] = $instance;
+    }
+    $api->setUrl($config['results']['host']);
+    $api->setAuth($config['results']['username'], $config['results']['password']);
+    $this->setResultsAPI($api);
+  }
+
+  protected function loadAPIConfig($source) {
+    $config = array();
+    if ($content = file_get_contents($source)) {
+      $parsed = Yaml::parse($content);
+      $config['results']['host'] = $parsed['results']['host'];
+      $config['results']['username'] = $parsed['results']['username'];
+      $config['results']['password'] = $parsed['results']['password'];
+    }
+    return $config;
+  }
+
+  // Stores a drupalci_results server node ID for this job
+  public $resultsServerID;
+
+  public function setResultsServerID($resultsServerID)
+  {
+    $this->resultsServerID = $resultsServerID;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getResultsServerID()
+  {
+    return $this->resultsServerID;
+  }
 
   /**
    * Stores the calling command's output buffer
@@ -327,7 +391,7 @@ class JobBase extends ContainerBase implements JobInterface {
     return $configs;
   }
 
-  public function startServiceContainerDaemons($type) {
+  public function startServiceContainerDaemons($container_type) {
     $needs_sleep = FALSE;
     $docker = $this->getDocker();
     $manager = $docker->getContainerManager();
@@ -337,7 +401,7 @@ class JobBase extends ContainerBase implements JobInterface {
       $id = substr($running->getID(), 0, 8);
       $instances[$repo] = $id;
     };
-    foreach ($this->serviceContainers[$type] as $key => $image) {
+    foreach ($this->serviceContainers[$container_type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {
         // TODO: Determine service container ports, id, etc, and save it to the job.
         Output::writeln("<comment>Found existing <options=bold>${image['image']}</options=bold> service container instance.</comment>");
@@ -345,8 +409,8 @@ class JobBase extends ContainerBase implements JobInterface {
         $container = $manager->find($instances[$image['image']]);
         $container_id = $container->getID();
         $container_name = $container->getName();
-        $this->serviceContainers[$type][$key]['id'] = $container_id;
-        $this->serviceContainers[$type][$key]['name'] = $container_name;
+        $this->serviceContainers[$container_type][$key]['id'] = $container_id;
+        $this->serviceContainers[$container_type][$key]['name'] = $container_name;
         continue;
       }
       // Container not running, so we'll need to create it.
@@ -368,8 +432,8 @@ class JobBase extends ContainerBase implements JobInterface {
       }, [], true);
       $container_id = $container->getID();
       $container_name = $container->getName();
-      $this->serviceContainers[$type][$key]['id'] = $container_id;
-      $this->serviceContainers[$type][$key]['name'] = $container_name;
+      $this->serviceContainers[$container_type][$key]['id'] = $container_id;
+      $this->serviceContainers[$container_type][$key]['name'] = $container_name;
       $short_id = substr($container_id, 0, 8);
       Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
       $needs_sleep = TRUE;
@@ -383,5 +447,6 @@ class JobBase extends ContainerBase implements JobInterface {
   public function getErrorState() {
     return $this->errorStatus;
   }
+
 
 }
