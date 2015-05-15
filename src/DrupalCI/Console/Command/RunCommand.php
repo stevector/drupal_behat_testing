@@ -91,7 +91,9 @@ class RunCommand extends DrupalCICommandBase {
     $job->setBuildId($build_id);
 
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
-    foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
+    // TODO: Add prep_results once results API integration is complete
+    foreach (['compile_definition', 'validate_definition', 'setup_directories', 'prepare_results_placeholders'] as $step) {
+    // foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
 
@@ -104,8 +106,41 @@ class RunCommand extends DrupalCICommandBase {
     // any local or drupalci defaults not otherwise defined in the passed job
     // definition, located in $job->job_definition
     $definition = $job->getDefinition();
+    if (!empty($definition['publish']['drupalci_results'])) {
+      $results_data = $definition['publish']['drupalci_results'];
+      // $data format:
+      // i) array('config' => '<configuration filename>'),
+      // ii) array('host' => '...', 'username' => '...', 'password' => '...')
+      // or a mixed array of the above
+      // iii) array(array(...), array(...))
+      // Normalize data to the third format, if necessary
+      $results_data = (count($results_data) == count($results_data, COUNT_RECURSIVE)) ? [$results_data] : $results_data;
+    }
+    else {
+      $results_data = array();
+    }
+
     foreach ($definition as $build_step => $step) {
       if (empty($step)) { continue; }
+      // If we are publishing this job to a results server (or multiple), update the progress on the server(s)
+      // TODO: Check current state, and don't progress if already there.
+      foreach ($results_data as $key => $instance) {
+        $job->configureResultsAPI($instance);
+        $api = $job->getResultsAPI();
+        $url = $api->getUrl();
+        // Retrieve the results node ID for the results server
+        $host = parse_url($url, PHP_URL_HOST);
+        $states = $api->states();
+        $results_id = $job->getResultsServerID();
+
+        foreach ($states as $key => $state) {
+          if ($build_step == $key) {
+            $api->progress($results_id[$host], $state['id']);
+            break;
+          }
+        }
+      }
+
       foreach ($step as $plugin => $data) {
         $this->buildstepsPluginManager()->getPlugin($build_step, $plugin)->run($job, $data);
         if ($job->getErrorState()) {
