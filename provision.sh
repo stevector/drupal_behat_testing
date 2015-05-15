@@ -53,7 +53,7 @@ else
   apt-get update && apt-get upgrade -y
   apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl \
          mysql-client postgresql-client postgresql-client-common
-  apt-get autoclean
+  apt-get autoclean && apt-get autoremove -y
 
   echo "Installing docker"
   curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
@@ -71,10 +71,6 @@ else
   echo "Creating directories for docker binds"
   DCIPATH="/var/lib/drupalci"
   mkdir -p $DCIPATH
-
-  ## TMPFS
-  #sudo mount -t tmpfs -o size=1G tmpfs /var/lib/drupalci
-
   mkdir -p $DCIPATH/web
   mkdir -p $DCIPATH/database/mariadb-5.5
   mkdir -p $DCIPATH/database/mariadb-10.0
