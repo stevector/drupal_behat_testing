@@ -28,4 +28,4 @@ execute:
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBURL% %DCI_TESTGROUPS%
 #publish:
 #  drupalci_results:
-#    config: ./drupalci.yaml
+#    config: ~/.drupalci/drupalci.yaml
