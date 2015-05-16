@@ -72,13 +72,13 @@ class ConfigShowCommand extends DrupalCICommandBase {
         foreach ($contents as $line) {
           $parsed = explode("=", $line);
           if (!empty($parsed[0]) && !empty($parsed[1])) {
-            $output->writeln("<comment>" . strtoupper($parsed[0]) . ": </comment><info>" . $parsed[1] . "</info>");
+            $output->writeln("<comment>" . $parsed[0] . ": </comment><info>" . $parsed[1] . "</info>");
           }
         }
         if (!empty($env_vars)) {
           $output->writeln("<comment;options=bold>Defined in Environment Variables:</comment;options=bold>");
-          foreach ($env_vars as $key => $value) {
-            $output->writeln("<comment>" . strtoupper($key) . ": </comment><info>" . $value . "</info>");
+          foreach ($env_vars as $env_key => $env_value) {
+            $output->writeln("<comment>" . $env_key . ": </comment><info>" . $env_value . "</info>");
           }
           $output->writeln("<info>------------ End config set: <options=bold>CURRENT DCI ENVIRONMENT</options=bold></info> ----------------</info>");
           $output->writeln('');
