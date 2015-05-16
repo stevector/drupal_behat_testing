@@ -11,7 +11,7 @@ namespace DrupalCI\Plugin\Preprocess\definition;
 /**
  * @PluginID("resultsserver")
  */
-class Fetch {
+class ResultsServer {
 
   /**
    * {@inheritdoc}
