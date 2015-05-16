@@ -135,6 +135,7 @@ class JobBase extends ContainerBase implements JobInterface {
 
   protected function loadAPIConfig($source) {
     $config = array();
+    $source = realpath($source);
     if ($content = file_get_contents($source)) {
       $parsed = Yaml::parse($content);
       $config['results']['host'] = $parsed['results']['host'];

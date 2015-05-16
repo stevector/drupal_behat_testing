@@ -57,10 +57,7 @@ class PrepResults extends PluginBase {
   }
 
   protected function generateResultNode(JobInterface $job, $definition) {
-
     $data = $definition['publish']['drupalci_results'];
-    $api = $job->getResultsAPI();
-
     // $config data format:
     // i) array('config' => '<configuration filename>'),
     // ii) array('host' => '...', 'username' => '...', 'password' => '...')
@@ -69,20 +66,13 @@ class PrepResults extends PluginBase {
     // Normalize data to the third format, if necessary
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
     foreach ($data as $key => $instance) {
-      if (!empty($instance['config'])) {
-        $config = $this->loadConfig($instance['config']);
-      }
-      else {
-        $config['results'] = $instance;
-      }
-      $api->setUrl($config['results']['host']);
-      $api->setAuth($config['results']['username'], $config['results']['password']);
-
       // TODO: We need to generate readable job titles.  Using $job->BuildID for now.
       $title = $job->getBuildID();
-
+      $job->configureResultsAPI($instance);
+      $api = $job->getResultsAPI();
       // Generate the results node on the results server
-      $host = parse_url($config['results']['host'], PHP_URL_HOST);
+      $url = $api->getUrl();
+      $host = parse_url($url, PHP_URL_HOST);
       $results_id = $job->getResultsServerID();
       $results_id[$host] = $api->create($title);
       // Store the result server record id on the job for future use

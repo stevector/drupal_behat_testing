@@ -125,6 +125,9 @@ class CompileDefinition extends PluginBase {
       }
     }
 
+    // Add 'HOME' env variable
+    $replacements["%HOME%"] = getenv("HOME");
+
     // Process DCI_* variable substitution into test definition template
     $search = array_keys($replacements);
     $replace = array_values($replacements);
