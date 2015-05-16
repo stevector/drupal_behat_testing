@@ -129,7 +129,14 @@ class JobBase extends ContainerBase implements JobInterface {
       $config['results'] = $instance;
     }
     $api->setUrl($config['results']['host']);
-    $api->setAuth($config['results']['username'], $config['results']['password']);
+    if (!empty($config['results']['username'])) {
+      // Handle case where no password is provided
+      if (empty($config['results']['password'])) {
+        $config['results']['password'] = '';
+      }
+      // Set authorization parameters on the API object
+      $api->setAuth($config['results']['username'], $config['results']['password']);
+    }
     $this->setResultsAPI($api);
   }
 

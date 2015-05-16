@@ -25,16 +25,40 @@ class ResultsServer {
    * but it could be extended to add the host auth information through
    * additional variables.
    *
-   * Input format: (string) $value = "results.drupalci.org"
+   * Input format: (string) $value = "https://user:pass@results.drupalci.org/"
    * Desired Result: [
-   * array('publish' => array('drupalci_results' => array(array('config' => '~/drupalci/drupalci.yaml'))))
+   * array(
+   *   'publish' => array(
+   *     'drupalci_results' => array(
+   *       array(
+   *         'host' => 'results.drupalci.org',
+   *         ['username' => 'user',]
+   *         ['password' => 'pass']
+   *
+   *       )
+   *     )
+   *   )
+   * )
    * ]
    */
-  public function process(array &$definition, $value) {
+  public function process(array &$definition, $url) {
     if (empty($definition['publish']['drupalci_results'])) {
       $definition['publish']['drupalci_results'] = [];
     }
-    $definition['publish']['drupalci_results'][] = array('config' => '~/.drupalci/drupalci.yaml');
+    $parsed = parse_url($url);
+    $server = array();
+    $server['host'] = $parsed['host'];
+    if (!empty($parsed['scheme'])) {
+      $server['host'] = $parsed['scheme'] . "://" . $server['host'];
+    }
+    if (!empty($parsed['user'])) {
+      $server['username'] = $parsed['user'];
+    }
+    if (!empty($parsed['pass'])) {
+      $server['password'] = $parsed['pass'];
+    }
+
+    $definition['publish']['drupalci_results'][] = $server;
   }
 }
 
