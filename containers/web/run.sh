@@ -1,4 +1,8 @@
 #!/bin/bash -e
+
+# This file is part of the original drupalci proof of concept development, and
+# as such, has been deprecated in favor of the drupalci console script.
+
 #
 # Name:         run.sh
 #
@@ -16,6 +20,7 @@
 #
 # Docs:         README.md for complete information
 #
+
 
 #print usage help if -h, --help
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]
