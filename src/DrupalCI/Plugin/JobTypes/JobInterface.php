@@ -125,9 +125,9 @@ interface JobInterface {
 
   public function setWorkingDir($working_directory);
 
-  public function setBuildID($id);
+  public function setBuildId($id);
 
-  public function getBuildID();
+  public function getBuildId();
 
   public function setResultsServerID($id);
 

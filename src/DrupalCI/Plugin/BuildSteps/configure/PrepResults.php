@@ -82,7 +82,7 @@ class PrepResults extends PluginBase {
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
     foreach ($data as $key => $instance) {
       // TODO: We need to generate readable job titles.  Using $job->BuildID for now.
-      $title = $job->getBuildID();
+      $title = $job->getBuildId();
       $job->configureResultsAPI($instance);
       $api = $job->getResultsAPI();
 
