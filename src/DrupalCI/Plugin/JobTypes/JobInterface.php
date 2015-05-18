@@ -12,11 +12,6 @@ interface JobInterface {
   /**
    * An array of build variables.
    *
-   * - DCI_DEPENDENCIES
-   * - DCI_DEPENDENCIES_GIT
-   * - DCI_TravisFile
-   * - DCI_Privileged
-   *
    * @return array
    *
    * @see SimpletestJob::$availableArguments
