@@ -108,9 +108,9 @@ class PHPUnitJob extends JobBase {
     // Default: '/var/www/html/core/tests/Drupal/Tests'
 
     // ***** Optional Arguments *****
-    'DCI_FETCH' => 'Used to specify any files which should be downloaded while building out the codebase.',
+    'DCI_Fetch' => 'Used to specify any files which should be downloaded while building out the codebase.',
     // Syntax: 'url1,relativelocaldirectory1;url2,relativelocaldirectory2;...'
-    'DCI_PATCH' => 'Defines any patches which should be applied while building out the codebase.',
+    'DCI_Patch' => 'Defines any patches which should be applied while building out the codebase.',
     // Syntax: 'localfile1,applydirectory1;localfile2,applydirectory2;...'
     'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
     // Syntax: 'argkey1,argvalue1;argkey2,argvalue2;argkey3;argkey4,argvalue4;

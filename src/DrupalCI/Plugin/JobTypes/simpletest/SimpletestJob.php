@@ -45,8 +45,8 @@ class SimpletestJob extends JobBase {
     'DCI_RunScript' => '/var/www/html/core/scripts/run-tests.sh ',
     'DCI_DBUser' => 'drupaltestbot',
     'DCI_DBPassword' => 'drupaltestbotpw',
-    'DCI_DBURL' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
-    'DCI_TESTGROUPS' => '--all',
+    'DCI_DBUrl' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
+    'DCI_TestGroups' => '--all',
     'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 4,
     'DCI_XMLOutput' => '/var/www/html/results/xml',
@@ -83,7 +83,7 @@ class SimpletestJob extends JobBase {
     // 'DCI_DBVersion' => 'environment:db',
     // 'DCI_PHPVersion' => 'environment:web',
     // 'DCI_RunScript' => 'execute:command',
-    // 'DCI_TESTGROUPS' => 'execute:command'
+    // 'DCI_TestGroups' => 'execute:command'
   );
 
   /**
@@ -117,8 +117,8 @@ class SimpletestJob extends JobBase {
     'DCI_RunOptions' => 'A string containing a series of any other run script options to append to the run script when performing a job.',
     'DCI_DBUser' => 'Defines the default database user to be used on the site database.  Default: drupaltestbot',
     'DCI_DBPassword' => 'Defines the default database password to be used on the site database.  Default: drupaltestbotpw',
-    'DCI_DBURL' => 'Define the --dburl parameter to be passed to the run script.  Default: dbtype://host (DBVersion, DBUser and DBPassword variable plugins will populate this).',
-    'DCI_TESTGROUPS' => 'Defines the target test groups to run.  Default: --all',
+    'DCI_DBUrl' => 'Define the --dburl parameter to be passed to the run script.  Default: dbtype://host (DBVersion, DBUser and DBPassword variable plugins will populate this).',
+    'DCI_TestGroups' => 'Defines the target test groups to run.  Default: --all',
     'DCI_SQLite' => 'Defines the location of the sqlite database used to store test results.  Default: /var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 'Defines the value to pass to the --concurrency argument of the run script.  Default: 4',
     'DCI_XMLOutput' => 'Defines the directory where xml results will be stored.  Default: output/var/www/html/results/xml',
@@ -128,9 +128,9 @@ class SimpletestJob extends JobBase {
     // ***** Optional arguments *****
     'DCI_DieOnFail' => 'Defines whether to include the --die-on-fail flag in the Run Script options',
     'DCI_SQLite' => 'Defines whether to include the --sqlite flag in the Run Script options',
-    'DCI_FETCH' => 'Used to specify any files which should be downloaded while building out the codebase.',
+    'DCI_Fetch' => 'Used to specify any files which should be downloaded while building out the codebase.',
     // Syntax: 'url1,relativelocaldirectory1;url2,relativelocaldirectory2;...'
-    'DCI_PATCH' => 'Defines any patches which should be applied while building out the codebase.',
+    'DCI_Patch' => 'Defines any patches which should be applied while building out the codebase.',
     // Syntax: 'localfile1,applydirectory1;localfile2,applydirectory2;...'
     'DCI_ResultsDirectory' => 'Defines the local directory within the container where the xml results file should be written.',
     'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
