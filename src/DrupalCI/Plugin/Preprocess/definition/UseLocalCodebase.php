@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \DrupalCI\Plugin\Preprocess\definition\LocalCodebase
+ * Contains \DrupalCI\Plugin\Preprocess\definition\UseLocalCodebase
  *
- * PreProcesses DCI_LocalCode variable, overriding the job's setup:checkout:
- * section for use with a local code base.
+ * Preprocesses the DCI_UseLocalCodebase variable, overriding the job's
+ * setup:checkout: section for use with a local code base.
  */
 
 namespace DrupalCI\Plugin\Preprocess\definition;

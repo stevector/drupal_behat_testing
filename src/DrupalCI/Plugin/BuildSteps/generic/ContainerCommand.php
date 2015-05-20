@@ -50,7 +50,7 @@ class ContainerCommand extends PluginBase {
                 Output::error('Error', $result);
               }
             });
-            //Response stream is never read you need to simulate a wait in order to get output
+            // Response stream is never read you need to simulate a wait in order to get output
             $result->getBody()->getContents();
             Output::writeLn((string) $result);
           }

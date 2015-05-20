@@ -3,7 +3,8 @@
  * @file
  * Contains \DrupalCI\Plugin\Preprocess\definition\ResultsServerConfig
  *
- * PreProcesses DCI_ResultsServerConfig variables, updating the job definition with a publish:drupalci_results: section.
+ * PreProcesses DCI_ResultsServerConfig variables, updating the job definition
+ * with a publish:drupalci_results: section.
  */
 
 namespace DrupalCI\Plugin\Preprocess\definition;

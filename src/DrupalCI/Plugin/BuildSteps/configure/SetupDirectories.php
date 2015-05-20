@@ -1,12 +1,12 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Jeremy
- * Date: 3/20/15
- * Time: 10:10 PM
+ * @file
+ * Contains \DrupalCI\Plugin\BuildSteps\configure\SetupDirectories
+ *
+ * Prepares the initial local working directory prior to checkout/copying code
  */
-
 namespace DrupalCI\Plugin\BuildSteps\configure;
+
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
@@ -14,11 +14,6 @@ use DrupalCI\Plugin\JobTypes\JobInterface;
  * @PluginID("setup_directories")
  */
 class SetupDirectories {
-
-
-  // TODO: Setting CodeBase results in $job->definition file being empty.  Look into CompileDefinition->getDefinitionFile()
-
-
   /**
    * {@inheritdoc}
    */
@@ -29,6 +24,7 @@ class SetupDirectories {
     $this->setupWorkingDir($job);
   }
 /*
+  // TODO: Setting CodeBase results in $job->definition file being empty.  Look into CompileDefinition->getDefinitionFile()
   public function setupCodebase(JobInterface $job) {
     $arguments = $job->getBuildVars();
     // Check if the source codebase directory has been specified
@@ -46,24 +42,29 @@ class SetupDirectories {
     $arguments = $job->getBuildVars();
     // Check if the target working directory has been specified.
     if (empty($arguments['DCI_CheckoutDir'])) {
-      // If no explicit working directory provided, we generate one in the system temporary directory.
-      $tmpdir = $this->create_tempdir($job, sys_get_temp_dir() . '/drupalci/', $job->jobtype . "-");
+      // Case:  No explicit working directory defined.
+      // Generate a working directory in the system temporary directory.
+      $tmpdir = $this->create_tempdir($job, sys_get_temp_dir() . '/drupalci/', $job->jobType . "-");
       if (!$tmpdir) {
         // Error creating checkout directory
         $job->errorOutput("Error", "Failure encountered while attempting to create a local checkout directory");
         return FALSE;
       }
       Output::writeLn("<comment>Checkout directory created at <info>$tmpdir</info></comment>");
+      $job->setBuildVar('DCI_CheckoutDir', $tmpdir);
       $arguments['DCI_CheckoutDir'] = $tmpdir;
-      $job->setBuildVars($arguments);
     }
     elseif ($arguments['DCI_CheckoutDir'] != $arguments['DCI_CodeBase']) {
-      // We ensure the checkout directory is within the system temporary directory, to ensure
-      // that we don't provide access to the entire file system.
-
+      // Case: Working directory defined, and differs from the CodeBase directory.
+      // TODO: Resolve / Sync up use of DCI_CodeBase and DCI_UseLocalCodebase
       // Create checkout directory
       $result = $this->create_local_checkout_dir($job);
+      // create_local_checkout_dir will ensure the checkout directory is
+      // within the system temporary directory, to ensure that we don't provide
+      // access to the entire file system.
+
       // Pass through any errors encountered while creating the directory
+      // TODO: This appears to be redundant ... verify and remove.
       if ($result == -1) {
         return -1;
       }

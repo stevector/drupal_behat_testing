@@ -9,6 +9,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\configure;
+
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
 
@@ -63,5 +64,4 @@ class ValidateDefinition extends PluginBase {
     // TODO: Strip out arguments which are not defined in the 'Available' arguments array
     return TRUE;
   }
-
 }

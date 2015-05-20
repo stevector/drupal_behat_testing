@@ -1,11 +1,10 @@
 <?php
 /**
  * @file
- * Contains
+ * Contains \DrupalCI\Plugin\Preprocess\VariableInterface
  */
 
 namespace DrupalCI\Plugin\Preprocess;
-
 
 interface VariableInterface {
 

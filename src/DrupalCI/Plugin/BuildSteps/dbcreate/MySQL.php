@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\MySQL.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\MySQL.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;

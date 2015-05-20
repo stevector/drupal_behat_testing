@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\MariaDB.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\MariaDB.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;

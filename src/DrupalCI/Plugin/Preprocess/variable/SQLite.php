@@ -1,10 +1,8 @@
 <?php
-
 /**
  * @file
  * Contains \DrupalCI\Plugin\Preprocess\variable\SQLite.
  */
-
 
 namespace DrupalCI\Plugin\Preprocess\variable;
 

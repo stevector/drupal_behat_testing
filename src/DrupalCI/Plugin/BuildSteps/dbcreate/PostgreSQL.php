@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\PostgreSQL.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\PostgreSQL.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;
@@ -32,4 +31,3 @@ class PostgreSQL extends ContainerCommand {
     parent::run($job, $createdb);
   }
 }
-?>

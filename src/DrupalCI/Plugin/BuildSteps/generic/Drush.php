@@ -8,7 +8,6 @@
 
 namespace DrupalCI\Plugin\BuildSteps\generic;
 
-use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**

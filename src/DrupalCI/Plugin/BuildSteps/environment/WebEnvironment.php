@@ -32,7 +32,8 @@ class WebEnvironment extends PhpEnvironment {
     $valid = $this->validateImageNames($containers['web'], $job);
     if (!empty($valid)) {
       $job->setExecContainers($containers);
-      // Actual creation and configuration of the executable containers will occur in the 'execute' plugin.
+      // Actual creation and configuration of the executable containers occurs
+      // during the 'getExecContainers()' method call.
     }
   }
 
