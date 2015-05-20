@@ -67,6 +67,7 @@ else
 
   echo "Creating drupalci symlink"
   ln -s /home/vagrant/drupalci_testbot /opt/drupalci_testbot
+  ln -s /home/vagrant/drupalci_testbot/drupalci /usr/local/bin/drupalci
 
   echo "Creating directories for docker binds"
   DCIPATH="/var/lib/drupalci"
