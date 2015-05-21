@@ -51,12 +51,11 @@ else
   swapon /var/swapfile
   /bin/echo "/var/swapfile swap swap defaults 0 0" >>/etc/fstab
   apt-get update && apt-get upgrade -y
-  apt-get install -y git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl \
-         mysql-client postgresql-client postgresql-client-common
+  apt-get install -y aufs-tools git mc ssh gawk grep sudo htop mysql-client php5-cli curl php5-curl postgresql-client postgresql-client-common
   apt-get autoclean && apt-get autoremove -y
 
   echo "Installing docker"
-  curl -s get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
+  curl -sSL get.docker.io | sh 2>&1 | egrep -i -v "Ctrl|docker installed"
   usermod -a -G docker vagrant
   cd /home/vagrant/drupalci_testbot
 
@@ -73,17 +72,16 @@ else
   DCIPATH="/var/lib/drupalci"
   mkdir -p $DCIPATH
   mkdir -p $DCIPATH/web
-  mkdir -p $DCIPATH/database/mariadb-5.5
-  mkdir -p $DCIPATH/database/mariadb-10.0
-  mkdir -p $DCIPATH/database/mysql-5.5
-  mkdir -p $DCIPATH/database/pgsql-9.1
-  mkdir -p $DCIPATH/database/pgsql-9.4
+  mkdir -p $DCIPATH/database
 
   echo "Changing ownership for the directories"
   # setting the uid:gid to www-data
-  chown -R 33:33 $DCIPATH/web
+  chown  vagrant:vagrant $DCIPATH
+  chown -R vagrant:www-data $DCIPATH/web
   # setting the uid:gid to database (mysql/postgres)
-  chown -R 102:102 $DCIPATH/database
+  chown -R vagrant:102 $DCIPATH/database
+  adduser vagrant www-data
+  chmod -R 775 $DCIPATH
 
   #Update/change cli php.ini
   echo "Updating php.ini for cli"
