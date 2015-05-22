@@ -1,4 +1,9 @@
 #!/bin/bash -e
+# This file is part of the original drupalci proof of concept development, and
+# as such, has been deprecated.  Web-based executable containers are expected
+# to start up apache directly.
+#
+# eg.  CMD = ['apache2', '-D', 'FOREGROUND']
 
 #GET ALL INFO FROM /var/www/html/test.info:
 source /var/www/html/test.info

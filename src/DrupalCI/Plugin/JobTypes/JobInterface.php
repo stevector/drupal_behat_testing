@@ -12,11 +12,6 @@ interface JobInterface {
   /**
    * An array of build variables.
    *
-   * - DCI_DEPENDENCIES
-   * - DCI_DEPENDENCIES_GIT
-   * - DCI_TravisFile
-   * - DCI_Privileged
-   *
    * @return array
    *
    * @see SimpletestJob::$availableArguments
@@ -130,9 +125,9 @@ interface JobInterface {
 
   public function setWorkingDir($working_directory);
 
-  public function setBuildID($id);
+  public function setBuildId($id);
 
-  public function getBuildID();
+  public function getBuildId();
 
   public function setResultsServerID($id);
 

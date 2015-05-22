@@ -7,7 +7,6 @@
  * directory.  This directory can then be used as the destination for the
  * DCI_XMLOutput variable, which requires a directory that already exists.
  */
-
 namespace DrupalCI\Plugin\Preprocess\definition;
 
 /**

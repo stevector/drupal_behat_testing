@@ -1,7 +1,7 @@
 #!/bin/bash
 
 terminate() {
-  echo "test"
+  echo "Container terminated"
   exit 0
 }
 
@@ -9,5 +9,5 @@ trap terminate SIGHUP SIGINT SIGTERM
 
 while true;
   do
-  sleep 600 & wait
+  sleep 500 & wait
 done

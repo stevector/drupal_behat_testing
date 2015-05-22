@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\MariaDB.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\MariaDB.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;
@@ -19,7 +18,7 @@ class MariaDB extends ContainerCommand {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
-    $parts = parse_url($job->getBuildvar('DCI_DBURL'));
+    $parts = parse_url($job->getBuildvar('DCI_DBUrl'));
     $parts['scheme'] = 'mysql';
     $host = $parts['host'];
     $user = $parts['user'];

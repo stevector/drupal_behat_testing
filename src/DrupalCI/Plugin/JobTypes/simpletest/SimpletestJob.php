@@ -12,20 +12,48 @@ use DrupalCI\Plugin\JobTypes\JobBase;
 /**
  * @PluginID("simpletest")
  */
-  // ^^^ Use an annotation to define the job type name.
 
 class SimpletestJob extends JobBase {
-  // ^^^ Extend JobBase, to get the main test runner functionality
 
   /**
+   * Job Type (jobType)
+   *
    * @var string
+   *
+   * This property is not referenced in the current code, but it is anticipated
+   * that others may want to reference the job type from the object itself at
+   * some point in the future.
    */
-  public $jobtype = 'simpletest';
-  // I don't believe this property is currently used; but anticipate we will
-  // want to reference the jobtype from the object itself at some point.
+  public $jobType = 'simpletest';
 
+  /**
+   * Default Arguments (defaultArguments)
+   *
+   * @var array
+   *
+   * Each DrupalCI Job type needs to contain a 'defaultArguments' property,
+   * which contains a list of DCI_* variables and default values; which defines
+   * the default behaviour of that job type if no additional overrides are
+   * passed into an instance of that job type.
+   */
+  public $defaultArguments = array(
+    'DCI_DBVersion' => 'mysql-5.5',
+    'DCI_PHPVersion' => '5.4',
+    'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
+    'DCI_CoreBranch' => '8.0.x',
+    'DCI_GitCheckoutDepth' => '1',
+    'DCI_RunScript' => '/var/www/html/core/scripts/run-tests.sh ',
+    'DCI_DBUser' => 'drupaltestbot',
+    'DCI_DBPassword' => 'drupaltestbotpw',
+    'DCI_DBUrl' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
+    'DCI_TestGroups' => '--all',
+    'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
+    'DCI_Concurrency' => 4,
+    'DCI_XMLOutput' => '/var/www/html/results/xml',
+    'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
+    'DCI_RunOptions' => 'color',
+  );
 
-  // ****************** Start Validation related properties ******************
   /**
    * Required Arguments, which must be present in order for the job to attempt
    * to run.
@@ -35,125 +63,78 @@ class SimpletestJob extends JobBase {
    * path from the parsed .yml file job definition that would need to be
    * traversed to get to the location that variable would exist in the job
    * definition.
+   *
+   * As an example, DCI_DBVersion defines the database type (mysql, pgsql, etc)
+   * for a given job. In a parsed .yml job definition file, this information
+   * would be stored in the value located at:
+   * array(
+   *   'environment' => array(
+   *     'db' => VALUE
+   *   )
+   * );
+   * Thus, thus the traversal path value stored in the 'requiredArguments'
+   * array is the array keys 'environment:db'.
+   *
+   * As any required arguments for the simpletest job type are defined in the
+   * 'defaultArguments' property, this array is empty.  However, that may not
+   * always be the case for other job types.
    */
   public $requiredArguments = array(
-    // DCI_DBVersion defines the database type (mysql, pgsql, etc). In a parsed
-    // yml job definition file, this information would be stored in the value
-    // at array('environment' => array('db' => VALUE)); thus the traversal path
-    // value is the array keys 'environment:db'
-    /* Temporarily hiding to prevent validation fails while testing during development
-    'DCI_DBVersion' => 'environment:db',
-    'DCI_PHPVersion' => 'environment:web',
-    'DCI_DrupalBranch' => 'variables:DCI_DrupalBranch',
-    'DCI_DBUser' => 'variables:DCI_DBUser',
-    'DCI_DBPassword' => 'variables:DCI_DBPassword',
-    */
+    // 'DCI_DBVersion' => 'environment:db',
+    // 'DCI_PHPVersion' => 'environment:web',
+    // 'DCI_RunScript' => 'execute:command',
+    // 'DCI_TestGroups' => 'execute:command'
   );
 
   /**
-   * Return a list of argument variables which are relevant to this job type.
+   * Return an array of possible argument variables for this job type.
    *
-   * For the Simpletest job type in the original DrupalCI proof of concept,
-   * this included the following list (copied from the original BASH script).
-   * Since the refresh, many of these are not currently evaluated; but they are
-   * currently included here as the eventual intent is to support all of the
-   * functionality that each of these provided in the original Proof of Concept
-   * implementation.
-   *
-   * *** NEW ARGUMENTS, ADDED AFTER THE REFACTORING ***
-   *
-   *
-   *
-   * *** ORIGINAL PoC ARGUMENTS, CURRENTLY SUPPORTED ***
-   *
-   *
-   * *** ORIGINAL PoC ARGUMENTS, NOT YET SUPPORTED ***
-   *  DCI_PATCH:         Local or remote Patches to be applied.
-   *       Format: patch_location,apply_dir;patch_location,apply_dir;...
-   *  DCI_DEPENDENCIES:  Contrib projects to be downloaded & patched.
-   *       Format: module1,module2,module2...
-   *  DCI_DEPENDENCIES_GIT  Format: gitrepo1,branch;gitrepo2,branch;...
-   *  DCI_DEPENDENCIES_TGZ  Format: module1_url.tgz,module1_url.tgz,...
-   *  DCI_DRUPALBRANCH:  Default is '8.0.x'
-   *  DCI_DRUPALVERSION: Default is '8'
-   *  DCI_TESTGROUPS:    Tests to run. Default is '--class NonDefaultBlockAdmin'
-   *       A list is available at the root of this project.
-   *  DCI_VERBOSE:       Default is 'false'
-   *  DCI_DBTYPE:        Default is 'mysql-5.5' from mysql/sqlite/pgsql
-   *  DCI_DBVER:         Default is '5.5'.  Used to override the default version for a given database type.
-   *  DCI_ENTRYPOINT:    Default is none. Executes other funcionality in the container prepending CMD.
-   *  DCI_CMD:           Default is none. Normally use '/bin/bash' to debug the container
-   *  DCI_INSTALLER:     Default is none. Try to use core non install tests.
-   *  DCI_UPDATEREPO:    Force git pull of Drupal & Drush. Default is 'false'
-   *  DCI_IDENTIFIER:    Automated Build Identifier. Only [a-z0-9-_.] are allowed
-   *  DCI_REPODIR:       Default is 'HOME/testbotdata'
-   *  DCI_DRUPALREPO:    Default is 'http://git.drupal.org/project/drupal.git'
-   *  DCI_DRUSHREPO:     Default is 'https://github.com/drush-ops/drush.git'
-   *  DCI_BUILDSDIR:     Default is  equal to DCI_REPODIR
-   *  DCI_WORKSPACE:     Default is 'HOME/testbotdata/DCI_IDENTIFIER/'
-   *  DCI_DBUSER:        Default is 'drupaltestbot'
-   *  DCI_DBPASS:        Default is 'drupaltestbotpw'
-   *  DCI_DBCONTAINER:   Default is 'drupaltestbot-db-mysql-5.5'
-   *  DCI_PHPVERSION:    Default is '5.4'
-   *  DCI_CONCURRENCY:   Default is '4'  #How many cpus to use per run
-   *  DCI_RUNSCRIPT:     Command to be executed
+   * The 'availableArguments' property is intended to provide a complete list
+   * of possible variable values which can affect this particular job type,
+   * along with details regarding how each variable affects the job operation.
+   * These are specified in an array, with the variable names used as the keys
+   * for the array and the description used as the array values.
    */
+
   public $availableArguments = array(
-    // New arguments, added after the proof of concept
-    'DCI_DieOnFail',                      // Maps to the --die-on-fail flag in run-tests.sh
-    'DCI_SQLite',                         // Maps to the --sqlite flag in run-tests.sh
+    // ***** Variables Available for any job type *****
+    'DCI_UseLocalCodebase' => 'Used to define a local codebase to be cloned (instead of performing a Git checkout)',
+    'DCI_CheckoutDir' => 'Defines the location to be used in creating the local copy of the codebase, to be mapped into the container as a container volume.  Default: /tmp/simpletest-[random string]',
+    'DCI_ResultsServer' => 'Specifies the url string of a DrupalCI results server for which to publish job results',
+    'DCI_ResultsServerConfig' => 'Specifies the location of a configuration file on the test runner containg a DrupalCI Results Server configuration to use in publishing results.',
+    'DCI_JobBuildId' => 'Specifies a unique build ID assigned to this job from an upstream server',
+    'DCI_JobId' => 'Specifies a unique results server node ID to use when publishing results for this job.',
+    'DCI_JobType' => 'Specifies a default job type to assume for a "drupalci run" command',
+    'DCI_EXCLUDE' => 'Specifies whether to exclude the .git directory during a clone of a local codebase.',  //TODO: Check logic, may be reversed.
 
-    // Legacy arguments, leftover from the proof of concept
-    // Currently supported:
-    // Not yet supported:
-    'DCI_PATCH',
-    'DCI_DEPENDENCIES',
-    'DCI_DEPENDENCIES_GIT',
-    'DCI_DEPENDENCIES_TGZ',
-    'DCI_DRUPALBRANCH',
-    'DCI_DRUPALVERSION',
-    'DCI_TESTGROUPS',
-    'DCI_VERBOSE',
-    'DCI_DBTYPE',
-    'DCI_DBVER',
-    'DCI_ENTRYPOINT',
-    'DCI_CMD',
-    'DCI_INSTALLER',
-    'DCI_UPDATEREPO',
-    'DCI_IDENTIFIER',
-    'DCI_REPODIR',
-    'DCI_DRUPALREPO',
-    'DCI_DRUSHREPO',
-    'DCI_BUILDSDIR',
-    'DCI_WORKSPACE',
-    'DCI_DBUSER',
-    'DCI_DBPASS',
-    'DCI_DBCONTAINER',
-    'DCI_PHPVERSION',
-    'DCI_CONCURRENCY',
-    'DCI_RUNSCRIPT',
-  );
+     // ***** Default Variables defined for every simpletest job *****
+    'DCI_DBVersion' => 'Defines the database version for this particular simpletest run. May map to a required service container. Default: mysql-5.5',
+    'DCI_PHPVersion' => 'Defines the PHP Version used within the executable container for this job type.  Default: 5.4',
+    'DCI_CoreRepository' => 'Defines the primary repository to be checked out while building the codebase to test.  Default: git://drupalcode.org/project/drupal.git',
+    'DCI_CoreBranch' => 'Defines the branch on the primary repository to be checked out while building the codebase to test.  Default: 8.0.x',
+    'DCI_GitCheckoutDepth' => 'Defines the depth parameter passed to git clone while checking out the core repository.  Default: 1',
+    'DCI_RunScript' => 'Defines the default run script to be executed on the container.  Default: /var/www/html/core/scripts/run-tests.sh',
+    'DCI_RunOptions' => 'A string containing a series of any other run script options to append to the run script when performing a job.',
+    'DCI_DBUser' => 'Defines the default database user to be used on the site database.  Default: drupaltestbot',
+    'DCI_DBPassword' => 'Defines the default database password to be used on the site database.  Default: drupaltestbotpw',
+    'DCI_DBUrl' => 'Define the --dburl parameter to be passed to the run script.  Default: dbtype://host (DBVersion, DBUser and DBPassword variable plugins will populate this).',
+    'DCI_TestGroups' => 'Defines the target test groups to run.  Default: --all',
+    'DCI_SQLite' => 'Defines the location of the sqlite database used to store test results.  Default: /var/www/html/results/simpletest.sqlite',
+    'DCI_Concurrency' => 'Defines the value to pass to the --concurrency argument of the run script.  Default: 4',
+    'DCI_XMLOutput' => 'Defines the directory where xml results will be stored.  Default: output/var/www/html/results/xml',
+    'DCI_PHPInterpreter' => 'Defines the php interpreter to be passed to the Run Script in the --php argument.  Default: /opt/phpenv/shims/php',
+    // Default: 'color;'
 
-  // ******************* End Validation related properties *******************
+    // ***** Optional arguments *****
+    'DCI_DieOnFail' => 'Defines whether to include the --die-on-fail flag in the Run Script options',
+    'DCI_SQLite' => 'Defines whether to include the --sqlite flag in the Run Script options',
+    'DCI_Fetch' => 'Used to specify any files which should be downloaded while building out the codebase.',
+    // Syntax: 'url1,relativelocaldirectory1;url2,relativelocaldirectory2;...'
+    'DCI_Patch' => 'Defines any patches which should be applied while building out the codebase.',
+    // Syntax: 'localfile1,applydirectory1;localfile2,applydirectory2;...'
+    'DCI_ResultsDirectory' => 'Defines the local directory within the container where the xml results file should be written.',
+    'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
+    // Syntax: 'argkey1,argvalue1;argkey2,argvalue2;argkey3;argkey4,argvalue4;'
 
-
-  // **************** Start job definition related properties ****************
-
-  public $defaultArguments = array(
-    'DCI_DBVersion' => 'mysql-5.5',
-    'DCI_PHPVersion' => '5.4',
-    'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
-    'DCI_CoreBranch' => '8.0.x',
-    'DCI_GitCheckoutDepth' => '1',
-    'DCI_RunScript' => "/var/www/html/core/scripts/run-tests.sh ",
-    'DCI_DBUser' => 'drupaltestbot',
-    'DCI_DBPassword' => 'drupaltestbotpw',
-    'DCI_DBURL' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
-    'DCI_TESTGROUPS' => '--all',
-    'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
-    'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/var/www/html/results/xml',
-    "DCI_PHPInterpreter" => "/opt/phpenv/shims/php",
-    "DCI_Color" => 'true',
   );
 }

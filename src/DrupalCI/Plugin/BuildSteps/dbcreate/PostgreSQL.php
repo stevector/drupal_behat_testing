@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\PostgreSQL.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\PostgreSQL.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;
@@ -20,7 +19,7 @@ class PostgreSQL extends ContainerCommand {
    */
   public function run(JobInterface $job, $data) {
 
-    $parts = parse_url($job->getBuildvar('DCI_DBURL'));
+    $parts = parse_url($job->getBuildvar('DCI_DBUrl'));
     $host = $parts['host'];
     $user = $parts['user'];
     $pass = $parts['pass'];
@@ -32,4 +31,3 @@ class PostgreSQL extends ContainerCommand {
     parent::run($job, $createdb);
   }
 }
-?>

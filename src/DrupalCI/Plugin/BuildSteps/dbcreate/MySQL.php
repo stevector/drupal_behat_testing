@@ -1,8 +1,7 @@
 <?php
-
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\dbinstall\MySQL.
+ * Contains \DrupalCI\Plugin\BuildSteps\dbcreate\MySQL.
  */
 
 namespace DrupalCI\Plugin\BuildSteps\dbcreate;
@@ -19,7 +18,7 @@ class MySQL extends ContainerCommand {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
-    $parts = parse_url($job->getBuildvar('DCI_DBURL'));
+    $parts = parse_url($job->getBuildvar('DCI_DBUrl'));
     $host = $parts['host'];
     $user = $parts['user'];
     $pass = $parts['pass'];

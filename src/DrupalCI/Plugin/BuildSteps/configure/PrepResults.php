@@ -10,7 +10,6 @@ namespace DrupalCI\Plugin\BuildSteps\configure;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
-use DrupalCIResultsApi\Api;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -29,36 +28,50 @@ class PrepResults extends PluginBase {
       return;
     }
 
-    // The results node could be defined further upstream, and passed in an environment variable
+    // The results node could be defined further upstream, and passed in to us
+    // in an environment variable (DCI_JobID);
     $upstream_id = $job->getBuildvar('DCI_JobID');
     // If we have a job ID, we also need a results server URL or config file location.
     $results_server = $job->getBuildvar('DCI_ResultsServer');
     $results_server_config = $job->getBuildvar('DCI_ResultsServerConfig');
     if (!empty($upstream_id)) {
-      // Results node is already assumed to be created.
+      // Job ID found.  Results node is assumed to already have been created.
       if (!empty($results_server_config)) {
-        // Load up information from the configuration file
+        // If passed DCI_ResultsServerConfig, we need to load up information
+        // from the specified configuration file (which should exist locally)
         $config = $this->loadConfig($results_server_config);
         $host = parse_url($config['results']['host'], PHP_URL_HOST);
       }
       elseif (!empty($results_server)) {
+        // If passed DCI_ResultsServer, we need to parse the host out of the
+        // provided URL.
         $host = parse_url($results_server, PHP_URL_HOST);
       }
       if (empty($host)) {
-        Output::writeln('<error>Unable to determine destination DrupalCI results server. Job results will not be published.</error>');
+        // If unable to parse a ResultsServer host out of either variable, then
+        // output a warning message.
+        Output::writeln('<warning>Unable to determine destination DrupalCI results server. Job results will not be published.</warning>');
         return;
       }
-      // Add the Results Node location to our job.
+      // Add the Results Node location to our job object so it can be
+      // referenced by the publish:drupalci_results: plugin.
       $results = $job->getResultsServerID();
       $results[$host] = $upstream_id;
       $job->setResultsServerID($results);
       return;
     }
 
-    // We don't have an upstream results node or server, so need to generate it here.
+    // If we get to this point, we don't have an upstream results server or
+    // node specified, so we'll generate it here.
     $this->generateResultNode($job, $definition);
   }
 
+  /**
+   * @param $source filename
+   *   A local source file containing Results Server connectivity information
+   * @return array
+   *   Array of Results Server information
+   */
   protected function loadConfig($source) {
     $config = array();
     $source = str_replace('%HOME%', getenv('HOME'), $source);
@@ -82,7 +95,7 @@ class PrepResults extends PluginBase {
     $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
     foreach ($data as $key => $instance) {
       // TODO: We need to generate readable job titles.  Using $job->BuildID for now.
-      $title = $job->getBuildID();
+      $title = $job->getBuildId();
       $job->configureResultsAPI($instance);
       $api = $job->getResultsAPI();
 
@@ -90,11 +103,10 @@ class PrepResults extends PluginBase {
       $url = trim($api->getUrl(), '/');
       $host = parse_url($url, PHP_URL_HOST);
       $results_id = $job->getResultsServerID();
-
       $results_id[$host] = $api->create($title);
+
       // Store the result server record id on the job for future use
       $job->setResultsServerID($results_id);
     }
   }
-
 }

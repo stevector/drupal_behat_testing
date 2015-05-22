@@ -19,7 +19,7 @@ class EmailResults extends PluginBase {
    * {@inheritdoc}
    */
   public function run() {
-    echo 'run email_results';
+    echo 'EmailResults plugin not yet implemented.';
   }
 
 }

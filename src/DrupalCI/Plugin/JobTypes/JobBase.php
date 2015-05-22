@@ -17,7 +17,6 @@ use Docker\Docker;
 use Docker\Http\DockerClient as Client;
 use Symfony\Component\Yaml\Yaml;
 use Docker\Container;
-use Docker\PortCollection;
 
 class JobBase extends ContainerBase implements JobInterface {
 
@@ -310,6 +309,8 @@ class JobBase extends ContainerBase implements JobInterface {
       foreach ($containers as $key => $container) {
         // Check if container is created.  If not, create it
         if (empty($container['created'])) {
+          // TODO: This may be causing duplicate containers to be created
+          // due to a race condition during short-running exec calls.
           $this->startContainer($container);
           $this->executableContainers[$type][$key] = $container;
         }

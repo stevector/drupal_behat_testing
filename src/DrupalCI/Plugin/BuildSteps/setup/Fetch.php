@@ -7,6 +7,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\setup;
+
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use Guzzle\Http\Client;

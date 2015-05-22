@@ -15,16 +15,16 @@ use DrupalCI\Plugin\JobTypes\JobBase;
 /**
  * @PluginID("generic")
  */
-// ^^^ Use an annotation to define the job type name.
 
 class GenericJob extends JobBase {
-  // ^^^ Extend JobBase, to get the main test runner functionality
-
   /**
+   * Job Type (jobType)
+   *
    * @var string
+   *
+   * This property is not referenced in the current code, but it is anticipated
+   * that others may want to reference the job type from the object itself at
+   * some point in the future.
    */
   public $jobtype = 'generic';
-  // ^^^ I don't believe this property is currently used; but anticipate we
-  // will want to reference the jobtype from the object itself at some point.
-
 }

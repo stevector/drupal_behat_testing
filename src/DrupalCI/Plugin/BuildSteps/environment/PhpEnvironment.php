@@ -9,6 +9,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\environment;
+
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 
@@ -31,7 +32,8 @@ class PhpEnvironment extends EnvironmentBase {
     $valid = $this->validateImageNames($containers['php'], $job);
     if (!empty($valid)) {
       $job->setExecContainers($containers);
-      // Actual creation and configuration of the executable containers will occur in the 'execute' plugin.
+      // Actual creation and configuration of the executable containers occurs
+      // in the getExecContainers() method call.
     }
   }
 

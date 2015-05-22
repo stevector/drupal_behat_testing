@@ -1,10 +1,8 @@
 <?php
-
 /**
  * @file
  * Contains \DrupalCI\Plugin\Preprocess\variable\DBUser.
  */
-
 
 namespace DrupalCI\Plugin\Preprocess\variable;
 
@@ -17,21 +15,21 @@ abstract class DBUrlBase extends PluginBase implements VariableInterface {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_DBURL';
+    return 'DCI_DBUrl';
   }
 
   /**
    * Change one part of the URL.
    *
    * @param $db_url
-   *   The value of the DCI_DBURL variable.
+   *   The value of the DCI_DBUrl variable.
    * @param $part
    *   The URL part being replaced. Can be scheme, user, pass, host or path.
    * @param $value
    *   The new value of the URL part.
    *
    * @return string
-   *   The new DCI_DBURL.
+   *   The new DCI_DBUrl.
    */
   protected function changeUrlPart($db_url, $part, $value) {
     $parts = parse_url($db_url);
