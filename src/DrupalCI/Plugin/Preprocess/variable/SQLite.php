@@ -24,7 +24,11 @@ class SQLite extends PluginBase {
    * {@inheritdoc}
    */
   public function process($run_script, $sqlite) {
-    return "$run_script --sqlite $sqlite";
+    if (!empty($sqlite)) {
+      return "$run_script --sqlite $sqlite";
+    } else {
+      return "$run_script";
+    }
   }
 
 }
