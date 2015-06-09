@@ -24,7 +24,7 @@ class CheckoutTest extends DrupalCITestCase {
     $checkout = new TestCheckout();
     $checkout->setValidate($dir);
     $checkout->run($this->job, $data);
-    $this->assertSame(['git clone -b 8.0.x git://code.drupal.org/drupal.git test/dir --depth=1'], $checkout->getCommands());
+    $this->assertSame(['git clone --depth=1 -b 8.0.x git://code.drupal.org/drupal.git test/dir'], $checkout->getCommands());
   }
 
   public function testRunLocalCheckout() {
