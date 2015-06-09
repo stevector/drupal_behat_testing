@@ -33,7 +33,7 @@ class Patch {
       $definition['setup']['patch'] = [];
     }
     foreach (explode(';', $value) as $patch_string) {
-      list($patch['patch_file'], $patch['patch_directory']) = explode(',', $patch_string);
+      list($patch['patch_file'], $patch['patch_dir']) = explode(',', $patch_string);
       $definition['setup']['patch'][] = $patch;
     }
   }
