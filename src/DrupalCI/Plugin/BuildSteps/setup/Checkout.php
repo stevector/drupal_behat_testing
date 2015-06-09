@@ -91,10 +91,12 @@ class Checkout extends SetupBase {
     }
     Output::writeLn("<comment>Performing git checkout of $repo $git_branch branch to $directory.</comment>");
     // TODO: Make sure target directory is empty
-    $cmd = "git clone -b $git_branch $repo $directory";
+    $git_depth = '';
     if (isset($details['depth'])) {
-      $cmd .= ' --depth=' . $details['depth'];
+      $git_depth = '--depth=' . $details['depth'];
     }
+    $cmd = "git clone -b $git_branch $git_depth $repo $directory";
+
     Output::writeLn("Git Command: $cmd");
     $this->exec($cmd, $cmdoutput, $result);
     if ($result !==0) {
