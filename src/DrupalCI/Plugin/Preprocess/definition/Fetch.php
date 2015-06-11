@@ -28,12 +28,21 @@ class Fetch {
    *      ...   ]
    */
   public function process(array &$definition, $value) {
+    // Stash the patch definition so that we can make sure it happens after the fetch.
+    // TODO: unhack.
+    if (!empty($definition['setup']['patch'])) {
+      $patch_step = $definition['setup']['patch'];
+      unset($definition['setup']['patch']);
+    }
     if (empty($definition['setup']['fetch'])) {
       $definition['setup']['fetch'] = [];
     }
     foreach (explode(';', $value) as $fetch_string) {
-      list($fetch['url'], $patch['fetch_directory']) = explode(',', $fetch_string);
+      list($fetch['url'], $fetch['fetch_directory']) = explode(',', $fetch_string);
       $definition['setup']['fetch'][] = $fetch;
+    }
+    if (!empty($patch_step)){
+      $definition['setup']['patch'] = $patch_step;
     }
   }
 }
