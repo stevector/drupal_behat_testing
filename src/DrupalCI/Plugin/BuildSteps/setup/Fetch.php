@@ -58,7 +58,6 @@ class Fetch extends SetupBase {
       }
       catch (\Exception $e) {
         $job->errorOutput("Error", "An error was encountered while attempting to write <info>$url</info> to <info>$directory</info>");
-        var_dump($e);
         return;
       }
       Output::writeLn("<comment>Fetch of <options=bold>$url</options=bold> to <options=bold>$destination_file</options=bold> complete.</comment>");
