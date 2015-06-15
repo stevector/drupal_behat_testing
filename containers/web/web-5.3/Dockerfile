@@ -2,6 +2,16 @@ FROM       drupalci/web-base
 MAINTAINER drupalci
 
 ##
+# Downgrade drush
+##
+# Drush and dependencies.
+RUN apt-get clean && apt-get update
+RUN apt-get install -y php5-cli
+RUN HOME=/ /usr/bin/php /usr/local/bin/composer global require drush/drush:7.0.0
+RUN /.composer/vendor/drush/drush/drush --version
+RUN apt-get -y remove php5-cli
+
+##
 # PHP 5.3.29
 ##
 
