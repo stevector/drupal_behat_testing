@@ -6,6 +6,7 @@ export LC_ALL=en_US.UTF-8
 
 PGVERSION=$(/usr/bin/psql --version | awk '{print $3}' | head -n1 | cut  -c 1-3)
 echo "PGSQL VERSION: ${PGVERSION}"
+sudo chown -R postgres:postgres /var/lib/postgresql
 
 if [ ! -z $(pg_lsclusters | grep -c ' main ') ];
     then

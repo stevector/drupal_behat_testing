@@ -39,5 +39,8 @@ USER postgres
 COPY ./conf/startup.sh /opt/startup.sh
 # copy over the updated PostgreSQL config that has been tuned for 4 Gigs of RAM
 COPY ./conf/postgresql.conf /etc/postgresql/9.1/main/postgresql.conf
+COPY ./conf/90-postgres /etc/sudoers.d/90-postgres
+RUN sudo adduser postgres sudo
 
 CMD ["/bin/bash", "/opt/startup.sh"]
+
