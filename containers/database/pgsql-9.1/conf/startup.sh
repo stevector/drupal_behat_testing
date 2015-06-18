@@ -24,9 +24,10 @@ if [ ! -z $(pg_lsclusters | grep -c ' main ') ];
     pg_ctlcluster ${PGVERSION} main stop
     # allow md5-based password auth for IPv4 connections
     echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/${PGVERSION}/main/pg_hba.conf
-    # listen on all addresses, not just localhost
-    echo "listen_addresses='*'" >> /etc/postgresql/${PGVERSION}/main/postgresql.conf
+    # copy conf after it was deleted by pg_dropcluster
+    cp /opt/postgresql.conf /etc/postgresql/${PGVERSION}/main/postgresql.conf
 fi
 
 /usr/lib/postgresql/${PGVERSION}/bin/postgres -D /var/lib/postgresql/${PGVERSION}/main -c config_file=/etc/postgresql/${PGVERSION}/main/postgresql.conf
 echo "pgsql died at $(date)";
+
