@@ -29,7 +29,6 @@ RUN apt-get clean && apt-get autoclean && apt-get -y autoremove
 
 # Adjust PostgreSQL configuration so that remote connections to the database are possible.
 RUN echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/9.4/main/pg_hba.conf
-RUN echo "listen_addresses='*'" >> /etc/postgresql/9.4/main/postgresql.conf
 
 # Expose the PostgreSQL port
 EXPOSE 5432
@@ -37,5 +36,11 @@ EXPOSE 5432
 USER postgres
 
 COPY ./conf/startup.sh /opt/startup.sh
+# copy over the updated PostgreSQL config that has been tuned for 4 Gigs of RAM
+COPY ./conf/postgresql.conf /etc/postgresql/9.4/main/postgresql.conf
+COPY ./conf/postgresql.conf /opt/postgresql.conf
+COPY ./conf/90-postgres /etc/sudoers.d/90-postgres
+RUN sudo adduser postgres sudo
 
 CMD ["/bin/bash", "/opt/startup.sh"]
+
