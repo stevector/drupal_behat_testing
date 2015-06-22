@@ -16,8 +16,8 @@ HostConfig:
     "5432/tcp":
       - "HostPort": "5432"
         "HostIP": "0.0.0.0"
-#  "Binds":
-#    - "/var/lib/drupalci/database/postgresql-9-4:/var/lib/postgresql/9.4"
+  "Binds":
+    - "/var/lib/drupalci/database/postgresql-9-4:/var/lib/postgresql/9.4"
 
 # e.g. Map Container port 80 to any available port
 #ExposedPorts:
