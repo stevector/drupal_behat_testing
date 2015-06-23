@@ -4,15 +4,14 @@ MAINTAINER drupalci
 ##
 # PHP master (7)
 ##
-
 RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
-    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
-
-RUN sudo php-build -i development --pear master /opt/phpenv/versions/master && \
+    echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
+    sudo php-build -i development --pear master /opt/phpenv/versions/master && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
     phpenv global master && \
     ln -s /opt/phpenv/shims/php /usr/bin/php
+
 # TODO: pecl mongo not working yet
 # RUN echo | pecl install mongo
 # TODO: test apcu on php 7
@@ -22,7 +21,9 @@ RUN sudo php-build -i development --pear master /opt/phpenv/versions/master && \
 RUN apt-get -y install software-properties-common && \
     add-apt-repository -y ppa:n-muench/programs-ppa2 && \
     apt-get update && \
-    apt-get install -y curl
+    apt-get install -y curl && \
+    apt-get clean && apt-get -y autoremove
+
 ##
 # copying php.ini for compiled php
 ##

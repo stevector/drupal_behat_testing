@@ -8,12 +8,12 @@ RUN apt-get clean && apt-get update && \
   apt-get install -y php5-cli && \
   HOME=/ /usr/bin/php /usr/local/bin/composer global require drush/drush:7.0.0 && \
   /.composer/vendor/drush/drush/drush --version && \
-  apt-get -y remove php5-cli
+  apt-get -y remove php5-cli && \
+  apt-get clean && apt-get -y autoremove
 
 ##
 # PHP 5.3.29
 ##
-
 RUN sudo php-build -i development --pear 5.3.29 /opt/phpenv/versions/5.3.29 && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
@@ -22,13 +22,16 @@ RUN sudo php-build -i development --pear 5.3.29 /opt/phpenv/versions/5.3.29 && \
 
 RUN echo | pecl install mongo && \
     echo | pecl install apc
+
 ##
 # Upgrade curl to version 7.38
 ##
 RUN apt-get -y install software-properties-common && \
     add-apt-repository -y ppa:n-muench/programs-ppa2 && \
     apt-get update && \
-    apt-get install -y curl
+    apt-get install -y curl && \
+    apt-get clean && apt-get -y autoremove
+
 ##
 # copying php.ini for compiled php
 ##
