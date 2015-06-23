@@ -26,6 +26,5 @@ install:
 execute:
   command:
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_TestGroups%
-#publish:
-#  drupalci_results:
-#    config: %HOME%/.drupalci/drupalci.yml
+publish:
+  junit_xmlformat:
