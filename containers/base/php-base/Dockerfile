@@ -9,14 +9,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
 
 # Saves us from stale repository issues.
-RUN apt-get clean && apt-get update
-
 # Build packages.
 # Make the PHP compiles go faster.
 # re2c and bison are needed for compiling php7
 # apache2-dev brings apxs2 into the game which is neede to compile php
-
-RUN apt-get install -y \
+RUN apt-get clean && apt-get update && \
+    apt-get install -y \
     build-essential \
     bison \
     ccache \
@@ -72,23 +70,21 @@ RUN apt-get install -y \
     unixODBC-dev \
     unzip \
     supervisor \
-    sqlite3
-
-RUN apt-get clean && apt-get autoremove -y && \
+    sqlite3 && \
+   apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
 
 ##
 # PHPENV.
 ##
 
-RUN git clone --depth 1 https://github.com/CHH/phpenv.git /tmp/phpenv
-RUN PHPENV_ROOT="/opt/phpenv" /tmp/phpenv/bin/phpenv-install.sh
-RUN scp /tmp/phpenv/extensions/* /opt/phpenv/libexec/
-
-RUN echo 'eval "$(phpenv init -)"' >> /root/.bashrc
+RUN git clone --depth 1 https://github.com/CHH/phpenv.git /tmp/phpenv && \
+    PHPENV_ROOT="/opt/phpenv" /tmp/phpenv/bin/phpenv-install.sh && \
+    scp /tmp/phpenv/extensions/* /opt/phpenv/libexec/ && \
+    echo 'eval "$(phpenv init -)"' >> /root/.bashrc && \
+    git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
 ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 
-RUN git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
 
 # Small hack for running the php compilation with more than one cpu core
 #RUN mv /usr/bin/make /usr/bin/make-system
@@ -107,8 +103,8 @@ RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-buil
 RUN bash -c "wget http://getcomposer.org/composer.phar && chmod 775 composer.phar && sudo mv composer.phar /usr/local/bin/composer"
 
 # Drush and dependencies.
-RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master
-RUN /.composer/vendor/drush/drush/drush --version
+RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
+    /.composer/vendor/drush/drush/drush --version
 
 # supervisor
 COPY ./conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -121,3 +117,4 @@ COPY daemon.sh /daemon.sh
 
 # Make start.sh executable.
 RUN chmod 755 /start.sh /daemon.sh
+
