@@ -72,7 +72,7 @@ class InitAllCommand extends DrupalCICommandBase {
     $cmd = $this->getApplication()->find('init:database');
 
     $arguments = array(
-      'command' => 'init:datase',
+      'command' => 'init:database',
       );
 
     $dbtype = $input->getOption('dbtype');
