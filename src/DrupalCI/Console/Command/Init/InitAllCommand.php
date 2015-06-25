@@ -63,7 +63,7 @@ class InitAllCommand extends DrupalCICommandBase {
 
     $arguments = array(
       'command' => 'init:base',
-      'container_name' => array('drupalci/base', 'drupalci/db-base', 'drupalci/php-base'),
+      'container_name' => array('drupalci/base', 'drupalci/db-base', 'drupalci/php-base', 'drupalci/web-base'),
     );
     $cmdinput = new ArrayInput($arguments + $options + $options_force);
     $returnCode = $cmd->run($cmdinput, $output);
