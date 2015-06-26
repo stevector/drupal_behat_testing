@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \DrupalCI\Plugin\Preprocess\variable\RunScriptArguments
+ * Contains \DrupalCI\Plugin\Preprocess\variable\RunOptions
  */
 
 namespace DrupalCI\Plugin\Preprocess\variable;
@@ -9,7 +9,7 @@ namespace DrupalCI\Plugin\Preprocess\variable;
 use DrupalCI\Plugin\PluginBase;
 
 /**
- * @PluginID("runscriptarguments")
+ * @PluginID("runoptions")
  */
 class RunOptions extends PluginBase {
 
