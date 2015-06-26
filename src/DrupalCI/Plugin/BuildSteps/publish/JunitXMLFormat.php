@@ -25,7 +25,12 @@ class JunitXMLFormat extends PluginBase {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
-
+    $arguments = $job->getBuildVars();
+    if (!empty($arguments['DCI_JunitXml'])) {
+      $output_dir = $arguments['DCI_JunitXml'];
+    } else {
+      $output_dir = ''; // TODO: this should utterly fail.
+    }
 
     // Connect to the database and query for the tests and reformat them in a sane manner.
     // If there is a sqlite results database
@@ -108,11 +113,11 @@ class JunitXMLFormat extends PluginBase {
         );
       }
     }
-    $this->_build_xml($classes);
+    $this->_build_xml($classes, $output_dir);
   }
 
 
-  private function _build_xml($test_result_data) {
+  private function _build_xml($test_result_data, $output_dir) {
     // Maps statuses to their xml element for each testcase.
     $element_map = array(
       'pass' => 'system-out',
@@ -121,7 +126,7 @@ class JunitXMLFormat extends PluginBase {
       'debug' => 'system-err',
     );
     // Create an xml file per group?
-    $dir = '/var/lib/drupalci/artifacts/xml';
+
     $test_group_id = 0;
     $doc = new DomDocument('1.0');
     $test_suites = $doc->createElement('testsuites');
@@ -200,7 +205,7 @@ class JunitXMLFormat extends PluginBase {
     $test_suites->setAttribute('disabled', "TODO SET");
     $test_suites->setAttribute('errors', "TODO SET");
     $doc->appendChild($test_suites);
-    file_put_contents($dir . '/testresults.xml', $doc->saveXML());
+    file_put_contents($output_dir . '/testresults.xml', $doc->saveXML());
 
   }
 
