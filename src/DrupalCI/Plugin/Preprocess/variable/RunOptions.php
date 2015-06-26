@@ -11,7 +11,7 @@ use DrupalCI\Plugin\PluginBase;
 /**
  * @PluginID("runscriptarguments")
  */
-class RunScriptArguments extends PluginBase {
+class RunOptions extends PluginBase {
 
   /**
    * {@inheritdoc}
