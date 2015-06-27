@@ -105,11 +105,13 @@ class JunitXMLFormat extends PluginBase {
         $test_method = substr($test_method, 0, strlen($test_method) - 2);
 
         //$classes[$test_group][$test_class][$test_method]['classname'] = $classname;
+        $result['file'] = substr($result['file'],14); // Trim off /var/www/html
         $classes[$test_group][$test_class][$test_method][] = array(
           'status' => $result['status'],
           'type' => $result['message_group'],
           'message' => strip_tags($result['message']),
           'line' => $result['line'],
+          'file' => $result['file'],
         );
       }
     }
@@ -156,28 +158,34 @@ class JunitXMLFormat extends PluginBase {
           $test_case->setAttribute('name', $test_method);
           $test_case_status = 'pass';
           $test_case_assertions = 0;
-
+          $test_output = '';
           foreach ($method_results as $assertion) {
-            $element = $doc->createElement($element_map[$assertion['status']]);
+
+
             if (!isset($assertion_counter[$assertion['status']])) {
               $assertion_counter[$assertion['status']] = 0;
             }
             $assertion_counter[$assertion['status']]++;
+
             if ($assertion['status'] == 'exception' || $assertion['status'] == 'fail') {
+              $element = $doc->createElement($element_map[$assertion['status']]);
               $element->setAttribute('message', $method_results['message']);
               $element->setAttribute('type', $assertion['status']);
               // Assume that exceptions and fails are failed tests.
               $test_case_status = 'failed';
+              $test_case->appendChild($element);
             }
-            else {
-              if ($assertion['status'] == 'pass' || $assertion['status'] == 'debug') {
-                $output = $doc->createCDATASection($assertion['message']);
-                $element->appendChild($output);
-              }
+            elseif (($assertion['status'] == 'pass') || ($assertion['status'] == 'debug')) {
+             $test_output .= $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
             }
+
             $test_case_assertions++;
-            $test_case->appendChild($element);
+
           }
+          $std_out = $doc->createElement('system-out');
+          $output = $doc->createCDATASection($test_output);
+          $std_out->appendChild($output);
+          $test_case->appendChild($std_out);
 
           // TODO: Errors and Failures need to be set per test Case.
           $test_case->setAttribute('status', $test_case_status);
