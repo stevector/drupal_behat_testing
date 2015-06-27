@@ -182,6 +182,7 @@ class JunitXMLFormat extends PluginBase {
             $test_case_assertions++;
 
           }
+          $test_output = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $test_output);
           $std_out = $doc->createElement('system-out');
           $output = $doc->createCDATASection($test_output);
           $std_out->appendChild($output);
