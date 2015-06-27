@@ -109,7 +109,7 @@ class JunitXMLFormat extends PluginBase {
         $classes[$test_group][$test_class][$test_method][] = array(
           'status' => $result['status'],
           'type' => $result['message_group'],
-          'message' => strip_tags($result['message']),
+          'message' => strip_tags(htmlspecialchars_decode($result['message'],ENT_QUOTES)),
           'line' => $result['line'],
           'file' => $result['file'],
         );
