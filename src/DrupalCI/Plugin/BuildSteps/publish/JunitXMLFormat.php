@@ -169,7 +169,7 @@ class JunitXMLFormat extends PluginBase {
 
             if ($assertion['status'] == 'exception' || $assertion['status'] == 'fail') {
               $element = $doc->createElement($element_map[$assertion['status']]);
-              $element->setAttribute('message', $method_results['message']);
+              $element->setAttribute('message', $assertion['message']);
               $element->setAttribute('type', $assertion['status']);
               // Assume that exceptions and fails are failed tests.
               $test_case_status = 'failed';
