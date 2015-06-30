@@ -140,4 +140,13 @@ interface JobInterface {
 
   public function setResultsAPI($api);
 
+  public function getArtifactList();
+
+  public function setArtifactFilename($filename);
+
+  public function getArtifactFilename();
+
+  public function setArtifact($key, $value);
+
+  public function getArtifact($key);
 }

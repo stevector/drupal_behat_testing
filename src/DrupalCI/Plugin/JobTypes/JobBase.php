@@ -457,5 +457,74 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->errorStatus;
   }
 
+  public function getArtifactList($include = array()) {
+    // Returns a list of build artifacts relevant to this job type.
+    // Syntax: array(filename1, filename2, ...)
+    $artifacts = array();
+
+    // Artifacts common to all jobs:
+    // - job definition
+    $artifacts['definition'] = "results/job_definition.txt";
+
+    // - standard output
+    $artifacts['stdout'] = "results/stout.txt";
+
+    // - standard error
+    $artifacts['stderr'] = "results/sterr.txt";
+
+    $artifacts = array_merge($artifacts, $include);
+
+    $this->setArtifacts($artifacts);
+
+    return $artifacts;
+  }
+
+  public $artifactFilename;
+
+  /**
+   * @param mixed $artifactFilename
+   */
+  public function setArtifactFilename($artifactFilename)
+  {
+    $this->artifactFilename = $artifactFilename;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getArtifactFilename()
+  {
+    return $this->artifactFilename;
+  }
+
+  public $artifacts;
+
+  /**
+   * @param mixed $artifacts
+   */
+  public function setArtifacts($artifacts)
+  {
+    $this->artifacts = $artifacts;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getArtifacts()
+  {
+    return $this->artifacts;
+  }
+
+
+  public function setArtifact($key, $value) {
+    $artifacts = $this->getArtifacts();
+    $artifacts[$key] = $value;
+    $this->setArtifacts($artifacts);
+  }
+
+  public function getArtifact($key) {
+    $artifacts = $this->getArtifacts();
+    return $artifacts[$key];
+  }
 
 }
