@@ -136,10 +136,16 @@ class JunitXMLFormat extends PluginBase {
     // TODO: get test name data from the job.
     $test_suites->setAttribute('name', "TODO SET");
     $test_suites->setAttribute('time', "TODO SET");
+    $total_failures = 0;
+    $total_tests = 0;
+    $total_exceptions = 0;
 
 
     // Go through the groups, and create a testsuite for each.
     foreach ($test_result_data as $groupname => $group_classes) {
+      $group_failures = 0;
+      $group_tests = 0;
+      $group_exceptions = 0;
       $test_suite = $doc->createElement('testsuite');
       $test_suite->setAttribute('id', $test_group_id);
       $test_suite->setAttribute('name', $groupname);
@@ -148,7 +154,6 @@ class JunitXMLFormat extends PluginBase {
       $test_suite->setAttribute('package', "TODO: Set Package");
       // TODO: time test runs. $test_group->setAttribute('time', $test_group_id);
       // TODO: add in the properties of the job into the test run.
-
 
       // Loop through the classes in each group
       foreach ($group_classes as $class_name => $class_methods) {
@@ -160,7 +165,6 @@ class JunitXMLFormat extends PluginBase {
           $test_case_assertions = 0;
           $test_output = '';
           foreach ($method_results as $assertion) {
-
 
             if (!isset($assertion_counter[$assertion['status']])) {
               $assertion_counter[$assertion['status']] = 0;
@@ -174,12 +178,21 @@ class JunitXMLFormat extends PluginBase {
               // Assume that exceptions and fails are failed tests.
               $test_case_status = 'failed';
               $test_case->appendChild($element);
+              if ($assertion['status'] == 'exception'){
+                $group_exceptions++;
+                $total_exceptions++;
+              } else if ($assertion['status'] == 'fail'){
+                $group_failures++;
+                $total_failures++;
+              }
             }
             elseif (($assertion['status'] == 'pass') || ($assertion['status'] == 'debug')) {
              $test_output .= $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
             }
 
             $test_case_assertions++;
+            $group_tests++;
+            $total_tests++;
 
           }
           $test_output = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $test_output);
@@ -191,7 +204,7 @@ class JunitXMLFormat extends PluginBase {
           // TODO: Errors and Failures need to be set per test Case.
           $test_case->setAttribute('status', $test_case_status);
           $test_case->setAttribute('assertions', $test_case_assertions);
-          $test_case->setAttribute('time', "TODO: track time");
+         // $test_case->setAttribute('time', "TODO: track time");
 
           $test_suite->appendChild($test_case);
 
@@ -199,9 +212,9 @@ class JunitXMLFormat extends PluginBase {
       }
 
       // Should this count the tests as part of the loop, or just array_count?
-      $test_suite->setAttribute('tests', $test_group_id);
-      $test_suite->setAttribute('failures', $test_group_id);
-      $test_suite->setAttribute('errors', $test_group_id);
+      $test_suite->setAttribute('tests', $group_tests);
+      $test_suite->setAttribute('failures', $group_failures);
+      $test_suite->setAttribute('errors', $group_exceptions);
       /* TODO: Someday simpletest will disable or skip tests based on environment
       $test_group->setAttribute('disabled', $test_group_id);
       $test_group->setAttribute('skipped', $test_group_id);
@@ -209,10 +222,10 @@ class JunitXMLFormat extends PluginBase {
       $test_suites->appendChild($test_suite);
       $test_group_id++;
     }
-    $test_suites->setAttribute('tests', "TODO SET");
-    $test_suites->setAttribute('failures', "TODO SET");
-    $test_suites->setAttribute('disabled', "TODO SET");
-    $test_suites->setAttribute('errors', "TODO SET");
+    $test_suites->setAttribute('tests', $total_tests);
+    $test_suites->setAttribute('failures', $total_failures);
+   // $test_suites->setAttribute('disabled', "TODO SET");
+    $test_suites->setAttribute('errors', $total_exceptions);
     $doc->appendChild($test_suites);
     file_put_contents($output_dir . '/testresults.xml', $doc->saveXML());
 
