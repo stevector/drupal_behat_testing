@@ -9,8 +9,11 @@ namespace DrupalCI\Plugin\JobTypes;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use DrupalCI\Console\Output;
+use DrupalCI\Job\Artifacts\BuildArtifact;
+use DrupalCI\Job\Artifacts\BuildArtifactList;
 use DrupalCIResultsApi\Api;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
 use Symfony\Component\Process\Process;
 use DrupalCI\Console\Jobs\ContainerBase;
 use Docker\Docker;
@@ -497,34 +500,60 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->artifactFilename;
   }
 
-  public $artifacts;
+  /**
+   * @var /DrupalCI/Job/Artifacts/BuildArtifactList
+   */
+  protected $artifacts;
+  public function setArtifacts($artifacts) { $this->artifacts = $artifacts; }
+  public function getArtifacts() { return $this->artifacts; }
+
+  public function __construct() {
+    $this->createArtifactList();
+    echo "Artifacts: " .print_r($this->artifacts, TRUE);
+  }
+
+  protected function createArtifactList() {
+    if (!isset($this->artifacts)) {
+      $this->artifacts = New BuildArtifactList();
+    }
+    // Load the standard base build artifacts into the list
+    foreach($this->defaultBuildArtifacts as $key => $value) {
+      $artifact = New BuildArtifact('file', $value);
+      $this->artifacts->addArtifact($key, $artifact);
+    }
+    // Load the jobType specific build artifacts into the list
+    // Format: array(key, target, [type = file])
+    foreach ($this->buildArtifacts as $value) {
+      $key = $value[0];
+      $target = $value[1];
+      $type = isset($value[2]) ? $value[2] : 'file';
+      $artifact = New BuildArtifact($type, $target);
+      $this->artifacts->addArtifact($key, $artifact);
+    }
+  }
+
+  // Provide the default file locations for standard build artifacts.
+  protected $defaultBuildArtifacts = array(
+    'stdout' => 'results/stdout.txt',
+    'stderr' => 'results/stderr.txt',
+    'jobDefinition' => 'results/jobDefinition.txt',
+  );
 
   /**
-   * @param mixed $artifacts
+   * Provide the details for job-specific build artifacts.
+   *
+   * This should be overridden by job-specific classes, to define the build
+   * artifacts which should be collected for that class.
+   *
+   * The default build artifacts listed above can be overridden here as well.
    */
-  public function setArtifacts($artifacts)
-  {
-    $this->artifacts = $artifacts;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getArtifacts()
-  {
-    return $this->artifacts;
-  }
-
-
-  public function setArtifact($key, $value) {
-    $artifacts = $this->getArtifacts();
-    $artifacts[$key] = $value;
-    $this->setArtifacts($artifacts);
-  }
-
-  public function getArtifact($key) {
-    $artifacts = $this->getArtifacts();
-    return $artifacts[$key];
-  }
+  protected $buildArtifacts = array(
+    // e.g. phpunit results file at ./results.txt:
+    // array('phpunit_results', './results.txt'),
+    // e.g. multiple xml files within results/xml directory:
+    // array('xml_results', 'results/xml', 'directory')
+    // e.g. a string representing red/blue outcome:
+    // array('color', 'red', 'string')
+  );
 
 }
