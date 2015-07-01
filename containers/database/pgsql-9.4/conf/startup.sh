@@ -26,6 +26,7 @@ if [ ! -z $(pg_lsclusters | grep -c ' main ') ];
     echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/${PGVERSION}/main/pg_hba.conf
     # copy conf after it was deleted by pg_dropcluster
     cp /opt/postgresql.conf /etc/postgresql/${PGVERSION}/main/postgresql.conf
+    mkdir -p /var/lib/postgresql/${PGVERSION}/main.pg_stat_tmp
 fi
 
 /usr/lib/postgresql/${PGVERSION}/bin/postgres -D /var/lib/postgresql/${PGVERSION}/main -c config_file=/etc/postgresql/${PGVERSION}/main/postgresql.conf
