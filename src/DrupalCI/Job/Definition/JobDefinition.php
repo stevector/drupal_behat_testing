@@ -1,10 +1,11 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: Jeremy
- * Date: 1/19/15
- * Time: 7:50 PM
+ * @file
+ * Contains \DrupalCI\Job\Definition\JobDefinition.
  */
+
+// TODO: This class does not appear to ever be called
 
 namespace DrupalCI\Console\Jobs\Definition;
 
