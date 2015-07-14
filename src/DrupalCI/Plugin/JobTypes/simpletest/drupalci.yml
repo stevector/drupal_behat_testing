@@ -26,6 +26,8 @@ install:
 execute:
   command:
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_TestGroups%
-#publish:
+publish:
+  gather_artifacts: /var/www/html/results
+  archive: /var/www/html/results/artifacts.zip
 #  drupalci_results:
 #    config: %HOME%/.drupalci/drupalci.yml

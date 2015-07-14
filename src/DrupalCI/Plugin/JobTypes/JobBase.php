@@ -509,7 +509,6 @@ class JobBase extends ContainerBase implements JobInterface {
 
   public function __construct() {
     $this->createArtifactList();
-    echo "Artifacts: " .print_r($this->artifacts, TRUE);
   }
 
   protected function createArtifactList() {
@@ -534,9 +533,9 @@ class JobBase extends ContainerBase implements JobInterface {
 
   // Provide the default file locations for standard build artifacts.
   protected $defaultBuildArtifacts = array(
-    'stdout' => 'results/stdout.txt',
-    'stderr' => 'results/stderr.txt',
-    'jobDefinition' => 'results/jobDefinition.txt',
+    'stdout' => 'stdout.txt',
+    'stderr' => 'stderr.txt',
+    'jobDefinition' => 'jobDefinition.txt',
   );
 
   /**
