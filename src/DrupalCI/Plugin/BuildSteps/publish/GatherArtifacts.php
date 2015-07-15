@@ -11,6 +11,7 @@ namespace DrupalCI\Plugin\BuildSteps\publish;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
+use DrupalCI\Plugin\BuildSteps\generic\ContainerCommand;
 
 /**
  * @PluginID("gather_artifacts")
@@ -20,48 +21,62 @@ class GatherArtifacts extends PluginBase {
   /**
    * {@inheritdoc}
    */
-  public function run(JobInterface $job, $directory) {
-    // Data format:  $directory: string containing the destination directory name
-    // TODO: Validate $directory for security purposes
+  public function run(JobInterface $job, $target_directory) {
 
-    // Create the destination directory if it doesn't already exist
-    if (!is_dir($directory)) {
-      Output::writeLn("<info>Creating build artifact directory: <options=bold>$directory</options=bold></info>");
-      if (!mkdir($directory, 0777, TRUE)) {
-        Output::error('', 'Error encountered while creating build artifact directory.  Unable to gather artifacts.');
-        // TODO: Handle error / end processing
-        return;
-      }
+    $docker = $job->getDocker();
+    $manager = $docker->getContainerManager();
+
+    Output::writeLn("<comment>Gathering job build artifacts in a common directory ...</comment>");
+
+    // Create the destination directory
+    if (!empty($target_directory)) {
+      $command = new ContainerCommand();
+      $command->run($job, "mkdir -p $target_directory");
     }
 
     // Retrieve the list of build artifacts from the job
     $artifacts = $job->getArtifacts();
 
-    // Special cases: Job definition
-    if (!empty($artifacts['jobDefinition'])) {
-      $file = $directory . DIRECTORY_SEPARATOR . $artifacts['jobDefinition'];
-      // TODO: Verify file name - unique, empty, etc.
-      if (!file_put_contents($file, print_r($job->getDefinition(), TRUE))) {
-        // TODO: Error encountered while writing out job definition
-      }
-    }
-
     // Iterate over the build artifacts
-    foreach ($artifacts as $key => $artifact) {
-      if (strtolower($artifact['type']) == 'file' || $artifact['type'] == 'directory') {
-        // Copy artifact file to the build artifacts directory
-        $file = $artifact['value'];
-        $dest = $directory . DIRECTORY_SEPARATOR . $file;
-        if (!copy($file, $dest)) {
-          // TODO: Error Handling: File copy failed
+    foreach ($artifacts->getArtifacts() as $key => $artifact) {
+      if ($key == 'jobDefinition') {
+        $destination_filename = $artifact->getValue();
+
+        // Retrieve the job definition from the job
+        $definition = $job->getDefinition();
+        // write the job definition out to a file in the artifact directory on the container.
+        if (!empty($definition_filename)) {
+          $file = $target_directory . DIRECTORY_SEPARATOR . $definition_filename;
+          // TODO: Verify file name - unique, empty, etc.
+          $command = new ContainerCommand();
+          $cmd = "cat >$file <<EOL \n" . print_r($definition, TRUE) . "\nEOL";
+          $command->run($job, $cmd);
+        }
+        else {
+          // TODO: Exception handling
+          Output::writeLn('<info>Error generating job definition build artifact.');
         }
       }
-      elseif (strtolower($artifact['type']) == 'string') {
-        // Write string to new file with filename based on the string's key
-        $dest = $directory . DIRECTORY_SEPARATOR . $key;
-        if (!file_put_contents($dest, $artifact['value'])) {
-          // TODO: Error Handling: File write failed
+      elseif (strtolower($artifact->getType()) == 'file' || $artifact->getType() == 'directory') {
+        // Copy artifact file to the build artifacts directory
+        $file = $artifact->getValue();
+        $dest = $target_directory . DIRECTORY_SEPARATOR . basename($file);
+        if ($file !== $dest) {
+          $command = new ContainerCommand();
+          $cmd = "cp -r $file $dest";
+          $command->run($job, $cmd);
         }
+        else {
+          Output::writeLn("<info>Skipping $file, as it already exists in the build artifact directory.");
+        }
+      }
+      elseif (strtolower($artifact->getType) == 'string') {
+        // Write string to new file with filename based on the string's key
+        $dest = $target_directory . DIRECTORY_SEPARATOR . $key;
+        $content = $artifact->getValue;
+        $command = new ContainerCommand();
+        $cmd = "cat >$dest <<EOL \n" . print_r($content, TRUE) . "\nEOL";
+        $command->run($job, $cmd);
       }
     }
   }

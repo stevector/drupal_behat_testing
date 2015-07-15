@@ -39,6 +39,10 @@ class BuildArtifactList {
     }
   }
 
+  public function getArtifacts() {
+    return $this->artifacts[$key];
+  }
+
   public function getKeys() {
     return array_keys($this->artifacts);
   }
