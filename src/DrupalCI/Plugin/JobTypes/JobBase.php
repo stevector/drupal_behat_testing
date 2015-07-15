@@ -533,8 +533,8 @@ class JobBase extends ContainerBase implements JobInterface {
 
   // Provide the default file locations for standard build artifacts.
   protected $defaultBuildArtifacts = array(
-    'stdout' => 'stdout.txt',
-    'stderr' => 'stderr.txt',
+    //'stdout' => 'stdout.txt',
+    //'stderr' => 'stderr.txt',
     'jobDefinition' => 'jobDefinition.txt',
   );
 

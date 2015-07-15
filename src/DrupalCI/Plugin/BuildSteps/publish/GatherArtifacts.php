@@ -45,8 +45,8 @@ class GatherArtifacts extends PluginBase {
         // Retrieve the job definition from the job
         $definition = $job->getDefinition();
         // write the job definition out to a file in the artifact directory on the container.
-        if (!empty($definition_filename)) {
-          $file = $target_directory . DIRECTORY_SEPARATOR . $definition_filename;
+        if (!empty($destination_filename)) {
+          $file = $target_directory . DIRECTORY_SEPARATOR . $destination_filename;
           // TODO: Verify file name - unique, empty, etc.
           $command = new ContainerCommand();
           $cmd = "cat >$file <<EOL \n" . print_r($definition, TRUE) . "\nEOL";
