@@ -19,7 +19,7 @@ RUN phpenv global 5.5.9 && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
     phpenv global 5.5.23 && \
     echo | pecl install mongo && \
-    echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
+    echo | pecl install channel://pecl.php.net/APCu-4.0.7
 
 ## Set the default php version
 Run phpenv global 5.5.23
