@@ -20,7 +20,7 @@ RUN phpenv global 5.5.9 && \
     phpenv global 5.5.23 && \
     echo | pecl install mongo && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
-    phpenv global 5.5.9
+    phpenv global 5.5.23
 
 ## Upgrade curl to version 7.38
 RUN apt-get -y install software-properties-common && \
