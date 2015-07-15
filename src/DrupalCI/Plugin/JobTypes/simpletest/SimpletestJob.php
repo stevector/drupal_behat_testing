@@ -38,7 +38,7 @@ class SimpletestJob extends JobBase {
    */
   public $defaultArguments = array(
     'DCI_DBVersion' => 'mysql-5.5',
-    'DCI_PHPVersion' => '5.4',
+    'DCI_PHPVersion' => '5.5',
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => '8.0.x',
     'DCI_GitCheckoutDepth' => '1',
@@ -49,7 +49,7 @@ class SimpletestJob extends JobBase {
     'DCI_TestGroups' => '--all',
     'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 4,
-    'DCI_XMLOutput' => '/var/www/html/results/xml',
+    // 'DCI_XMLOutput' => '/var/www/html/results/xml',
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
     'DCI_RunOptions' => 'color',
   );
@@ -108,7 +108,7 @@ class SimpletestJob extends JobBase {
 
      // ***** Default Variables defined for every simpletest job *****
     'DCI_DBVersion' => 'Defines the database version for this particular simpletest run. May map to a required service container. Default: mysql-5.5',
-    'DCI_PHPVersion' => 'Defines the PHP Version used within the executable container for this job type.  Default: 5.4',
+    'DCI_PHPVersion' => 'Defines the PHP Version used within the executable container for this job type.  Default: 5.5',
     'DCI_CoreRepository' => 'Defines the primary repository to be checked out while building the codebase to test.  Default: git://drupalcode.org/project/drupal.git',
     'DCI_CoreBranch' => 'Defines the branch on the primary repository to be checked out while building the codebase to test.  Default: 8.0.x',
     'DCI_GitCheckoutDepth' => 'Defines the depth parameter passed to git clone while checking out the core repository.  Default: 1',
