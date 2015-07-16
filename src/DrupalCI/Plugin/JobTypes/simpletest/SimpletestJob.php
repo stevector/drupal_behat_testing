@@ -157,6 +157,7 @@ class SimpletestJob extends JobBase {
    *   etc.
    */
   protected $buildArtifacts = array(
+    array('testgroups', '/var/www/html/sites/simpletest/testgroups.txt'),
     array('run_tests_xml', '/var/www/html/sites/simpletest/xml', 'directory'),
     array('sqlite_test_db', '/var/www/html/results/simpletest.sqlite'),
     // array('php_error_log', 'TODO: Locate'),
