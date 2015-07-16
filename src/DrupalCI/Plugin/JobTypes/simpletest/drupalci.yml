@@ -20,7 +20,8 @@ setup:
     - /var/www/html/artifacts
     - /var/www/html/sites/simpletest/xml
   command:
-    - chown -fR www-data:www-data /var/www/html/sites /var/www/html/artifacts /var/www/html/results
+    - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
+    - chmod 0777 /var/www/html/artifacts
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:

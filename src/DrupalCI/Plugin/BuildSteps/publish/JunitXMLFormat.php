@@ -9,6 +9,7 @@
  */
 
 namespace DrupalCI\Plugin\BuildSteps\publish;
+use Docker\Docker;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
@@ -44,7 +45,8 @@ class JunitXMLFormat extends PluginBase {
     $this->loadTestList($source_dir . DIRECTORY_SEPARATOR . 'artifacts/testgroups.txt');
 
     // Set up output directory (inside working directory)
-    $output_directory = $source_dir . DIRECTORY_SEPARATOR . $output_directory;
+    $output_directory = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . $output_directory;
+    mkdir($output_directory, 0777, TRUE);
 
     // Set an initial default group, in case leading tests are found with no group.
     $group = 'nogroup';
@@ -223,11 +225,8 @@ class JunitXMLFormat extends PluginBase {
    // $test_suites->setAttribute('disabled', "TODO SET");
     $test_suites->setAttribute('errors', $total_exceptions);
     $doc->appendChild($test_suites);
-    if (!is_dir($output_dir)) {
-      mkdir($output_dir, 0777, TRUE);
-    }
     file_put_contents($output_dir . '/testresults.xml', $doc->saveXML());
-    Output::writeln("<info>Reformatted test results written to <options=bold>" . $output_dir . '\testresults.xml</options=bold></info>');
+    Output::writeln("<info>Reformatted test results written to <options=bold>" . $output_dir . '/testresults.xml</options=bold></info>');
   }
 
 }
