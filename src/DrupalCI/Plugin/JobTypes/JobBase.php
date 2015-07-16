@@ -555,4 +555,24 @@ class JobBase extends ContainerBase implements JobInterface {
     // array('color', 'red', 'string')
   );
 
+  protected $artifactDirectory;
+
+  /**
+   * @param mixed $artifactDirectory
+   */
+  public function setArtifactDirectory($artifactDirectory)
+  {
+    $this->artifactDirectory = $artifactDirectory;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getArtifactDirectory()
+  {
+    return $this->artifactDirectory;
+  }
+
+
+
 }

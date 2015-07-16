@@ -34,6 +34,9 @@ class GatherArtifacts extends PluginBase {
       $command->run($job, "mkdir -p $target_directory");
     }
 
+    // Store the directory in our job object
+    $job->setArtifactDirectory($target_directory);
+
     // Retrieve the list of build artifacts from the job
     $artifacts = $job->getArtifacts();
 

@@ -47,7 +47,7 @@ class SimpletestJob extends JobBase {
     'DCI_DBPassword' => 'drupaltestbotpw',
     'DCI_DBUrl' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
     'DCI_TestGroups' => '--all',
-    'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
+    'DCI_SQLite' => '/var/www/html/artifacts/simpletest.sqlite',
     'DCI_Concurrency' => 4,
     // 'DCI_XMLOutput' => '/var/www/html/results/xml',
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
@@ -157,9 +157,9 @@ class SimpletestJob extends JobBase {
    *   etc.
    */
   protected $buildArtifacts = array(
-    array('testgroups', '/var/www/html/sites/simpletest/testgroups.txt'),
-    array('run_tests_xml', '/var/www/html/sites/simpletest/xml', 'directory'),
-    array('sqlite_test_db', '/var/www/html/results/simpletest.sqlite'),
+    array('testgroups', '/var/www/html/artifacts/testgroups.txt'),
+    array('run_tests_xml', '/var/www/html/artifacts/xml', 'directory'),
+    array('sqlite_test_db', '/var/www/html/artifacts/simpletest.sqlite'),
     // array('php_error_log', 'TODO: Locate'),
     // array('apache_access_log', 'TODO: Locate'),
     // array('apache_error_log', 'TODO: Locate'),

@@ -148,4 +148,8 @@ interface JobInterface {
 
   public function setArtifactFilename($filename);
 
+  public function getArtifactDirectory();
+
+  public function setArtifactDirectory($directory);
+
 }

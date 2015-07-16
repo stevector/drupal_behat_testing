@@ -86,7 +86,11 @@ class RunCommand extends DrupalCICommandBase {
     $job->setDefinitionFile($definition_file);
 
     // Create a unique job build_id
-    $build_id = $job_type . '_' . time();
+    // Check for BUILD_TAG environment variable, and if not present, create a random result.
+    $build_id = getenv('BUILD_TAG');
+    if (empty($build_id)) {
+      $build_id = $job_type . '-' . time();
+    }
 
     $job->setBuildId($build_id);
 
