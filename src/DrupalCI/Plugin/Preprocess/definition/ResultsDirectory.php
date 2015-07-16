@@ -12,7 +12,7 @@ namespace DrupalCI\Plugin\Preprocess\definition;
 /**
  * @PluginID("resultsdirectory")
  */
-class Fetch {
+class ResultsDirectory {
 
   /**
    * {@inheritdoc}
