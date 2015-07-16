@@ -45,9 +45,10 @@ class SetupDirectories {
       // Case:  No explicit working directory defined.
       // Generate a working directory in the system temporary directory.
       $build_id = $job->getBuildId();
-      $tmpdir = mkdir(sys_get_temp_dir() . '/drupalci/' . $build_id, 0777, TRUE);
+      $tmpdir = sys_get_temp_dir() . '/drupalci/' . $build_id;
+      $result = mkdir($tmpdir, 0777, TRUE);
       // $tmpdir = $this->create_tempdir($job, sys_get_temp_dir() . '/drupalci/', $job->jobType . "-");
-      if (!$tmpdir) {
+      if (!$result) {
         // Error creating checkout directory
         $job->errorOutput("Error", "Failure encountered while attempting to create a local checkout directory");
         return FALSE;
