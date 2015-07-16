@@ -89,7 +89,7 @@ class RunCommand extends DrupalCICommandBase {
     // Check for BUILD_TAG environment variable, and if not present, create a random result.
     $build_id = getenv('BUILD_TAG');
     if (empty($build_id)) {
-      $build_id = $job_type . '-' . time();
+      $build_id = $job_type . '_' . time();
     }
 
     $job->setBuildId($build_id);
