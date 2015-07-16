@@ -25,7 +25,7 @@ class Fetch {
    */
   public function process(array &$definition, $value) {
     if (empty($definition['pre-install']['mkdir'])) {
-      $definition['setup']['mkdir'] = [];
+      $definition['pre-install']['mkdir'] = [];
     }
     // TODO: Sanitize to ensure we're not traversing out of the working directory
     $definition['pre-install']['mkdir'][] = $value;
