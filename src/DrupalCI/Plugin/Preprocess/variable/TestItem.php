@@ -39,6 +39,10 @@ class TestItem extends PluginBase {
      *   all                                    --all
      */
 
+    if (empty($testitem)) {
+      return $testgroups;
+    }
+
     // Special case for 'all'
     if (strtolower($testitem) === 'all') {
       return "--all";
