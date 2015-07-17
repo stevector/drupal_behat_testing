@@ -78,7 +78,7 @@ class AdditionalRepositories {
     }
     // If it already exists, but has only one entry, we need to normalize it to an array format.
     // Normalize data to the third format, if necessary
-    elseif ($definition['setup']['checkout'] == count($definition['setup']['checkout'], COUNT_RECURSIVE)) {
+    elseif (count($definition['setup']['checkout']) == count($definition['setup']['checkout'], COUNT_RECURSIVE)) {
       $definition['setup']['checkout'] = [$definition['setup']['checkout']];
     }
 
