@@ -105,7 +105,6 @@ class AdditionalRepositories {
       }
       $definition['setup']['checkout'][] = $output;
     }
-    echo "Checkout: " . print_r($definition['setup']['checkout']);
   }
 }
 
