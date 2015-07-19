@@ -95,7 +95,7 @@ class Checkout extends SetupBase {
     if (isset($details['depth'])) {
       $git_depth = '--depth ' . $details['depth'];
     }
-    $cmd = "git clone -b $git_branch $git_depth $repo $directory";
+    $cmd = "git clone -b $git_branch $git_depth $repo '$directory'";
 
     Output::writeLn("Git Command: $cmd");
     $this->exec($cmd, $cmdoutput, $result);
