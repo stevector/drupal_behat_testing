@@ -17,7 +17,7 @@ class TestItem extends PluginBase {
   * {@inheritdoc}
   */
   public function target() {
-    return 'DCI_TESTGROUPS';
+    return 'DCI_TestGroups';
   }
 
   /**
