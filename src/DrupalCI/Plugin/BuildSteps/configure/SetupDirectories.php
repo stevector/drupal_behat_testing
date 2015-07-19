@@ -46,12 +46,14 @@ class SetupDirectories {
       // Generate a working directory in the system temporary directory.
       $build_id = $job->getBuildId();
       $tmpdir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $build_id;
-      $result = mkdir($tmpdir, 0777, TRUE);
-      // $tmpdir = $this->create_tempdir($job, sys_get_temp_dir() . '/drupalci/', $job->jobType . "-");
-      if (!$result) {
-        // Error creating checkout directory
-        $job->errorOutput("Error", "Failure encountered while attempting to create a local checkout directory");
-        return FALSE;
+      if (!is_dir($tmpdir)) {
+        $result = mkdir($tmpdir, 0777, TRUE);
+        // $tmpdir = $this->create_tempdir($job, sys_get_temp_dir() . '/drupalci/', $job->jobType . "-");
+        if (!$result) {
+          // Error creating checkout directory
+          $job->errorOutput("Error", "Failure encountered while attempting to create a local checkout directory");
+          return FALSE;
+        }
       }
       Output::writeLn("<comment>Checkout directory created at <info>$tmpdir</info></comment>");
       $job->setBuildVar('DCI_CheckoutDir', $tmpdir);
