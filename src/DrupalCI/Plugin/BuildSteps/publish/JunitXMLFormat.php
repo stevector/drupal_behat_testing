@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * Contains \DrupalCI\Plugin\BuildSteps\publish\DrupalCIResults
+ * Contains \DrupalCI\Plugin\BuildSteps\publish\JunitXmlFormat
  *
- * Processes "publish: drupalci_server:" instructions from within a job
- * definition. Gathers the resulting job artifacts and pushes them to a
- * DrupalCI Results server.
+ * Processes "publish: junit_xmlformat:" instructions from within a job
+ * definition.  Connects to the database, queries for the tests, and reformats
+ * them in a sane manner.  (If there is a sqlite results database!)
  */
 
 namespace DrupalCI\Plugin\BuildSteps\publish;
+use Docker\Docker;
+use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
-use DrupalCIResultsApi\Api;
-use Symfony\Component\Yaml\Yaml;
 use SQLite3;
 use DOMDocument;
 
@@ -21,38 +21,37 @@ use DOMDocument;
  */
 class JunitXMLFormat extends PluginBase {
 
+  protected $testlist = [];
+  public function setTestlist($testlist)  {  $this->testlist = $testlist; }
+  public function getTestlist() {  return $this->testlist; }
+
+  protected function loadTestList($file) {
+    $test_list = file($file, FILE_IGNORE_NEW_LINES);
+    // Get rid of the first four lines
+    $this->setTestlist(array_slice($test_list, 4));
+  }
+
   /**
    * {@inheritdoc}
    */
-  public function run(JobInterface $job, $data) {
-    $arguments = $job->getBuildVars();
-    if (!empty($arguments['DCI_JunitXml'])) {
-      $output_dir = $arguments['DCI_JunitXml'];
-    } else {
-      $output_dir = ''; // TODO: this should utterly fail.
-    }
-
-    // Connect to the database and query for the tests and reformat them in a sane manner.
-    // If there is a sqlite results database
-
-    // $data format:
-    // i) array('config' => '<configuration filename>'),
-    // ii) array('host' => '...', 'username' => '...', 'password' => '...')
-    // or a mixed array of the above
-    // iii) array(array(...), array(...))
-    // Normalize data to the third format, if necessary
-    $data = (count($data) == count($data, COUNT_RECURSIVE)) ? [$data] : $data;
-
-    // Get the groups from run-tests.sh
-    $test_list = [];
+  public function run(JobInterface $job, $output_directory) {
+    // Set up initial variable to store tests
     $tests = [];
+
+    // Load the list of tests from the testgroups.txt build artifact
+    // Assumes that gatherArtifacts plugin has run.
+    // TODO: Verify that gatherArtifacts has ran.
+    $source_dir = $job->getBuildVar('DCI_CheckoutDir');
+    $this->loadTestList($source_dir . DIRECTORY_SEPARATOR . 'artifacts/testgroups.txt');
+
+    // Set up output directory (inside working directory)
+    $output_directory = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . $output_directory;
+    mkdir($output_directory, 0777, TRUE);
+
+    // Set an initial default group, in case leading tests are found with no group.
     $group = 'nogroup';
-
-    # TODO: find a better way to uncouple this from the other command dependency.
-    $test_list = file('/var/lib/drupalci/artifacts/testgroups.txt', FILE_IGNORE_NEW_LINES);
-    // Get rid of the first four lines
-    $test_list = array_slice($test_list, 4);
-
+    // Iterate through and process the test list
+    $test_list = $this->getTestlist();
     foreach ($test_list as $output_line) {
       if (substr($output_line, 0, 3) == ' - ') {
         // This is a class
@@ -65,9 +64,9 @@ class JunitXMLFormat extends PluginBase {
       }
     }
 
-
     # TODO: get the sqlite dir from config.
-    $db = new SQLite3('/var/lib/drupalci/artifacts/simpletest.sqlite');
+    $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
+    $db = new SQLite3($dbfile);
     // Crack open the sqlite database.
 
     // query for simpletest results
@@ -115,9 +114,8 @@ class JunitXMLFormat extends PluginBase {
         );
       }
     }
-    $this->_build_xml($classes, $output_dir);
+    $this->_build_xml($classes, $output_directory);
   }
-
 
   private function _build_xml($test_result_data, $output_dir) {
     // Maps statuses to their xml element for each testcase.
@@ -228,7 +226,7 @@ class JunitXMLFormat extends PluginBase {
     $test_suites->setAttribute('errors', $total_exceptions);
     $doc->appendChild($test_suites);
     file_put_contents($output_dir . '/testresults.xml', $doc->saveXML());
-
+    Output::writeln("<info>Reformatted test results written to <options=bold>" . $output_dir . '/testresults.xml</options=bold></info>');
   }
 
 }

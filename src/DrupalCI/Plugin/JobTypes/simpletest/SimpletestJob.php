@@ -95,7 +95,6 @@ class SimpletestJob extends JobBase {
    * These are specified in an array, with the variable names used as the keys
    * for the array and the description used as the array values.
    */
-
   public $availableArguments = array(
     // ***** Variables Available for any job type *****
     'DCI_UseLocalCodebase' => 'Used to define a local codebase to be cloned (instead of performing a Git checkout)',
@@ -135,6 +134,36 @@ class SimpletestJob extends JobBase {
     'DCI_ResultsDirectory' => 'Defines the local directory within the container where the xml results file should be written.',
     'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
     // Syntax: 'argkey1,argvalue1;argkey2,argvalue2;argkey3;argkey4,argvalue4;'
-
   );
+
+  /**
+   * Provide the details for job-specific build artifacts.
+   *
+   * This should be overridden by job-specific classes, to define the build
+   * artifacts which should be collected for that class.
+   *
+   * For Simpletest jobs, this includes:
+   *   - the xml output from run-tests.sh (if present)
+   *   - sqlite database (if present)
+   *   - php error log
+   *   - apache access log
+   *   - apache error log
+   *   - any verbose output from run-tests.sh (if present)
+   *
+   * Syntax:
+   *   phpunit results file at ./results.txt:  array('phpunit_results', './results.txt'),
+   *   multiple xml files within results/xml directory: array('xml_results', 'results/xml', 'directory'),
+   *   a string representing red/blue outcome: array('color', 'red', 'string')
+   *   etc.
+   */
+  protected $buildArtifacts = array(
+    array('testgroups', '/var/www/html/artifacts/testgroups.txt'),
+    // array('run_tests_xml', '/var/www/html/results/xml', 'directory'),
+    array('sqlite_test_db', '/var/www/html/results/simpletest.sqlite'),
+    // array('php_error_log', 'TODO: Locate'),
+    // array('apache_access_log', 'TODO: Locate'),
+    // array('apache_error_log', 'TODO: Locate'),
+    // array('run_tests_verbose', 'TODO: Locate', 'directory'),
+  );
+
 }

@@ -12,6 +12,8 @@ use DrupalCI\Plugin\JobTypes\JobInterface;
 
 /**
  * @PluginID("mkdir")
+ *
+ * Creates a directory on the job runner host
  */
 class CreateDirectory extends ContainerCommand {
 

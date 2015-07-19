@@ -17,15 +17,21 @@ setup:
   # Create the directory where we will store our results
   mkdir:
     - /var/www/html/results
+    - /var/www/html/artifacts
     - /var/www/html/sites/simpletest/xml
   command:
     - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
+    - chmod 0777 /var/www/html/artifacts
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:
 execute:
   command:
-    - php /var/www/html/core/scripts/run-tests.sh --list --php /opt/phpenv/shims/php > /var/www/html/sites/simpletest/testgroups.txt
-    - cd /var/www/html && sudo -u www-data php %DCI_RunScript%  --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
+    - php /var/www/html/core/scripts/run-tests.sh --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
 publish:
-  junit_xmlformat:
+  gather_artifacts: /var/www/html/artifacts
+  # archive: /var/www/html/results/artifacts.zip
+  # junit_xmlformat:
+#  drupalci_results:
+#    config: %HOME%/.drupalci/drupalci.yml
