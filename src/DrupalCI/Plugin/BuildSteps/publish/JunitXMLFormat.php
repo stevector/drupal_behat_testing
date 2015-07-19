@@ -42,10 +42,12 @@ class JunitXMLFormat extends PluginBase {
     // Assumes that gatherArtifacts plugin has run.
     // TODO: Verify that gatherArtifacts has ran.
     $source_dir = $job->getBuildVar('DCI_CheckoutDir');
+    // TODO: Temporary hack.  Strip /checkout off the directory
+    $artifact_dir = preg_replace('#/checkout$#', '', $source_dir);
     $this->loadTestList($source_dir . DIRECTORY_SEPARATOR . 'artifacts/testgroups.txt');
 
     // Set up output directory (inside working directory)
-    $output_directory = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . $output_directory;
+    $output_directory = $artifact_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . $output_directory;
     mkdir($output_directory, 0777, TRUE);
 
     // Set an initial default group, in case leading tests are found with no group.
