@@ -13,7 +13,6 @@ COPY ./conf/my.cnf /etc/mysql/my.cnf
 RUN rm -rf /var/lib/mysql/*
 
 USER root
-EXPOSE 3306
 
 COPY ./conf/startup.sh /opt/startup.sh
 
