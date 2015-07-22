@@ -3,6 +3,9 @@ Image:            "drupalci/mariadb-5.5"
 
 # Docker name to use for this container
 name:             drupaltestbot-db-mariadb-5-5
+HostConfig:
+  "Binds":
+    - "/var/lib/drupalci/database/mariadb-5-5:/var/lib/mysql"
 
 
 # -----------------------------------------------------------------------------
@@ -11,14 +14,12 @@ name:             drupaltestbot-db-mariadb-5-5
 # e.g. Map Container port 3306 to Host port 3306
 ExposedPorts:
   3306/tcp: []
-HostConfig:
-  "PortBindings":
-    "3306/tcp":
-      - "HostPort": "3306"
-        "HostIP": "0.0.0.0"
-  "Binds":
-    - "/var/lib/drupalci/database/mariadb-5-5:/var/lib/mysql"
-
+#HostConfig:
+#  "PortBindings":
+#    "3306/tcp":
+#      - "HostPort": "3306"
+#        "HostIP": "0.0.0.0"
+#
 # e.g. Map Container port 80 to any available port
 #ExposedPorts:
 #  80/tcp: []
