@@ -32,5 +32,4 @@ COPY ./conf/opt-apc.ini /opt/phpenv/versions/5.4.39/etc/conf.d/apc.ini
 COPY ./conf/opt-gettext.ini /opt/phpenv/versions/5.4.39/etc/conf.d/gettext.ini
 COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/5.4.39/etc/conf.d/xdebug.ini
 
-EXPOSE 80
 CMD ["/bin/bash", "/start.sh"]

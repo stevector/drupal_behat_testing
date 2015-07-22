@@ -13,4 +13,3 @@ RUN apt-get install -y adduser mongodb-org-server mongodb-org-shell
 
 CMD ["mongod"]
 
-EXPOSE 27017
