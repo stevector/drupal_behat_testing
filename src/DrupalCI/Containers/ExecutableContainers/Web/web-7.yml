@@ -6,6 +6,10 @@ Cmd:              ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 
 # Mount point within the container for mounting the codebase directory / git checkout
 Mountpoint:       "/var/www/html"
+HostConfig:
+  "Binds":
+    - "/var/lib/drupalci/artifacts:/var/www/html/sites/simpletest"
+    - "/var/lib/dockerci/docker-tmp:/tmp"
 
 # -----------------------------------------------------------------------------
 # Exposing container ports to the host

@@ -9,6 +9,7 @@ Mountpoint:       "/var/www/html"
 HostConfig:
   "Binds":
     - "/var/lib/drupalci/artifacts:/var/www/html/sites/simpletest"
+    - "/var/lib/dockerci/docker-tmp:/tmp"
 
 # -----------------------------------------------------------------------------
 # Exposing container ports to the host
