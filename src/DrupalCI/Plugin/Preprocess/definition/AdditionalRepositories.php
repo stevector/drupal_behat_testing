@@ -24,7 +24,7 @@ class AdditionalRepositories {
    * checkout entries for those repositories to the 'setup' stage of the job
    * definition.
    */
-  public function process(array &$definition, $repositories) {
+  public function process(array &$definition, $repositories, $dci_variables) {
     /*
      * The format of the $repositories string is a comma-separated list of
      * values for each checkout, with individual checkout lists separated by

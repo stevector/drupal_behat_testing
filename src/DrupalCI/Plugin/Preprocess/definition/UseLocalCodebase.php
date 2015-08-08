@@ -23,7 +23,7 @@ class UseLocalCodebase {
    * testing, and overrides the 'setup:checkout:' array within the given
    * job definition to use the local codebase.
    */
-  public function process(array &$definition, $source_directory) {
+  public function process(array &$definition, $source_directory, $dci_variables) {
     // Override all job checkout steps
     $definition['setup']['checkout'] = [];
     $definition['setup']['checkout']['protocol'] = 'local';

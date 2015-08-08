@@ -28,7 +28,7 @@ class Patch {
    *   array('patch_file' => 'file2.patch', 'patch_directory' => 'patch_directory2')
    *       ...   ]
    */
-  public function process(array &$definition, $value) {
+  public function process(array &$definition, $value, $dci_variables) {
     if (empty($definition['setup']['patch'])) {
       $definition['setup']['patch'] = [];
     }
