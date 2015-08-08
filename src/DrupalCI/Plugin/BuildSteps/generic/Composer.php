@@ -44,7 +44,7 @@ class Composer extends ContainerCommand {
    *   The full composer command string.
    */
   protected function buildComposerCommand($arguments) {
-    return "/opt/phpenv/shims/php composer.phar $arguments";
+    return "composer $arguments";
   }
 
 }
