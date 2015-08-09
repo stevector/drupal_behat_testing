@@ -32,8 +32,8 @@ class DrupalInstall {
     if (!empty($dci_variables['DCI_DrupalCoreVersion'])) {
       $core_version = $dci_variables['DCI_DrupalCoreVersion'];
     }
-    elseif (!empty($dci_variables['DCI_CoreRepositoryBranch'])) {
-      $core_version = $dci_variables['DCI_CoreRepositoryBranch'];
+    elseif (!empty($dci_variables['DCI_CoreBranch'])) {
+      $core_version = $dci_variables['DCI_CoreBranch'];
     }
     else {
       // Assume Drupal Core 8.0.x by default
@@ -64,7 +64,12 @@ class DrupalInstall {
 
   protected function process_drush_install(&$definition, $core_version, $dci_variables) {
     // TODO: Implement drush installation process
-
+    if (empty($definition['install']['drush'])) {
+      $definition['install']['drush'] = [];
+    }
+    $definition['install']['drush'][] = "si -y --db-url=%DCI_DBurl% --clean-url=0 ----account-name=admin --account-pass=drupal --account-mail=admin@example.com"
+    $definition['install']['drush'][] = "vset simpletest_clear_results '0' 2>&1";
+    $definition['install']['drush'][] = "vset simpletest_verbose '0' 2>&1";
+    $definition['install']['drush'][] = "en -y simpletest 2>&1";
   }
-
 }
