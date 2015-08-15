@@ -140,7 +140,6 @@ class JunitXMLFormat extends PluginBase {
     $total_tests = 0;
     $total_exceptions = 0;
 
-
     // Go through the groups, and create a testsuite for each.
     foreach ($test_result_data as $groupname => $group_classes) {
       $group_failures = 0;
@@ -165,6 +164,8 @@ class JunitXMLFormat extends PluginBase {
           $test_case_assertions = 0;
           $test_output = '';
           foreach ($method_results as $assertion) {
+            $assertion_result = $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
+            $assertion_result = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $assertion_result);
 
             if (!isset($assertion_counter[$assertion['status']])) {
               $assertion_counter[$assertion['status']] = 0;
@@ -173,7 +174,7 @@ class JunitXMLFormat extends PluginBase {
 
             if ($assertion['status'] == 'exception' || $assertion['status'] == 'fail') {
               $element = $doc->createElement($element_map[$assertion['status']]);
-              $element->setAttribute('message', $assertion['message']);
+              $element->setAttribute('message', $assertion_result);
               $element->setAttribute('type', $assertion['status']);
               // Assume that exceptions and fails are failed tests.
               $test_case_status = 'failed';
@@ -187,7 +188,7 @@ class JunitXMLFormat extends PluginBase {
               }
             }
             elseif (($assertion['status'] == 'pass') || ($assertion['status'] == 'debug')) {
-             $test_output .= $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
+              $test_output .= $assertion_result;
             }
 
             $test_case_assertions++;
@@ -195,7 +196,6 @@ class JunitXMLFormat extends PluginBase {
             $total_tests++;
 
           }
-          $test_output = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $test_output);
           $std_out = $doc->createElement('system-out');
           $output = $doc->createCDATASection($test_output);
           $std_out->appendChild($output);
