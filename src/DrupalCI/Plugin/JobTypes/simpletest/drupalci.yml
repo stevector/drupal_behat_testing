@@ -29,7 +29,8 @@ install:
 execute:
   command:
     - php /var/www/html/core/scripts/run-tests.sh --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
-    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
+    #- cd /var/www/html && sudo -u www-data php %DCI_RunScript% --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip
