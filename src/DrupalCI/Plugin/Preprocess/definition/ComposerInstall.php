@@ -24,18 +24,25 @@ class ComposerInstall {
       return;
     }
 
-    if (empty($definition['install'])) {
-      $definition['install'] = [];
+    if (empty($definition['pre-install'])) {
+      // Insert the pre-install step at the appropriate spot in the definition.
+      // If ['install'] exists, put it immediately before that key.  If not,
+      // put it before the ['execute'] key.
+      $new_array = [];
+      $search_key = (!empty($definition['install'])) ? 'install' : 'execute';
+      foreach ($definition as $key => $details) {
+        if ($key == $search_key) {
+          $new_array['pre-install'] = [];
+        }
+        $new_array[$key] = $details;
+      }
+      $definition = $new_array;
     }
 
-    // Make sure our composer steps run before any other install steps
-    $original_install = $definition['install'];
-    $original_composer = (!empty($definition['install']['composer'])) ? $definition['install']['composer'] : [];
-    unset($original_install['composer']);
-    $new_install['composer'] = $original_composer;
-    $new_install['composer'][] = 'install --working-dir /var/www/html/core --prefer-dist';
-    $new_install += $original_install;
+    if (empty($definition['pre-install']['composer'])) {
+      $definition['pre-install']['composer'] = [];
+    }
 
-    $definition['install'] = $new_install;
+    $definition['pre-install']['composer'][] = 'install --working-dir /var/www/html/core --prefer-dist';
   }
 }
