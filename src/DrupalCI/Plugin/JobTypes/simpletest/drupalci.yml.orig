@@ -28,11 +28,14 @@ setup:
 install:
 execute:
   command:
-    - php -v
-    - php /var/www/html/core/scripts/run-tests.sh --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
+<<<<<<< HEAD
+    - php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
-    # @TODO: when jenkins jobs use RunOptions, switch to this:
-    # - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
+=======
+    - php /var/www/html/core/scripts/run-tests.sh --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
+    #- cd /var/www/html && sudo -u www-data php %DCI_RunScript% --keep-results --dburl %DCI_DBurl% %DCI_TestGroups%
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
+>>>>>>> by jthorson: Convert Simpletest job to use DCI_RunOptions
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip
