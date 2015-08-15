@@ -11,7 +11,7 @@ namespace DrupalCI\Plugin\Preprocess\definition;
  */
 class DBVersion {
 
-  public function process(array &$definition, $value) {
+  public function process(array &$definition, $value, $dci_variables) {
     $length = array_search('install', array_keys($definition));
     $dbtype = explode('-', $value, 2)[0];
     $definition =

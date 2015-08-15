@@ -24,7 +24,7 @@ class JunitXml {
    * then create the directory on the host and use it as the output destination
    * for re-formatted xml processed by the JunitXML Formatter plugin.
    */
-  public function process(array &$definition, $value) {
+  public function process(array &$definition, $value, $dci_variables) {
     // TODO: Sanitize to ensure we're not traversing out of the working directory
     $definition['publish']['junit_xmlformat'] = $value;
   }

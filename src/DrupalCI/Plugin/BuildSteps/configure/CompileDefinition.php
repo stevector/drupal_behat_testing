@@ -113,14 +113,16 @@ class CompileDefinition extends PluginBase {
         }
       }
     }
-    // Foreach DCI_* pair in the array, check if a plugin exists, and process if it does.  (Pass in test definition template)
+    // Foreach DCI_* pair in the array, check if a definition plugin exists,
+    // and process if it does.  We pass in the test definition template and
+    // complete array of DCI_* variables.
     foreach ($dci_variables as $key => $value) {
       if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
         $name = strtolower($matches[1]);
         $replacements["%$key%"] = $value;
         if ($plugin_manager->hasPlugin('definition', $name)) {
           $plugin_manager->getPlugin('definition', $name)
-            ->process($definition, $value);
+            ->process($definition, $value, $dci_variables);
         }
       }
     }

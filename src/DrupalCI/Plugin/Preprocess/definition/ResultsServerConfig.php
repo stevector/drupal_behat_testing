@@ -39,7 +39,7 @@ class ResultsServerConfig {
    * )
    * ]
    */
-  public function process(array &$definition, $value) {
+  public function process(array &$definition, $value, $dci_variables) {
     if (empty($definition['publish']['drupalci_results'])) {
       $definition['publish']['drupalci_results'] = [];
     }
