@@ -90,6 +90,22 @@ class CompileDefinition extends PluginBase {
     // Combine the above to generate the final array of DCI_* key=>value pairs
     $dci_variables = $cli_variables + $environment_variables + $local_overrides + $jobtype_defaults + $platform_defaults;
 
+    // Reorder array, placing priority variables at the front
+    if (!empty($job->priorityArguments)) {
+      $original_array = $dci_variables;
+      $original_keys = array_keys($original_array);
+      $ordered_variables = [];
+      foreach ($job->priorityArguments as $element) {
+        if (in_array($element, $original_keys)) {
+          $ordered_variables[$element] = $original_array[$element];
+          unset($original_array[$element]);
+        }
+      }
+      $dci_variables = array_merge($ordered_variables, $original_array);
+    }
+
+    // For each DCI_* element in the array, check to see if a variable
+    // preprocessor exists, and process it if it does.
     $replacements = [];
     $plugin_manager = $this->getPreprocessPluginManager();
     foreach ($dci_variables as $key => &$value) {

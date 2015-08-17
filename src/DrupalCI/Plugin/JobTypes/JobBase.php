@@ -54,6 +54,8 @@ class JobBase extends ContainerBase implements JobInterface {
   // Defines platform defaults which apply for all jobs.  (Can still be overridden by per-job defaults)
   public $platformDefaults = array(
     "DCI_CodeBase" => "./",
+    "DCI_IsDrupal" => true,
+    "DCI_DrupalVersion" => "8.0.x",
     // DCI_CheckoutDir defaults to a random directory in the system temp directory.
   );
 
