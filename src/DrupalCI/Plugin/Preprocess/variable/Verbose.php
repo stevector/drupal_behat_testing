@@ -17,17 +17,17 @@ class Verbose extends PluginBase {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_RunScript';
+    return 'DCI_RunOptions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process($run_script, $source_value) {
+  public function process($run_options, $source_value) {
     if (strtolower($source_value) === 'true') {
-      $run_script .=  ' --verbose';
+      $run_options .=  ' --verbose';
     }
-    return $run_script;
+    return $run_options;
   }
 
 }

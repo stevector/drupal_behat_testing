@@ -14,7 +14,7 @@ use DrupalCI\Plugin\PluginBase;
 class XMLOutput extends PluginBase {
 
   public function target() {
-    return 'DCI_RunScript';
+    return 'DCI_RunOptions';
   }
 
   public function process($dci_variable, $value) {

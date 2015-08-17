@@ -17,17 +17,17 @@ class Color extends PluginBase {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_RunScript';
+    return 'DCI_Runptions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process($run_script, $source_value) {
+  public function process($run_options, $source_value) {
     if (strtolower($source_value) === 'true') {
-      $run_script .=  ' --color';
+      $run_options .=  ' --color';
     }
-    return $run_script;
+    return $run_options;
   }
 
 }

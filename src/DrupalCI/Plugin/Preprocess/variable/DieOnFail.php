@@ -17,17 +17,17 @@ class DieOnFail extends PluginBase {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_RunScript';
+    return 'DCI_RunOptions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process($run_script, $source_value) {
+  public function process($run_options, $source_value) {
     if (strtolower($source_value) === 'true') {
-      $run_script .=  ' --die-on-fail';
+      $run_options .=  ' --die-on-fail';
     }
-    return $run_script;
+    return $run_options;
   }
 
 }

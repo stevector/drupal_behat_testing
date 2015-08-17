@@ -50,7 +50,7 @@ class TestItem extends PluginBase {
 
     // Split the string components
     $components = explode(':', $testitem);
-    if (!in_array($components[0], array('module', 'class', 'file'))) {
+    if (!in_array($components[0], array('module', 'class', 'file', 'directory'))) {
       // Invalid entry.
       return $testgroups;
     }

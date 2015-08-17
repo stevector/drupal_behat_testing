@@ -17,17 +17,17 @@ class SQLite extends PluginBase {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_RunScript';
+    return 'DCI_RunOptions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function process($run_script, $sqlite) {
+  public function process($run_options, $sqlite) {
     if (!empty($sqlite)) {
-      return "$run_script --sqlite $sqlite";
+      return "$run_options --sqlite $sqlite";
     } else {
-      return "$run_script";
+      return "$run_options";
     }
   }
 
