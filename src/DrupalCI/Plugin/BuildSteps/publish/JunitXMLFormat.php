@@ -150,7 +150,7 @@ class JunitXMLFormat extends PluginBase {
       $test_suite->setAttribute('name', $groupname);
       $test_suite->setAttribute('timestamp', date('c'));
       $test_suite->setAttribute('hostname', "TODO: Set Hostname");
-      $test_suite->setAttribute('package', "TODO: Set Package");
+      $test_suite->setAttribute('package', $groupname);
       // TODO: time test runs. $test_group->setAttribute('time', $test_group_id);
       // TODO: add in the properties of the job into the test run.
 
