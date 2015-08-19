@@ -91,13 +91,14 @@ class RunCommand extends DrupalCICommandBase {
     // Compile the complete job definition, taking into account DCI_* variables
     // and job-specific arguments
     $job_definition->compile($job);
+    $job_definition->validate($job);
 
     // Attach our job definition object to the job.
     $job->setJobDefinition($job_definition);
 
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     // TODO: Add prep_results once results API integration is complete
-    foreach (['validate_definition', 'setup_directories'] as $step) {
+    foreach (['setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
 

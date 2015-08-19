@@ -24,6 +24,11 @@ class JobDefinition {
   protected $template_file;
   protected function setTemplateFile($template_file) {  $this->template_file = $template_file; }
 
+  // Contains our array of DCI_* variables
+  protected $dci_variables;
+  public function getDCIVariables() {  return $this->dci_variables;  }
+  public function setDCIVariables($dci_variables) {  $this->dci_variables = $dci_variables;  }
+
   // Contains the parsed job definition
   protected $definition = array();
   public function getDefinition() {  return $this->definition;  }
@@ -68,24 +73,71 @@ class JobDefinition {
    */
   public function compile(JobInterface $job) {
     // Compile our list of DCI_* variables
-    $dci_variables = $this->compileDciVariables($job);
+    $this->compileDciVariables($job);
 
     // Execute variable preprocessor plugin logic
-    $this->executeVariablePreprocessors($dci_variables);
+    $this->executeVariablePreprocessors();
 
     // Execute definition preprocessor plugin logic
-    $this->executeDefinitionPreprocessors($dci_variables);
+    $this->executeDefinitionPreprocessors();
 
     // Process DCI_* variable substitution into the job definition template
-    $this->substituteVariables($dci_variables);
+    $this->substituteVariables();
 
     // Add the build variables and job definition to our job object, for
     // compatibility.
     // TODO: References to these on the job should be moved over to reference
     // the job definition instead.
-    $job->setBuildVars($dci_variables + $job->getBuildVars());
+    $job->setBuildVars($this->getDCIVariables() + $job->getBuildVars());
     $job->setDefinition($this->getDefinition());
 
+  }
+
+  /**
+   * Validate that the job contains all required elements defined in the class
+   */
+  public function validate(JobInterface $job) {
+    // TODO: Ensure that all 'required' arguments are defined
+    $definition = $this->getDefinition();
+    $failflag = FALSE;
+    foreach ($job->getRequiredArguments() as $env_var => $yaml_loc) {
+      if (!empty($job->getBuildVars()[$env_var])) {
+        continue;
+      }
+      else {
+        // Look for the appropriate array structure in the job definition file
+        // eg: environment:db
+        $keys = explode(":", $yaml_loc);
+        $eval = $definition;
+        foreach ($keys as $key) {
+          if (!empty($eval[$key])) {
+            // Check if the next level contains a numeric [0] key, indicating a
+            // nested array of parameters.  If found, skip this level of the
+            // array.
+            if (isset($eval[$key][0])) {
+              $eval = $eval[$key][0];
+            }
+            else {
+              $eval=$eval[$key];
+            }
+          }
+          else {
+            // Missing a required key in the array key chain
+            $failflag = TRUE;
+            break;
+          }
+        }
+        if (!$failflag) {
+          continue;
+        }
+      }
+      // If processing gets to here, we're missing a required variable
+      $job->errorOutput("Failed", "Required test parameter <options=bold>'$env_var'</options=bold> not found in environment variables, and <options=bold>'$yaml_loc'</options=bold> not found in job definition file.");
+      // TODO: Graceful handling of failed exit states
+      return FALSE;
+    }
+    // TODO: Strip out arguments which are not defined in the 'Available' arguments array
+    return TRUE;
   }
 
   /**
@@ -164,16 +216,17 @@ class JobDefinition {
       $dci_variables = array_merge($ordered_variables, $original_array);
     }
 
-    return $dci_variables;
+    $this->setDCIVariables($dci_variables);
   }
 
   /**
    * Execute Variable preprocessor Plugin logic
    */
-  protected function executeVariablePreprocessors(&$dci_variables) {
+  protected function executeVariablePreprocessors() {
     // For each DCI_* element in the array, check to see if a variable
     // preprocessor exists, and process it if it does.
     $replacements = [];
+    $dci_variables = $this->getDCIVariables();
     $plugin_manager = $this->getPreprocessPluginManager();
     foreach ($dci_variables as $key => &$value) {
       if (preg_match('/^DCI_(.+)$/i', $key, $matches)) {
@@ -196,13 +249,15 @@ class JobDefinition {
         }
       }
     }
+    $this->setDCIVariables($dci_variables);
   }
 
   /**
    * Execute Variable preprocessor Plugin logic
    */
-  protected function executeDefinitionPreprocessors($dci_variables) {
+  protected function executeDefinitionPreprocessors() {
     $definition = $this->getDefinition();
+    $dci_variables = $this->getDCIVariables();
     $plugin_manager = $this->getPreprocessPluginManager();
     // Foreach DCI_* pair in the array, check if a definition plugin exists,
     // and process if it does.  We pass in the test definition template and
@@ -222,9 +277,10 @@ class JobDefinition {
   /**
    * Substitute DCI_* variables into the job definition template
    */
-  protected function substituteVariables($dci_variables) {
+  protected function substituteVariables() {
     // Generate our replacements array
     $replacements = [];
+    $dci_variables = $this->getDCIVariables();
     foreach ($dci_variables as $key => $value) {
       if (preg_match('/^DCI_(.+)$/', $key, $matches)) {
         $name = strtolower($matches[1]);
