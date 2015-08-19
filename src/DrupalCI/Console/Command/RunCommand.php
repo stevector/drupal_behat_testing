@@ -97,8 +97,7 @@ class RunCommand extends DrupalCICommandBase {
 
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     // TODO: Add prep_results once results API integration is complete
-    foreach (['validate_definition', 'setup_directories', 'prepare_results_placeholders'] as $step) {
-    // foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
+    foreach (['validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
 
