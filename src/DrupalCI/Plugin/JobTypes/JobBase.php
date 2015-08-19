@@ -602,6 +602,7 @@ class JobBase extends ContainerBase implements JobInterface {
       $build_id = $this->jobtype . '_' . time();
     }
     $this->setBuildId($build_id);
+    Output::writeLn("<info>Executing job with build ID: <options=bold>$build_id</options=bold></info>");
   }
 
 }

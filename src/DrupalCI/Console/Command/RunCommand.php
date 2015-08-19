@@ -71,6 +71,9 @@ class RunCommand extends DrupalCICommandBase {
     // Link our $output variable to the job, so that jobs can display their work.
     Output::setOutput($output);
 
+    // Generate a unique job build_id, and store it within the job object
+    $job->generateBuildId();
+
     // Determine the job definition template to be used
     if ($definition && strtolower(substr(trim($definition), -4)) == ".yml") {
       $template_file = $definition;
@@ -85,16 +88,16 @@ class RunCommand extends DrupalCICommandBase {
     // not exist, this will trigger a FileNotFound or ParseError exception.
     $job_definition = new JobDefinition($template_file);
 
+    // Compile the complete job definition, taking into account DCI_* variables
+    // and job-specific arguments
+    $job_definition->compile($job);
+
     // Attach our job definition object to the job.
     $job->setJobDefinition($job_definition);
 
-    // Generate a unique job build_id, and store it within the job object
-    $job->generateBuildId();
-
-
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     // TODO: Add prep_results once results API integration is complete
-    foreach (['compile_definition', 'validate_definition', 'setup_directories', 'prepare_results_placeholders'] as $step) {
+    foreach (['validate_definition', 'setup_directories', 'prepare_results_placeholders'] as $step) {
     // foreach (['compile_definition', 'validate_definition', 'setup_directories'] as $step) {
       $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
     }
