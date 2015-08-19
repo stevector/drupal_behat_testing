@@ -17,7 +17,7 @@ class Color extends PluginBase {
    * {@inheritdoc}
    */
   public function target() {
-    return 'DCI_Runptions';
+    return 'DCI_RunOptions';
   }
 
   /**
