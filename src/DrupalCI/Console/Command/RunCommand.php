@@ -9,6 +9,7 @@ namespace DrupalCI\Console\Command;
 
 use DrupalCI\Console\Helpers\ConfigHelper;
 use DrupalCI\Console\Output;
+use DrupalCI\Job\Definition\JobDefinition;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,49 +51,46 @@ class RunCommand extends DrupalCICommandBase {
    */
   public function execute(InputInterface $input, OutputInterface $output) {
     $definition = $input->getArgument('definition');
-    // The definition argument is optional, so we need to set a default definition file if it's not provided.
-    if (!$definition) {
-      // See if we've defined a default job type in our local configuration overrides
-      $confighelper = new ConfigHelper();
-      $local_overrides = $confighelper->getCurrentConfigSetParsed();
-      if (!empty($local_overrides['DCI_JobType'])) {
-        $definition = $local_overrides['DCI_JobType'];
-      }
-      else {
-        // Default to a drupalci.yml file in the local directory
-        $definition = "./drupalci.yml";
-      }
-    }
-    // Populate the job type and definition file variables
-    if (substr(trim($definition), -4) == ".yml") {
-      // "File" arguments
-      $job_type = 'generic';
-      $definition_file = $definition;
+
+    $confighelper = new ConfigHelper();
+    $local_overrides = $confighelper->getCurrentConfigSetParsed();
+
+    // Determine the Job Type based on the first argument to the run command
+    if ($definition) {
+      $job_type = (strtolower(substr(trim($definition), -4)) == ".yml") ? "generic" : trim($definition);
     }
     else {
-      // "Job Type" arguments
-      $job_type = $definition;
-      $definition_file = __DIR__ . "/../../Plugin/JobTypes/$job_type/drupalci.yml";
+      // If no argument defined, then check for a default in the local overrides
+      $job_type = (!empty($local_overrides['DCI_JobType'])) ? $local_overrides['DCI_JobType'] : 'generic';
     }
-    // TODO: Make sure $definition_file exists
 
+    // Load the associated class for this job type
     /** @var $job \DrupalCI\Plugin\JobTypes\JobInterface */
     $job = $this->jobPluginManager()->getPlugin($job_type, $job_type);
 
     // Link our $output variable to the job, so that jobs can display their work.
     Output::setOutput($output);
 
-    // Store the definition file argument in the job so we can act on it later
-    $job->setDefinitionFile($definition_file);
-
-    // Create a unique job build_id
-    // Check for BUILD_TAG environment variable, and if not present, create a random result.
-    $build_id = getenv('BUILD_TAG');
-    if (empty($build_id)) {
-      $build_id = $job_type . '_' . time();
+    // Determine the job definition template to be used
+    if ($definition && strtolower(substr(trim($definition), -4)) == ".yml") {
+      $template_file = $definition;
+    }
+    else {
+      $template_file = $job->getDefaultDefinitionTemplate($job_type);
     }
 
-    $job->setBuildId($build_id);
+    Output::writeLn("<info>Using job definition template: <options=bold>$template_file</options=bold></info>");
+
+    // Create a new job definition object for this job.  If $template_file does
+    // not exist, this will trigger a FileNotFound or ParseError exception.
+    $job_definition = new JobDefinition($template_file);
+
+    // Attach our job definition object to the job.
+    $job->setJobDefinition($job_definition);
+
+    // Generate a unique job build_id, and store it within the job object
+    $job->generateBuildId();
+
 
     // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
     // TODO: Add prep_results once results API integration is complete

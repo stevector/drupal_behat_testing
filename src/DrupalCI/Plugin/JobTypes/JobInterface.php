@@ -5,6 +5,7 @@
  */
 namespace DrupalCI\Plugin\JobTypes;
 
+use DrupalCI\Job\Definition\JobDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
 
 interface JobInterface {
@@ -109,10 +110,6 @@ interface JobInterface {
 
   public function setDefinition(array $job_definition);
 
-  public function getDefinitionFile();
-
-  public function setDefinitionFile($filename);
-
   public function getDefaultArguments();
 
   public function getPlatformDefaults();
@@ -152,4 +149,11 @@ interface JobInterface {
 
   public function setArtifactDirectory($directory);
 
+  public function getDefaultDefinitionTemplate($job_type);
+
+  public function getJobDefinition();
+
+  public function setJobDefinition(JobDefinition $job_definition);
+
+  public function generateBuildId();
 }

@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use DrupalCI\Console\Output;
 use DrupalCI\Job\Artifacts\BuildArtifact;
 use DrupalCI\Job\Artifacts\BuildArtifactList;
+use DrupalCI\Job\Definition\JobDefinition;
 use DrupalCIResultsApi\Api;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
@@ -44,9 +45,6 @@ class JobBase extends ContainerBase implements JobInterface {
   {
     return $this->buildId;
   }
-
-  // Defines the job definition file
-  protected $jobDefinitionFile;
 
   // Defines argument variable names which are valid for this job type
   public $availableArguments = array();
@@ -218,13 +216,15 @@ class JobBase extends ContainerBase implements JobInterface {
     $this->jobDefinition = $job_definition;
   }
 
-  public function getDefinitionFile() {
-    return $this->jobDefinitionFile;
+  protected $job_definition;
+
+  public function setJobDefinition(JobDefinition $job_definition) {
+    $this->job_definition = $job_definition;
+  }
+  public function getJobDefinition() {
+    return $this->job_definition;
   }
 
-  public function setDefinitionFile($filename) {
-    $this->jobDefinitionFile = $filename;
-  }
   public function getDefaultArguments() {
     return $this->defaultArguments;
   }
@@ -575,6 +575,33 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->artifactDirectory;
   }
 
+  /**
+   * Returns the default job definition template for this job type
+   *
+   * This method may be overridden by a specific job class to add template
+   * selection logic, if desired.
+   *
+   * @param $job_type
+   *   The name of the job type, used to select the appropriate subdirectory
+   *
+   * @return string
+   *   The location of the default job definition template
+   */
+  public function getDefaultDefinitionTemplate($job_type) {
+    return __DIR__ . "/$job_type/drupalci.yml";
+  }
 
+  /**
+   * Generate a Build ID for this job
+   */
+  public function generateBuildId() {
+    // Use the BUILD_TAG environment variable if present, otherwise generate a
+    // unique build tag based on timestamp.
+    $build_id = getenv('BUILD_TAG');
+    if (empty($build_id)) {
+      $build_id = $this->jobtype . '_' . time();
+    }
+    $this->setBuildId($build_id);
+  }
 
 }

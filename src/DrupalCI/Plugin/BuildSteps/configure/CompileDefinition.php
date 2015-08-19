@@ -45,8 +45,8 @@ class CompileDefinition extends PluginBase {
 
     // For other 'jobtype' jobs, this is the file located at
     // DrupalCI/Plugin/JobTypes/<jobtype>/drupalci.yml.
-    if (!$definition = $this->loadYaml($job->getDefinitionFile())) {
-      $job->errorOutput('Error', 'Failed to load job definition YAML');
+    if (!$definition = $job->getJobDefinition()->getDefinition()) {
+      $job->errorOutput('Error', 'Failed to load job definition from job');
     }
     // Get and parse external (i.e. anything not from the default definition
     // file) job argument parameters.  DrupalCI jobs are controlled via a
