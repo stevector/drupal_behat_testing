@@ -117,6 +117,9 @@ class DockerRemoveCommand extends DrupalCICommandBase {
       $cmd_docker_rm = "docker rm " . implode(' ', $createdContainers);
       exec( $cmd_docker_rm, $rmContainers);
 
+      Output::writeln('Removed Containers:');
+      Output::writeln($rmContainers);
+
       // DEBUG
       //Output::writeln($remove_output);
 
@@ -124,7 +127,8 @@ class DockerRemoveCommand extends DrupalCICommandBase {
       exec($cmd_docker_psa, $remove_check);
 
       if (!empty($remove_check)) {
-        Output::writeln('<error>Error:</error>'); Output::writeln($remove_check);
+        Output::writeln('<error>Error:</error>'); 
+        Output::writeln($remove_check);
       }
       else {
         Output::writeln('<comment>Remove complete.</comment>');
