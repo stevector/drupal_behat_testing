@@ -23,8 +23,8 @@ class CleanCommand extends DrupalCICommandBase {
   protected function configure() {
     $this
       ->setName('clean')
-      ->setDescription('Remove docker images and containers.')
-      ->addArgument('type', InputArgument::REQUIRED, 'Type of container to clean.')
+      ->setDescription('Remove docker images and containers associated with DrupalCI.')
+      ->addArgument('type', InputArgument::REQUIRED, 'Type of container to clean (e.g. db, web, all, etc.)')
       ->addOption('hard', '', InputOption::VALUE_NONE, 'Remove everything, stopping first if neccessary.')
       ->addOption('list', '', InputOption::VALUE_NONE, 'List images or containers.');
   }
@@ -47,7 +47,6 @@ class CleanCommand extends DrupalCICommandBase {
       $this->listContainers($type, $input, $output);
     }
     else {
-      // TODO: handle cleaning of just certain types, currently just cleans all
       $this->cleanContainers($type, $input, $output);
     }
   }
@@ -67,39 +66,74 @@ class CleanCommand extends DrupalCICommandBase {
   /**
    * (@inheritdoc)
    */
-  protected function cleanContainers($type, InputInterface $input, OutputInterface $output) {
+  protected function imageTypes($type, InputInterface $input, OutputInterface $output) {
+    // get list DCI container type
+    $image_type = '';
+    switch ($type) {
+    case 'all':
+      break;
+    case 'db':
+      $image_type = 'mysql|pgsql|mariadb|mongodb';
+      break;
+    case 'web':
+      $image_type = 'web';
+      break;
+    case 'php':
+      $image_type = 'php';
+      break;
+    }
+    return $image_type;
+  }
+
+  /**
+   * (@inheritdoc)
+   */
+  protected function cleanContainers($type, InputInterface $input,OutputInterface $output) {
     // TODO: replace PHP exec('docker ...') with docker-php
     Output::setOutput($output);
-    // get list of running containers
-    exec('docker ps -q', $runningContainers);
-    // get list of created containers
-    exec('docker ps -a -q', $createdContainers);
-    $result_code = 0;
-    if ($createdContainers) {
-      // stop running containers and clean up
-      Output::writeln('<comment>Cleaning containers.</comment>');
-      if ($runningContainers) {
-        exec('docker stop $(docker ps -q) && docker rm $(docker ps -a -q)', $clean_output, $result_code);
-      }
-      else {
-        // no containerss running, so just clean up
-        exec('docker rm $(docker ps -a -q)', $clean_output, $result_code);
-      }
-      // DEBUG
-      // Output::writeln($clean_output);
-    }
-    else {
-      Output::writeln('<comment>No containers to be cleaned.</comment>');
+
+    // DCI search string
+    $search_string = 'drupalci';
+    $image_type = $this->imageTypes($type, $input, $output);
+    if(!empty($image_type)){
+      $search_string .= "' | egrep '" . $image_type;
     }
 
-    exec('docker ps -a -q', $clean_check);
-    if ($clean_check || $result_code) {
-      Output::writeln('<error>Error:</error>');
-      Output::writeln($clean_check);
-      Output::writeln('<comment>Docker result code:</comment> '.$result_code);
+    // get list of created containers
+    $cmd_docker_psa = "docker ps -a | grep '" . $search_string . "' | awk '{print $1}'";
+    $cmd_docker_ps = "docker ps | grep '" . $search_string . "' | awk '{print $1}'";
+    exec($cmd_docker_psa, $createdContainers);
+
+    $result_code = 0;
+    if($createdContainers) {
+      Output::writeln('<comment>Cleaning containers.</comment>');
+      // get list of running containers of desired type
+      exec($cmd_docker_ps, $runningContainers);
+      if(!empty($runningContainers)){
+      // kill DCI running containers
+        $cmd_docker_kill = "docker kill " . implode(' ', $runningContainers);
+        exec( $cmd_docker_kill, $killContainers);
+      }
+      // remove DCI containers
+      $cmd_docker_rm = "docker rm " . implode(' ', $createdContainers);
+      exec( $cmd_docker_rm, $rmContainers);
+      // DEBUG
+      //Output::writeln($clean_output);
+
+      exec($cmd_docker_psa, $clean_check);
+
+      if ($clean_check || $result_code) {
+        Output::writeln('<error>Error:</error>'); Output::writeln($clean_check);
+        Output::writeln('<comment>Docker result code:</comment> '.$result_code);
+      }
+      else {
+        Output::writeln('<comment>Clean complete.</comment>');
+      }
     }
     else {
-      Output::writeln('<comment>Clean complete.</comment>');
+      // nothing to clean
+      Output::writeln('<comment>Nothing to clean.</comment> ');
     }
+
   }
 }
