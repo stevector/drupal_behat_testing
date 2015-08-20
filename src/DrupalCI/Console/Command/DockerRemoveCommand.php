@@ -41,7 +41,7 @@ class DockerRemoveCommand extends DrupalCICommandBase {
     if (!in_array($type, $types)) {
       $output->writeln('<error>' . $type . ' is not a legal container type.</error>');
     }
-    //$this->showArguments($input, $output);
+
     if ($input->getOption('list')) {
       $this->listContainers($type, $input, $output);
     }
@@ -88,7 +88,7 @@ class DockerRemoveCommand extends DrupalCICommandBase {
    * (@inheritdoc)
    */
   protected function removeContainers($type, InputInterface $input,OutputInterface $output) {
-    // TODO: replace PHP exec('docker ...') with docker-php
+
     Output::setOutput($output);
 
     // DCI search string
@@ -117,11 +117,12 @@ class DockerRemoveCommand extends DrupalCICommandBase {
       $cmd_docker_rm = "docker rm " . implode(' ', $createdContainers);
       exec( $cmd_docker_rm, $rmContainers);
 
+      // list removed containers
       Output::writeln('Removed Containers:');
       Output::writeln($rmContainers);
 
       // DEBUG
-      //Output::writeln($remove_output);
+      //Output::writeln($rmContainers);
 
       //check to for any DCI after the kill and remove
       exec($cmd_docker_psa, $remove_check);
