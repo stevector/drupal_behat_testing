@@ -5,8 +5,6 @@
  * Contains \DrupalCI\Job\Definition\JobDefinition.
  */
 
-// TODO: This class does not appear to ever be called
-
 namespace DrupalCI\Job\Definition;
 
 use DrupalCI\Console\Helpers\ConfigHelper;
@@ -15,7 +13,6 @@ use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
 class JobDefinition {
@@ -39,7 +36,6 @@ class JobDefinition {
    */
   protected $pluginManager;
 
-
   function __construct($template_file) {
     // Store the template location
     $this->setTemplateFile($template_file);
@@ -55,6 +51,7 @@ class JobDefinition {
     // For other 'jobtype' jobs, this is the file location returned by
     // the $job->getDefaultDefinitionTemplate() method, which defaults to
     // DrupalCI/Plugin/JobTypes/<jobtype>/drupalci.yml for most job types.
+
     if (!file_exists($template_file)) {
       //Output::writeln("Unable to locate job definition template at <options=bold>$template_file</options=bold>");
       throw new FileNotFoundException("Unable to locate job definition template at $template_file.");
