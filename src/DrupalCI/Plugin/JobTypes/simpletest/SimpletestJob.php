@@ -98,7 +98,7 @@ class SimpletestJob extends JobBase {
   public $availableArguments = array(
     // ***** Variables Available for any job type *****
     'DCI_UseLocalCodebase' => 'Used to define a local codebase to be cloned (instead of performing a Git checkout)',
-    'DCI_CheckoutDir' => 'Defines the location to be used in creating the local copy of the codebase, to be mapped into the container as a container volume.  Default: /tmp/simpletest-[random string]',
+    'DCI_WorkingDir' => 'Defines the location to be used in creating the local copy of the codebase, to be mapped into the container as a container volume.  Default: /tmp/simpletest-[random string]',
     'DCI_ResultsServer' => 'Specifies the url string of a DrupalCI results server for which to publish job results',
     'DCI_ResultsServerConfig' => 'Specifies the location of a configuration file on the test runner containg a DrupalCI Results Server configuration to use in publishing results.',
     'DCI_JobBuildId' => 'Specifies a unique build ID assigned to this job from an upstream server',

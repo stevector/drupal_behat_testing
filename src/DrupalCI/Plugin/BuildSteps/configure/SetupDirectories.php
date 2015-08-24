@@ -41,7 +41,7 @@ class SetupDirectories {
   public function setupWorkingDir(JobInterface $job) {
     $arguments = $job->getBuildVars();
     // Check if the target working directory has been specified.
-    if (empty($arguments['DCI_CheckoutDir'])) {
+    if (empty($arguments['DCI_WorkingDir'])) {
       // Case:  No explicit working directory defined.
       // Generate a working directory in the system temporary directory.
       $build_id = $job->getBuildId();
@@ -56,10 +56,10 @@ class SetupDirectories {
         }
       }
       Output::writeLn("<comment>Checkout directory created at <info>$tmpdir</info></comment>");
-      $job->setBuildVar('DCI_CheckoutDir', $tmpdir);
-      $arguments['DCI_CheckoutDir'] = $tmpdir;
+      $job->setBuildVar('DCI_WorkingDir', $tmpdir);
+      $arguments['DCI_WorkingDir'] = $tmpdir;
     }
-    elseif ($arguments['DCI_CheckoutDir'] != $arguments['DCI_CodeBase']) {
+    elseif ($arguments['DCI_WorkingDir'] != $arguments['DCI_CodeBase']) {
       // Case: Working directory defined, and differs from the CodeBase directory.
       // TODO: Resolve / Sync up use of DCI_CodeBase and DCI_UseLocalCodebase
       // Create checkout directory
@@ -75,7 +75,7 @@ class SetupDirectories {
       }
     }
     // Update the checkout directory in the class object
-    $job->setWorkingDir($arguments['DCI_CheckoutDir']);
+    $job->setWorkingDir($arguments['DCI_WorkingDir']);
   }
 /*
   protected function create_tempdir(JobInterface $job, $dir=NULL,$prefix=NULL) {
@@ -103,21 +103,21 @@ class SetupDirectories {
 */
   protected function create_local_checkout_dir(JobInterface $job) {
     $arguments = $job->getBuildVars();
-    $directory = $arguments['DCI_CheckoutDir'];
+    $directory = $arguments['DCI_WorkingDir'];
     $tempdir = sys_get_temp_dir();
 
-    // Prefix the system temp dir on the DCI_CheckoutDir variable if needed
+    // Prefix the system temp dir on the DCI_WorkingDir variable if needed
     if (strpos($directory, $tempdir) !== 0) {
       // If not, prefix the system temp directory on the variable.
       if ($directory[0] != "/") {
         $directory = "/" . $directory;
       }
-      $arguments['DCI_CheckoutDir'] = $tempdir . $directory;
+      $arguments['DCI_WorkingDir'] = $tempdir . $directory;
       $job->setBuildVars($arguments);
     }
 
-    // Check if the DCI_CheckoutDir exists within the /tmp directory, or create it if not
-    $path = realpath($arguments['DCI_CheckoutDir']);
+    // Check if the DCI_WorkingDir exists within the /tmp directory, or create it if not
+    $path = realpath($arguments['DCI_WorkingDir']);
     if ($path !== FALSE) {
       // Directory exists.  Check that we're still in /tmp
       if (!$this->validate_checkout_dir($job)) {
@@ -133,13 +133,13 @@ class SetupDirectories {
     }
     elseif ($path === FALSE) {
       // Directory doesn't exist, so create it.
-      $directory = $arguments['DCI_CheckoutDir'];
+      $directory = $arguments['DCI_WorkingDir'];
       mkdir($directory, 0777, true);
       Output::writeLn("<comment>Checkout Directory created at <info>$directory</info>");
       // Ensure we are under the system temp dir
       if (!$this->validate_checkout_dir($job)) {
         // Something bad happened.  Attempt to transverse out of the /tmp dir, perhaps?
-        $job->errorOutput("Error", "DCI_CheckoutDir must reside somewhere within the system temporary file directory. You may wish to manually remove the directory created above.");
+        $job->errorOutput("Error", "DCI_WorkingDir must reside somewhere within the system temporary file directory. You may wish to manually remove the directory created above.");
         return;
       }
     }
@@ -147,7 +147,7 @@ class SetupDirectories {
 
   public function validate_checkout_dir(JobInterface $job) {
     $arguments = $job->getBuildVars();
-    $path = realpath($arguments['DCI_CheckoutDir']);
+    $path = realpath($arguments['DCI_WorkingDir']);
     $tmpdir = sys_get_temp_dir();
     if (strpos($path, $tmpdir) === 0) {
       return TRUE;

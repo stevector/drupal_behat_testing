@@ -54,7 +54,7 @@ class JobBase extends ContainerBase implements JobInterface {
     "DCI_CodeBase" => "./",
     "DCI_IsDrupal" => true,
     "DCI_DrupalVersion" => "8.0.x",
-    // DCI_CheckoutDir defaults to a random directory in the system temp directory.
+    // DCI_WorkingDir defaults to a random directory in the system temp directory.
   );
 
   // Defines the default arguments which are valid for this job type
