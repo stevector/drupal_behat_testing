@@ -33,8 +33,8 @@ execute:
     - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
     - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
     - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest 2>&1
-    - sudo -u www-data php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
-    - sudo -u www-data php %DCI_RunScript% --url http://localhost %DCI_TestGroups%
+    - sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
+    - sudo -u www-data php %DCI_RunScript% --url http://localhost %DCI_RunOptions% %DCI_TestGroups%
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip
