@@ -49,7 +49,7 @@ class SimpletestLegacy6Job extends JobBase {
     'DCI_TestGroups' => '--all',
     'DCI_Concurrency' => 4,
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
-    'DCI_RunOptions' => 'color;keep-results',
+    'DCI_RunOptions' => 'color',
   );
 
   /**
