@@ -105,6 +105,12 @@ class Checkout extends SetupBase {
       // TODO: Pass on the actual return value for the git checkout
       return;
     }
+
+    $cmd = "cd '$directory' && git log --oneline -n 1 --decorate";
+    $this->exec($cmd, $cmdoutput, $result);
+    Output::writeLn("<comment>Git commit info:</comment>");
+    Output::writeLn("<comment>\t" . implode($cmdoutput));
+
     Output::writeLn("<comment>Checkout complete.</comment>");
   }
 
