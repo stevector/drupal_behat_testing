@@ -26,26 +26,14 @@ use Docker\Container;
 class JobBase extends ContainerBase implements JobInterface {
 
   // Defines the job type
-  public $jobtype = 'base';
+  protected $jobType = 'base';
+  public function getJobType() {  return $this->jobType;  }
 
   // Defines a unique build ID
-  public $buildId;
+  protected $buildId;
+  public function setBuildId($buildId) {  $this->buildId = $buildId;  }
+  public function getBuildId() {  return $this->buildId;  }
 
-  /**
-   * @param mixed $buildId
-   */
-  public function setBuildId($buildId)
-  {
-    $this->buildId = $buildId;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getBuildId()
-  {
-    return $this->buildId;
-  }
 
   // Defines argument variable names which are valid for this job type
   public $availableArguments = array();
@@ -612,7 +600,7 @@ class JobBase extends ContainerBase implements JobInterface {
     // unique build tag based on timestamp.
     $build_id = getenv('BUILD_TAG');
     if (empty($build_id)) {
-      $build_id = $this->jobtype . '_' . time();
+      $build_id = $this->getJobType() . '_' . time();
     }
     $this->setBuildId($build_id);
     Output::writeLn("<info>Executing job with build ID: <options=bold>$build_id</options=bold></info>");

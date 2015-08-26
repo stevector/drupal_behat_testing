@@ -16,15 +16,9 @@ use DrupalCI\Plugin\JobTypes\JobBase;
 class SimpletestJob extends JobBase {
 
   /**
-   * Job Type (jobType)
-   *
    * @var string
-   *
-   * This property is not referenced in the current code, but it is anticipated
-   * that others may want to reference the job type from the object itself at
-   * some point in the future.
-   */
-  public $jobtype = 'simpletest';
+  */
+  public $jobType = 'simpletest';
 
   /**
    * Default Arguments (defaultArguments)

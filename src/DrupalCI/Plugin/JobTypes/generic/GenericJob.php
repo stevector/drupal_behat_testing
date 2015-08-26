@@ -17,16 +17,11 @@ use DrupalCI\Plugin\JobTypes\JobBase;
  */
 
 class GenericJob extends JobBase {
+
   /**
-   * Job Type (jobType)
-   *
    * @var string
-   *
-   * This property is not referenced in the current code, but it is anticipated
-   * that others may want to reference the job type from the object itself at
-   * some point in the future.
    */
-  public $jobtype = 'generic';
+  public $jobType = 'generic';
 
   /**
    * Overrides the getDefaultDefinitionTemplate() method from within JobBase.
