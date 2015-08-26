@@ -27,6 +27,7 @@ class InitAllCommand extends DrupalCICommandBase {
       ->addOption('dbtype', '', InputOption::VALUE_OPTIONAL, 'Database types to support')
       ->addOption('phptype', '', InputOption::VALUE_OPTIONAL, 'PHP Versions to support')
       ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
+      ->addOption('all', null, InputOption::VALUE_NONE, 'Pull/Build all containers')
     ;
   }
 
@@ -42,6 +43,7 @@ class InitAllCommand extends DrupalCICommandBase {
     $options['--no-ansi'] = $input->getOption('no-ansi');
     $options['--no-interaction'] = $input->getOption('no-interaction');
     $options_force['--forcebuild'] = $input->getOption('forcebuild');
+    $options_force['--all'] = $input->getOption('all');
 
     # Validate/Install dependencies
     $cmd = $this->getApplication()->find('init:dependencies');
@@ -63,7 +65,6 @@ class InitAllCommand extends DrupalCICommandBase {
 
     $arguments = array(
       'command' => 'init:base',
-      'container_name' => array('drupalci/base', 'drupalci/db-base', 'drupalci/php-base', 'drupalci/web-base'),
     );
     $cmdinput = new ArrayInput($arguments + $options + $options_force);
     $returnCode = $cmd->run($cmdinput, $output);

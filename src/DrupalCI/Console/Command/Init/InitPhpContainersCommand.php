@@ -30,6 +30,7 @@ class InitPhpContainersCommand extends DrupalCICommandBase {
       ->setDescription('Build initial DrupalCI php containers')
       ->addArgument('container_name', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Docker container image(s) to build.')
       ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
+      ->addOption('all', null, InputOption::VALUE_NONE, 'Pull/Build all php containers')
     ;
   }
 
@@ -72,6 +73,9 @@ class InitPhpContainersCommand extends DrupalCICommandBase {
         {
           $names = array($this->default_build['php']);
         }
+      }
+      else if ($input->getOption('all')) {
+        $names = $container_names;
       }
       else {
         $names = $this->getPhpContainerNames($container_names, $input, $output);
