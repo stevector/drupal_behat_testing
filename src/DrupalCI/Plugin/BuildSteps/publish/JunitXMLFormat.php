@@ -41,7 +41,7 @@ class JunitXMLFormat extends PluginBase {
     // Load the list of tests from the testgroups.txt build artifact
     // Assumes that gatherArtifacts plugin has run.
     // TODO: Verify that gatherArtifacts has ran.
-    $source_dir = $job->getBuildVar('DCI_WorkingDir');
+    $source_dir = $job->getJobCodebase()->getWorkingDir();
     // TODO: Temporary hack.  Strip /checkout off the directory
     $artifact_dir = preg_replace('#/checkout$#', '', $source_dir);
     $this->loadTestList($source_dir . DIRECTORY_SEPARATOR . 'artifacts/testgroups.txt');

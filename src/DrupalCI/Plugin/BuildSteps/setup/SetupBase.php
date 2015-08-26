@@ -15,7 +15,7 @@ abstract class SetupBase extends PluginBase {
 
   protected function validateDirectory(JobInterface $job, $dir) {
     // Validate target directory.  Must be within workingdir.
-    $working_dir = $job->getWorkingDir();
+    $working_dir = $job->getJobCodebase()->getWorkingDir();
     $true_dir = realpath($dir);
     if (!empty($true_dir)) {
       if ($true_dir == realpath($working_dir)) {

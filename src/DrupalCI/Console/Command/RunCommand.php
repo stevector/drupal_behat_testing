@@ -9,6 +9,7 @@ namespace DrupalCI\Console\Command;
 
 use DrupalCI\Console\Helpers\ConfigHelper;
 use DrupalCI\Console\Output;
+use DrupalCI\Job\CodeBase\JobCodeBase;
 use DrupalCI\Job\Definition\JobDefinition;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
@@ -96,10 +97,11 @@ class RunCommand extends DrupalCICommandBase {
     // Attach our job definition object to the job.
     $job->setJobDefinition($job_definition);
 
-    // Load the job definition, environment defaults, and any job-specific configuration steps which need to occur
-    // TODO: Add prep_results once results API integration is complete
-    foreach (['setup_directories'] as $step) {
-      $this->buildstepsPluginManager()->getPlugin('configure', $step)->run($job, NULL);
+    // Set up the local working directory
+    $job_codebase = new JobCodebase($job);
+    $result = $job_codebase->setupWorkingDirectory($job_definition);
+    if ($result === FALSE) {
+      return;
     }
 
     if ($job->getErrorState()) {
@@ -109,10 +111,11 @@ class RunCommand extends DrupalCICommandBase {
 
     // The job should now have a fully merged job definition file, including
     // any local or drupalci defaults not otherwise defined in the passed job
-    // definition, located in $job->job_definition
-    $definition = $job->getDefinition();
+    // definition
+    $definition = $job_definition->getDefinition();
+
     if (!empty($definition['publish']['drupalci_results'])) {
-      $results_data = $definition['publish']['drupalci_results'];
+      $results_data = $job_definition['publish']['drupalci_results'];
       // $data format:
       // i) array('config' => '<configuration filename>'),
       // ii) array('host' => '...', 'username' => '...', 'password' => '...')

@@ -32,7 +32,7 @@ class Patch extends SetupBase {
         $job->errorOutput("Error", "No valid patch file provided for the patch command.");
         return;
       }
-      $workingdir = realpath($job->getWorkingDir());
+      $workingdir = realpath($job->getJobCodebase()->getWorkingDir());
       $patchfile = $details['patch_file'];
       $patchdir = (!empty($details['patch_dir'])) ? $details['patch_dir'] : $workingdir;
       // Validate target directory.

@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use DrupalCI\Console\Output;
 use DrupalCI\Job\Artifacts\BuildArtifact;
 use DrupalCI\Job\Artifacts\BuildArtifactList;
+use DrupalCI\Job\CodeBase\JobCodeBase;
 use DrupalCI\Job\Definition\JobDefinition;
 use DrupalCIResultsApi\Api;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -71,11 +72,31 @@ class JobBase extends ContainerBase implements JobInterface {
   // Placeholder which holds the parsed job definition file for this job
   public $jobDefinition = NULL;
 
+  /**
+   * @var \DrupalCI\Job\CodeBase\JobCodebase
+   *
+   * Placeholder which holds the JobCodeBase object for this job
+   */
+  public $jobCodebase;
+
+  /**
+   * @param \DrupalCI\Job\CodeBase\JobCodebase $job_codebase
+   */
+  public function setJobCodebase(JobCodeBase $job_codebase)
+  {
+    $this->jobCodebase = $job_codebase;
+  }
+
+  /**
+   * @return \DrupalCI\Job\CodeBase\JobCodebase
+   */
+  public function getJobCodebase()
+  {
+    return $this->jobCodebase;
+  }
+
   // Error status
   public $errorStatus = 0;
-
-  // Default working directory
-  public $workingDirectory = "./";
 
   /**
    * @var array
@@ -241,14 +262,6 @@ class JobBase extends ContainerBase implements JobInterface {
     $this->serviceContainers = $service_containers;
   }
 
-  public function getWorkingDir() {
-    return $this->workingDirectory;
-  }
-
-  public function setWorkingDir($working_directory) {
-    $this->workingDirectory = $working_directory;
-  }
-
   public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.') {
     Output::error($type, $message);
     $this->errorStatus = -1;
@@ -378,7 +391,7 @@ class JobBase extends ContainerBase implements JobInterface {
   protected function createContainerVolumes(&$config) {
     $volumes = array();
     // Map working directory
-    $working = $this->workingDirectory;
+    $working = $this->getJobCodebase()->getWorkingDir();
     $mount_point = (empty($config['Mountpoint'])) ? "/data" : $config['Mountpoint'];
     $config['HostConfig']['Binds'][] = "$working:$mount_point";
   }

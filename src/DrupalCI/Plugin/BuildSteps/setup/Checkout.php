@@ -52,7 +52,7 @@ class Checkout extends SetupBase {
 
   protected function setupCheckoutLocal(JobInterface $job, $details) {
     $source_dir = isset($details['source_dir']) ? $details['source_dir'] : './';
-    $checkout_dir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getWorkingDir();
+    $checkout_dir = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getJobCodebase()->getWorkingDir();
     // TODO: Ensure we don't end up with double slashes
     // Validate source directory
     if (!is_dir($source_dir)) {
@@ -81,7 +81,7 @@ class Checkout extends SetupBase {
     Output::writeLn("<info>Entering setup_checkout_git().</info>");
     $repo = isset($details['repo']) ? $details['repo'] : 'git://drupalcode.org/project/drupal.git';
     $git_branch = isset($details['branch']) ? $details['branch'] : 'master';
-    $checkout_directory = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getWorkingDir();
+    $checkout_directory = isset($details['checkout_dir']) ? $details['checkout_dir'] : $job->getJobCodebase()->getWorkingDir();
     // TODO: Ensure we don't end up with double slashes
     // Validate target directory.  Must be within workingdir.
     if (!($directory = $this->validateDirectory($job, $checkout_directory))) {

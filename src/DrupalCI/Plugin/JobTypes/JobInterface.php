@@ -5,6 +5,7 @@
  */
 namespace DrupalCI\Plugin\JobTypes;
 
+use DrupalCI\Job\CodeBase\JobCodeBase;
 use DrupalCI\Job\Definition\JobDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -118,10 +119,6 @@ interface JobInterface {
 
   public function setServiceContainers(array $service_containers);
 
-  public function getWorkingDir();
-
-  public function setWorkingDir($working_directory);
-
   public function setBuildId($id);
 
   public function getBuildId();
@@ -156,4 +153,9 @@ interface JobInterface {
   public function setJobDefinition(JobDefinition $job_definition);
 
   public function generateBuildId();
+
+  public function getJobCodebase();
+
+  public function setJobCodebase(JobCodebase $job_codebase);
+
 }

@@ -41,7 +41,7 @@ class Fetch extends SetupBase {
         return;
       }
       $url = $details['url'];
-      $workingdir = $job->getWorkingDir();
+      $workingdir = $job->getJobCodebase()->getWorkingDir();
       $fetchdir = (!empty($details['fetch_directory'])) ? $details['fetch_directory'] : $workingdir;
       if (!($directory = $this->validateDirectory($job, $fetchdir))) {
         // Invalid checkout directory
