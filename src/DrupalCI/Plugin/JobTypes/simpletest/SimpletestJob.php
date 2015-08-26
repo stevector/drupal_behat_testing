@@ -49,6 +49,7 @@ class SimpletestJob extends JobBase {
     'DCI_TestGroups' => '--all',
     'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 4,
+    'DCI_GitCommitHash' => '',
     // 'DCI_XMLOutput' => '/var/www/html/results/xml',
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
     'DCI_RunOptions' => 'color;keep-results',
@@ -134,6 +135,7 @@ class SimpletestJob extends JobBase {
     'DCI_ResultsDirectory' => 'Defines the local directory within the container where the xml results file should be written.',
     'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
     // Syntax: 'argkey1,argvalue1;argkey2,argvalue2;argkey3;argkey4,argvalue4;'
+    'DCI_GitCommitHash' => 'This allows to checkout specific core commits, useful for regression testing',
   );
 
   /**

@@ -92,10 +92,10 @@ class Checkout extends SetupBase {
     Output::writeLn("<comment>Performing git checkout of $repo $git_branch branch to $directory.</comment>");
     // TODO: Make sure target directory is empty
     $git_depth = '';
-    if (isset($details['depth']) && !isset($details['commit_hash'])) {
+    if (isset($details['depth']) && empty($details['commit_hash'])) {
       $git_depth = '--depth ' . $details['depth'];
     }
-    $cmd = "git clone -b $git_branch  $repo '$directory'";
+    $cmd = "git clone -b $git_branch $git_depth $repo '$directory'";
     Output::writeLn("Git Command: $cmd");
     $this->exec($cmd, $cmdoutput, $result);
     if ($result !==0) {
@@ -105,10 +105,11 @@ class Checkout extends SetupBase {
       return;
     }
 
-    $cmd =  "cd " . $directory . " && git reset -q --hard " . $details['commit_hash'] . " ";
-
-    Output::writeLn("Git Command: $cmd");
-    $this->exec($cmd, $cmdoutput, $result);
+    if (!empty($details['commit_hash'])) {
+      $cmd =  "cd " . $directory . " && git reset -q --hard " . $details['commit_hash'] . " ";
+      Output::writeLn("Git Command: $cmd");
+      $this->exec($cmd, $cmdoutput, $result);
+    }
     if ($result !==0) {
       // Git threw an error.
       $job->errorOutput("Checkout failed", "The git checkout returned an error.");
