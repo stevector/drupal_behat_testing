@@ -92,20 +92,25 @@ class RunCommand extends DrupalCICommandBase {
     // Compile the complete job definition, taking into account DCI_* variables
     // and job-specific arguments
     $job_definition->compile($job);
-    $job_definition->validate($job);
+    $result = $job_definition->validate($job);
+    if (!$result) {
+      // Job definition failed validation.  Error output has already been
+      // generated and displayed during execution of the validation method.
+      return;
+    }
 
     // Attach our job definition object to the job.
     $job->setJobDefinition($job_definition);
 
-    // Set up the local working directory
+    // Create our job Codebase object and attach it to the job.
     $job_codebase = new JobCodebase($job);
+
+    // Set up the local working directory
     $result = $job_codebase->setupWorkingDirectory($job_definition);
     if ($result === FALSE) {
-      return;
-    }
-
-    if ($job->getErrorState()) {
-      $output->writeln("<error>Job halted due to an error while configuring job.</error>");
+      // Error encountered while setting up the working directory. Error output
+      // has already been generated and displayed during execution of the
+      // setupWorkingDirectory method.
       return;
     }
 

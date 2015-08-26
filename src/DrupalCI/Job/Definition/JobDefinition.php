@@ -133,7 +133,7 @@ class JobDefinition {
         }
       }
       // If processing gets to here, we're missing a required variable
-      $job->errorOutput("Failed", "Required test parameter <options=bold>'$env_var'</options=bold> not found in environment variables, and <options=bold>'$yaml_loc'</options=bold> not found in job definition file.");
+      Output::error("Invalid Job Definition", "Required test parameter <options=bold>'$env_var'</options=bold> not found in environment variables, and <options=bold>'$yaml_loc'</options=bold> not found in job definition file.");
       // TODO: Graceful handling of failed exit states
       return FALSE;
     }
