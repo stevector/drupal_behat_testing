@@ -24,7 +24,7 @@ class SimpletestJob extends JobBase {
    * that others may want to reference the job type from the object itself at
    * some point in the future.
    */
-  public $jobType = 'simpletest';
+  public $jobtype = 'simpletest';
 
   /**
    * Default Arguments (defaultArguments)
