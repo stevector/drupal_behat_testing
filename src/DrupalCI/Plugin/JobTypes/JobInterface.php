@@ -7,6 +7,7 @@ namespace DrupalCI\Plugin\JobTypes;
 
 use DrupalCI\Job\CodeBase\JobCodebase;
 use DrupalCI\Job\Definition\JobDefinition;
+use DrupalCI\Job\Results\JobResults;
 use Symfony\Component\Console\Output\OutputInterface;
 
 interface JobInterface {
@@ -55,6 +56,17 @@ interface JobInterface {
    * @param \DrupalCI\Job\CodeBase\JobCodebase $job_codebase
    */
   public function setJobCodebase(JobCodebase $job_codebase);
+
+  /**
+   * @return \DrupalCI\Job\Results\JobResults
+   */
+  public function getJobResults();
+
+  /**
+   * @param \DrupalCI\Job\Results\JobResults $job_results
+   */
+  public function setJobResults(JobResults $job_results);
+
 
   /**
    * Available arguments.

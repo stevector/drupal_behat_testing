@@ -13,6 +13,7 @@ use DrupalCI\Job\Artifacts\BuildArtifact;
 use DrupalCI\Job\Artifacts\BuildArtifactList;
 use DrupalCI\Job\CodeBase\JobCodeBase;
 use DrupalCI\Job\Definition\JobDefinition;
+use DrupalCI\Job\Results\JobResults;
 use DrupalCIResultsApi\Api;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
@@ -68,6 +69,15 @@ class JobBase extends ContainerBase implements JobInterface {
   protected $jobCodebase;
   public function getJobCodebase() {  return $this->jobCodebase;  }
   public function setJobCodebase(JobCodeBase $job_codebase)  {  $this->jobCodebase = $job_codebase;  }
+
+  /**
+   * Stores the results object for this job
+   *
+   * @var \DrupalCI\Job\Results\JobResults
+   */
+  protected $jobResults;
+  public function getJobResults() {  return $this->jobResults;  }
+  public function setJobResults(JobResults $job_results)  {  $this->jobResults = $job_results;  }
 
   /**
    * Defines argument variable names which are valid for this job type

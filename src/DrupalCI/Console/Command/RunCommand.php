@@ -11,6 +11,7 @@ use DrupalCI\Console\Helpers\ConfigHelper;
 use DrupalCI\Console\Output;
 use DrupalCI\Job\CodeBase\JobCodeBase;
 use DrupalCI\Job\Definition\JobDefinition;
+use DrupalCI\Job\Results\JobResults;
 use DrupalCI\Plugin\PluginManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -113,6 +114,9 @@ class RunCommand extends DrupalCICommandBase {
       // setupWorkingDirectory method.
       return;
     }
+
+    // Create our job Results object and attach it to the job.
+    $job_results = new JobResults($job);
 
     // The job should now have a fully merged job definition file, including
     // any local or DrupalCI defaults not otherwise defined in the passed job
