@@ -51,14 +51,14 @@ class RunCommand extends DrupalCICommandBase {
    * {@inheritdoc}
    */
   public function execute(InputInterface $input, OutputInterface $output) {
-    $definition = $input->getArgument('definition');
+    $arg = $input->getArgument('definition');
 
     $confighelper = new ConfigHelper();
     $local_overrides = $confighelper->getCurrentConfigSetParsed();
 
     // Determine the Job Type based on the first argument to the run command
-    if ($definition) {
-      $job_type = (strtolower(substr(trim($definition), -4)) == ".yml") ? "generic" : trim($definition);
+    if ($arg) {
+      $job_type = (strtolower(substr(trim($arg), -4)) == ".yml") ? "generic" : trim($arg);
     }
     else {
       // If no argument defined, then check for a default in the local overrides
@@ -76,8 +76,8 @@ class RunCommand extends DrupalCICommandBase {
     $job->generateBuildId();
 
     // Determine the job definition template to be used
-    if ($definition && strtolower(substr(trim($definition), -4)) == ".yml") {
-      $template_file = $definition;
+    if ($arg && strtolower(substr(trim($arg), -4)) == ".yml") {
+      $template_file = $arg;
     }
     else {
       $template_file = $job->getDefaultDefinitionTemplate($job_type);
