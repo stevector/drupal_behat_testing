@@ -35,7 +35,7 @@ class RunCommand extends DrupalCICommandBase {
    *   Will probably be a combination of things taken from environment variables
    *   and job specific options.
    *   TODO: Sort out how to define job-specific options, and be able to import
-   *   them into the drupalci command. (Imported from a specially named file in
+   *   them into the drupalCI command. (Imported from a specially named file in
    *   the job directory, perhaps?) Will need syntax to define required versus
    *   optional options, and their defaults if not specified.
    */
@@ -115,7 +115,7 @@ class RunCommand extends DrupalCICommandBase {
     }
 
     // The job should now have a fully merged job definition file, including
-    // any local or drupalci defaults not otherwise defined in the passed job
+    // any local or drupalCI defaults not otherwise defined in the passed job
     // definition
     $definition = $job_definition->getDefinition();
 

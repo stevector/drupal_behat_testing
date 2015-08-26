@@ -17,9 +17,9 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
- *   load <configset>  Clears all drupalci namespaced environment variables and
+ *   load <configset>  Clears all DrupalCI namespaced environment variables and
  *                       establishes new values matching the combination of
- *                       drupalci defaults and overrides from the chosen config
+ *                       DrupalCI defaults and overrides from the chosen config
  *                       set, as defined in ~/.drupalci/configs/<configset>.
  */
 class ConfigLoadCommand extends DrupalCICommandBase {

@@ -39,7 +39,7 @@ class InitConfigCommand extends DrupalCICommandBase {
     $output->writeln("<info>Executing init:config</info>");
 
     # Check whether ~/.drupalci directory exists, and force option not called
-    # TODO: Parameterize the drupalci directory
+    # TODO: Parameterize the DrupalCI directory
 
     $homedir = getenv('HOME');
 
@@ -85,7 +85,7 @@ class InitConfigCommand extends DrupalCICommandBase {
       // TODO: Currently using placeholder files.  Populate file contents.
       $finder = new Finder();
       $directory = "./configsets";
-      // TODO: This means we can only execute the command from the drupalci
+      // TODO: This means we can only execute the command from the DrupalCI
       // directory.  Need to be able to run from anywhere - determine how to
       // get the current script execution directory (not the /bin symlink!)
       // and construct an absolute directory path above.
