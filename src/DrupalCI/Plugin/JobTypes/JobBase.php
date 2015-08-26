@@ -25,63 +25,124 @@ use Docker\Container;
 
 class JobBase extends ContainerBase implements JobInterface {
 
-  // Defines the job type
+  /**
+   * Stores the job type
+   *
+   * @var string
+   */
   protected $jobType = 'base';
   public function getJobType() {  return $this->jobType;  }
 
-  // Defines a unique build ID
+  /**
+   * Stores the calling command's output buffer
+   *
+   * @var \Symfony\Component\Console\Output\OutputInterface
+   */
+  public $output;
+  public function setOutput(OutputInterface $output) {  $this->output = $output;  }
+  public function getOutput() {  return $this->output;  }
+
+  /**
+   * Stores a build ID for this job
+   *
+   * @var string
+   */
   protected $buildId;
-  public function setBuildId($buildId) {  $this->buildId = $buildId;  }
   public function getBuildId() {  return $this->buildId;  }
+  public function setBuildId($buildId) {  $this->buildId = $buildId;  }
 
+  /**
+   * Stores the job definition object for this job
+   *
+   * @var \DrupalCI\Job\Definition\JobDefinition
+   */
+  protected $jobDefinition = NULL;
+  public function getJobDefinition() {  return $this->jobDefinition;  }
+  public function setJobDefinition(JobDefinition $job_definition) {  $this->jobDefinition = $job_definition; }
 
-  // Defines argument variable names which are valid for this job type
-  public $availableArguments = array();
+  /**
+   * Stores the codebase object for this job
+   *
+   * @var \DrupalCI\Job\CodeBase\JobCodebase
+   */
+  protected $jobCodebase;
+  public function getJobCodebase() {  return $this->jobCodebase;  }
+  public function setJobCodebase(JobCodeBase $job_codebase)  {  $this->jobCodebase = $job_codebase;  }
 
-  // Defines platform defaults which apply for all jobs.  (Can still be overridden by per-job defaults)
-  public $platformDefaults = array(
-    "DCI_CodeBase" => "./",
+  /**
+   * Defines argument variable names which are valid for this job type
+   *
+   * @var array
+   */
+  protected $availableArguments = array();
+  public function getAvailableArguments() {  return $this->availableArguments;  }
+
+  /**
+   * Defines the default arguments which are valid for this job type
+   *
+   * @var array
+   */
+  protected $defaultArguments = array();
+  public function getDefaultArguments() {  return $this->defaultArguments;  }
+
+  /**
+   * Defines the required arguments which are necessary for this job type
+   *
+   * Format:  array('ENV_VARIABLE_NAME' => 'CONFIG_FILE_LOCATION'), where
+   * CONFIG_FILE_LOCATION is a colon-separated nested location for the
+   * equivalent variable in a job definition file.
+   *
+   * @var array
+   */
+  protected $requiredArguments = array();   // eg:   'DCI_DBVersion' => 'environment:db'
+  public function getRequiredArguments() {  return $this->requiredArguments;  }
+
+  /**
+   * Defines initial platform defaults for all jobs (if not overridden).
+   *
+   * @var array
+   */
+  protected $platformDefaults = array(
     "DCI_IsDrupal" => true,
     "DCI_DrupalVersion" => "8.0.x",
-    // DCI_WorkingDir defaults to a random directory in the system temp directory.
+    // DCI_WorkingDir defaults to a 'jobtype-buildID' directory in the system temp directory.
   );
-
-  // Defines the default arguments which are valid for this job type
-  public $defaultArguments = array();
-
-  // Defines the required arguments which are necessary for this job type
-  // Format:  array('ENV_VARIABLE_NAME' => 'CONFIG_FILE_LOCATION'), where
-  // CONFIG_FILE_LOCATION is a colon-separated nested location for the
-  // equivalent var in a job definition file.
-  public $requiredArguments = array(
-    // eg:   'DCI_DBVersion' => 'environment:db'
-  );
-
-  // Placeholder which holds the parsed job definition file for this job
-  public $jobDefinition = NULL;
+  public function getPlatformDefaults() {  return $this->platformDefaults;  }
 
   /**
-   * @var \DrupalCI\Job\CodeBase\JobCodebase
+   * Stores build variables which need to be persisted between build steps
    *
-   * Placeholder which holds the JobCodeBase object for this job
+   * @var array
    */
-  public $jobCodebase;
+  protected $buildVars = array();
+  public function getBuildVars() {  return $this->buildVars;  }
+  public function setBuildVars(array $build_vars) {  $this->buildVars = $build_vars;  }
+  public function getBuildVar($build_var) {  return isset($this->buildVars[$build_var]) ? $this->buildVars[$build_var] : NULL;  }
+  public function setBuildVar($build_var, $value) {  $this->buildVars[$build_var] = $value;  }
 
   /**
-   * @param \DrupalCI\Job\CodeBase\JobCodebase $job_codebase
+   * Stores our Docker Container manager
+   *
+   * @var \Docker\Docker
    */
-  public function setJobCodebase(JobCodeBase $job_codebase)
-  {
-    $this->jobCodebase = $job_codebase;
-  }
+  protected $docker;
 
   /**
-   * @return \DrupalCI\Job\CodeBase\JobCodebase
+   * @return \Docker\Docker
    */
-  public function getJobCodebase()
+  public function getDocker()
   {
-    return $this->jobCodebase;
+    $client = Client::createWithEnv();
+    if (null === $this->docker) {
+      $this->docker = new Docker($client);
+    }
+    return $this->docker;
   }
+
+
+
+
+
 
   // Error status
   public $errorStatus = 0;
@@ -102,11 +163,6 @@ class JobBase extends ContainerBase implements JobInterface {
   // Holds the name and Docker IDs of our executable containers.
   public $executableContainers = [];
 
-  // Holds our Docker container manager
-  protected $docker;
-
-  // Holds build variables which need to be persisted between build steps
-  public $buildVars = array();
 
   // Holds our DrupalCIResultsAPI API
   protected $resultsAPI = NULL;
@@ -179,68 +235,8 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->resultsServerID;
   }
 
-  /**
-   * Stores the calling command's output buffer
-   *
-   * @var \Symfony\Component\Console\Output\OutputInterface
-   */
-  public $output;
 
-  public function getBuildVars() {
-    return $this->buildVars;
-  }
 
-  // Sets the build variables for this job
-  public function setBuildVars(array $build_vars) {
-    $this->buildVars = $build_vars;
-  }
-
-  // Retrieves a single build variable for this job
-  public function getBuildvar($build_var) {
-    return isset($this->buildVars[$build_var]) ? $this->buildVars[$build_var] : NULL;
-  }
-
-  // Sets a single build variable for this job
-  public function setBuildVar($build_var, $value) {
-    $this->buildVars[$build_var] = $value;
-  }
-
-  public function getRequiredArguments() {
-    return $this->requiredArguments;
-  }
-
-  public function setOutput(OutputInterface $output) {
-    $this->output = $output;
-  }
-
-  public function getOutput() {
-    return $this->output;
-  }
-
-  public function getDefinition() {
-    return $this->jobDefinition;
-  }
-
-  public function setDefinition(array $job_definition) {
-    $this->jobDefinition = $job_definition;
-  }
-
-  protected $job_definition;
-
-  public function setJobDefinition(JobDefinition $job_definition) {
-    $this->job_definition = $job_definition;
-  }
-  public function getJobDefinition() {
-    return $this->job_definition;
-  }
-
-  public function getDefaultArguments() {
-    return $this->defaultArguments;
-  }
-
-  public function getPlatformDefaults() {
-    return $this->platformDefaults;
-  }
 
   public function getServiceContainers() {
     return $this->serviceContainers;
@@ -300,14 +296,6 @@ class JobBase extends ContainerBase implements JobInterface {
     return $this->plugins[$type][$plugin_id];
   }
 
-  public function getDocker()
-  {
-    $client = Client::createWithEnv();
-    if (null === $this->docker) {
-      $this->docker = new Docker($client);
-    }
-    return $this->docker;
-  }
 
   public function getExecContainers() {
     $configs = $this->executableContainers;

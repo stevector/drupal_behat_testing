@@ -90,8 +90,6 @@ class JobDefinition {
     // TODO: References to these on the job should be moved over to reference
     // the job definition instead.
     $job->setBuildVars($this->getDCIVariables() + $job->getBuildVars());
-    $job->setDefinition($this->getDefinition());
-
   }
 
   /**

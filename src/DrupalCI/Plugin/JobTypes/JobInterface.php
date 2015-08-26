@@ -5,42 +5,78 @@
  */
 namespace DrupalCI\Plugin\JobTypes;
 
-use DrupalCI\Job\CodeBase\JobCodeBase;
+use DrupalCI\Job\CodeBase\JobCodebase;
 use DrupalCI\Job\Definition\JobDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
 
 interface JobInterface {
 
   /**
-   * An array of build variables.
+   * @return string
+   */
+  public function getJobType();
+
+  /**
+   * @return \Symfony\Component\Console\Output\OutputInterface
+   */
+  public function getOutput();
+
+  /**
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   */
+  public function setOutput(OutputInterface $output);
+
+  /**
+   * @return string
+   */
+  public function getBuildId();
+
+  /**
+   * @param string
+   */
+  public function setBuildId($id);
+
+  /**
+   * @return \DrupalCI\Job\Definition\JobDefinition
+   */
+  public function getJobDefinition();
+
+  /**
+   * @param \DrupalCI\Job\Definition\JobDefinition $job_definition
+   */
+  public function setJobDefinition(JobDefinition $job_definition);
+
+  /**
+   * @return \DrupalCI\Job\CodeBase\JobCodebase
+   */
+  public function getJobCodebase();
+
+  /**
+   * @param \DrupalCI\Job\CodeBase\JobCodebase $job_codebase
+   */
+  public function setJobCodebase(JobCodebase $job_codebase);
+
+  /**
+   * Available arguments.
+   *
+   * @TODO: move to annotation
    *
    * @return array
    *
    * @see SimpletestJob::$availableArguments
    */
-  public function getBuildVars();
+  public function getAvailableArguments();
 
   /**
-   * @param array $build_vars
+   * Default arguments.
    *
-   * @see JobInterface::getBuildvards
-   */
-  public function setBuildVars(array $build_vars);
-
-  /**
-   * @param string $build_var
+   * @TODO: move to annotation
    *
-   * @return mixed
+   * @return array
    *
-   * @see JobInterface::getBuildvards
+   * @see SimpletestJob::$defaultArguments
    */
-  public function getBuildvar($build_var);
-
-  /**
-   * @param $build_var
-   * @param $value
-   */
-  public function setBuildVar($build_var, $value);
+  public function getDefaultArguments();
 
   /**
    * Required arguments.
@@ -54,14 +90,41 @@ interface JobInterface {
   public function getRequiredArguments();
 
   /**
-   * @return \Symfony\Component\Console\Output\OutputInterface
+   * An array of build variables.
+   *
+   * @return array
+   *
+   * @see SimpletestJob::$availableArguments
    */
-  public function getOutput();
+  public function getBuildVars();
 
   /**
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @param array $build_vars
+   *
+   * @see JobInterface::getBuildvars
    */
-  public function setOutput(OutputInterface $output);
+  public function setBuildVars(array $build_vars);
+
+  /**
+   * @param string $build_var
+   *
+   * @return mixed
+   *
+   * @see JobInterface::getBuildvars
+   */
+  public function getBuildVar($build_var);
+
+  /**
+   * @param $build_var
+   * @param $value
+   */
+  public function setBuildVar($build_var, $value);
+
+  /**
+   * @return \Docker\Docker
+   */
+  public function getDocker();
+
 
   /**
    * Sends an error message.
@@ -81,11 +144,6 @@ interface JobInterface {
    * @see \Symfony\Component\Process\Process::__construct().
    */
   public function shellCommand($cmd);
-
-  /**
-   * @return \Docker\Docker
-   */
-  public function getDocker();
 
   public function configureResultsAPI($config);
   /**
@@ -107,11 +165,7 @@ interface JobInterface {
 
   public function getErrorState();
 
-  public function getDefinition();
 
-  public function setDefinition(array $job_definition);
-
-  public function getDefaultArguments();
 
   public function getPlatformDefaults();
 
@@ -119,9 +173,6 @@ interface JobInterface {
 
   public function setServiceContainers(array $service_containers);
 
-  public function setBuildId($id);
-
-  public function getBuildId();
 
   public function setResultsServerID($id);
 
@@ -148,14 +199,8 @@ interface JobInterface {
 
   public function getDefaultDefinitionTemplate($job_type);
 
-  public function getJobDefinition();
-
-  public function setJobDefinition(JobDefinition $job_definition);
 
   public function generateBuildId();
 
-  public function getJobCodebase();
-
-  public function setJobCodebase(JobCodebase $job_codebase);
 
 }

@@ -2,7 +2,7 @@
 # To use:
 # - Drupal checkout in /tmp/drupal
 # - drupalci config:load blank
-# - drupalci config:set DCI_CodeBase=/tmp/drupal
+# - drupalci config:set DCI_UseLocalCodeBase=/tmp/drupal
 # - drupalci run simpletest
 # Must have php-5.4 container image
 environment:
