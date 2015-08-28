@@ -1719,12 +1719,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ryanaslett/docker-php.git",
-                "reference": "635ce033deed5bf389719d219b7ba6e61985fa89"
+                "reference": "2196695941f03ae0ff6c148fe0604d2c1bc1caaa"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/635ce033deed5bf389719d219b7ba6e61985fa89",
-                "reference": "635ce033deed5bf389719d219b7ba6e61985fa89",
+                "reference": "2196695941f03ae0ff6c148fe0604d2c1bc1caaa",
                 "shasum": ""
             },
             "require": {
