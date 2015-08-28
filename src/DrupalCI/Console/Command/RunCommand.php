@@ -76,6 +76,18 @@ class RunCommand extends DrupalCICommandBase {
     // Generate a unique job build_id, and store it within the job object
     $job->generateBuildId();
 
+    // Create our job Codebase object and attach it to the job.
+    $job_codebase = new JobCodebase($job);
+
+    // Create our job Definition object and attach it to the job.
+    $job_definition = new JobDefinition($job);
+
+    // Compile our complete list of DCI_* variables
+    $job_definition->compile($job);
+
+    // Setup our project and version metadata
+    $job_codebase->setupProject($job_definition);
+
     // Determine the job definition template to be used
     if ($arg && strtolower(substr(trim($arg), -4)) == ".yml") {
       $template_file = $arg;
@@ -86,25 +98,22 @@ class RunCommand extends DrupalCICommandBase {
 
     Output::writeLn("<info>Using job definition template: <options=bold>$template_file</options=bold></info>");
 
-    // Create a new job definition object for this job.  If $template_file does
-    // not exist, this will trigger a FileNotFound or ParseError exception.
-    $job_definition = new JobDefinition($template_file);
+    // Load our job template file into the job definition.  If $template_file
+    // doesn't exist, this will trigger a FileNotFound or ParseError exception.
+    $job_definition->loadTemplateFile($template_file);
 
-    // Compile the complete job definition, taking into account DCI_* variables
-    // and job-specific arguments
-    $job_definition->compile($job);
+    // Process the complete job definition, taking into account DCI_* variable
+    // and definition preprocessors, along with job-specific arguments
+    $job_definition->preprocess($job);
+
+    // Validate the resulting job definition, to ensure all required parameters
+    // are present.
     $result = $job_definition->validate($job);
     if (!$result) {
       // Job definition failed validation.  Error output has already been
       // generated and displayed during execution of the validation method.
       return;
     }
-
-    // Attach our job definition object to the job.
-    $job->setJobDefinition($job_definition);
-
-    // Create our job Codebase object and attach it to the job.
-    $job_codebase = new JobCodebase($job);
 
     // Set up the local working directory
     $result = $job_codebase->setupWorkingDirectory($job_definition);
@@ -117,6 +126,8 @@ class RunCommand extends DrupalCICommandBase {
 
     // Create our job Results object and attach it to the job.
     $job_results = new JobResults($job);
+
+    // TODO: Consider adding a 'job publisher' class for interim feedback and/or real-time display
 
     // The job should now have a fully merged job definition file, including
     // any local or DrupalCI defaults not otherwise defined in the passed job
@@ -141,6 +152,7 @@ class RunCommand extends DrupalCICommandBase {
       if (empty($step)) { continue; }
       // If we are publishing this job to a results server (or multiple), update the progress on the server(s)
       // TODO: Check current state, and don't progress if already there.
+      // TODO: Move this to a JobResults or JobPublisher object
       foreach ($results_data as $key => $instance) {
         $job->configureResultsAPI($instance);
         $api = $job->getResultsAPI();

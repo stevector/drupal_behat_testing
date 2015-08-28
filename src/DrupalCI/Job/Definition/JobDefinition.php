@@ -40,7 +40,13 @@ class JobDefinition {
    */
   protected $pluginManager;
 
-  function __construct($template_file) {
+  public function __construct(JobInterface $job) {
+    $job->setJobDefinition($this);
+  }
+
+  public function loadTemplateFile($template_file) {
+    // TODO: Pass in Job instead of template file, and calculate what template file we need as a result
+
     // Store the template location
     $this->setTemplateFile($template_file);
 
@@ -67,28 +73,26 @@ class JobDefinition {
   }
 
   /**
-   * Compile the complete job definition
-   *
-   * Populates the job definition template based on DCI_* variables and
-   * job-specific arguments
+   * Compile the complete list of DCI_* variables
    */
   public function compile(JobInterface $job) {
     // Compile our list of DCI_* variables
     $this->compileDciVariables($job);
+  }
 
+  /**
+   * Populates the job definition template based on DCI_* variables and
+   * job-specific arguments
+   */
+  public function preprocess(JobInterface $job) {
     // Execute variable preprocessor plugin logic
     $this->executeVariablePreprocessors();
-
     // Execute definition preprocessor plugin logic
     $this->executeDefinitionPreprocessors();
-
     // Process DCI_* variable substitution into the job definition template
     $this->substituteVariables();
-
     // Add the build variables and job definition to our job object, for
     // compatibility.
-    // TODO: References to these on the job should be moved over to reference
-    // the job definition instead.
     $job->setBuildVars($this->getDCIVariables() + $job->getBuildVars());
   }
 

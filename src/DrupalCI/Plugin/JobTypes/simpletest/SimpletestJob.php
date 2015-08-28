@@ -137,8 +137,8 @@ class SimpletestJob extends JobBase {
    * any other DCI_* variable preprocessors are executed.
    */
   public $priorityArguments = array(
-    // IsDrupal doesn't *need* to run first, but it seems like a good idea
-    'DCI_IsDrupal',
+    // CoreProject doesn't *need* to run first, but it seems like a good idea
+    'DCI_CoreProject',
     // Expand run options to their argument format, before adding arguments
     'DCI_RunOptions',
     // CoreBranch needs to be able to override the SQLite variable before the

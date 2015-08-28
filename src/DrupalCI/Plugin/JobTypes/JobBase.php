@@ -113,8 +113,7 @@ class JobBase extends ContainerBase implements JobInterface {
    * @var array
    */
   protected $platformDefaults = array(
-    "DCI_IsDrupal" => true,
-    "DCI_DrupalVersion" => "8.0.x",
+    "DCI_CoreProject" => "Drupal",
     // DCI_WorkingDir defaults to a 'jobtype-buildID' directory in the system temp directory.
   );
   public function getPlatformDefaults() {  return $this->platformDefaults;  }
