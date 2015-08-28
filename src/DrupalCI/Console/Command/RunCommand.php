@@ -165,8 +165,8 @@ class RunCommand extends DrupalCICommandBase {
         $states = $api->states();
         $results_id = $job->getResultsServerID();
 
-        foreach ($states as $key => $state) {
-          if ($build_step == $key) {
+        foreach ($states as $subkey => $state) {
+          if ($build_step == $subkey) {
             $api->progress($results_id[$host], $state['id']);
             break;
           }
