@@ -40,10 +40,6 @@ class JobDefinition {
    */
   protected $pluginManager;
 
-  public function __construct(JobInterface $job) {
-    $job->setJobDefinition($this);
-  }
-
   public function loadTemplateFile($template_file) {
     // TODO: Pass in Job instead of template file, and calculate what template file we need as a result
 

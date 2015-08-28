@@ -63,11 +63,6 @@ class JobCodebase {
     $this->setRepositories($repository);
   }
 
-  public function __construct(JobInterface $job) {
-    // Attach the codebase object to our job.
-    $job->setJobCodebase($this);
-  }
-
   public function setupProject(JobDefinition $job_definition) {
     // Core Project
     // For future compatibility.  In the future, we could potentially add

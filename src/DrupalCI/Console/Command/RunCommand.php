@@ -77,10 +77,12 @@ class RunCommand extends DrupalCICommandBase {
     $job->generateBuildId();
 
     // Create our job Codebase object and attach it to the job.
-    $job_codebase = new JobCodebase($job);
+    $job_codebase = new JobCodebase();
+    $job->setJobCodebase($job_codebase);
 
     // Create our job Definition object and attach it to the job.
-    $job_definition = new JobDefinition($job);
+    $job_definition = new JobDefinition();
+    $job->setJobDefinition($job_definition);
 
     // Compile our complete list of DCI_* variables
     $job_definition->compile($job);
@@ -125,7 +127,8 @@ class RunCommand extends DrupalCICommandBase {
     }
 
     // Create our job Results object and attach it to the job.
-    $job_results = new JobResults($job);
+    $job_results = new JobResults();
+    $job->setJobResults($job_results);
 
     // TODO: Consider adding a 'job publisher' class for interim feedback and/or real-time display
 
