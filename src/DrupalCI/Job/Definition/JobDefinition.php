@@ -33,7 +33,12 @@ class JobDefinition {
   // Contains the parsed job definition
   protected $definition = array();
   public function getDefinition() {  return $this->definition;  }
-  public function setDefinition(array $job_definition) {  $this->definition = $job_definition;  }
+  protected function setDefinition(array $job_definition) {  $this->definition = $job_definition;  }
+
+  // Contains the array of build steps
+  protected $build_steps = array();
+  public function getBuildSteps() {  return $this->build_steps;  }
+  protected function setBuildSteps(array $build_steps) {  $this->build_steps = $build_steps;  }
 
   /**
    * @var \DrupalCI\Plugin\PluginManager;
@@ -86,10 +91,13 @@ class JobDefinition {
     // Execute definition preprocessor plugin logic
     $this->executeDefinitionPreprocessors();
     // Process DCI_* variable substitution into the job definition template
-    $this->substituteVariables();
+    $this->substituteTemplateVariables();
     // Add the build variables and job definition to our job object, for
     // compatibility.
     $job->setBuildVars($this->getDCIVariables() + $job->getBuildVars());
+    // Split out the final array of build steps into it's own element and store
+    // it for future use.
+    $this->setBuildSteps($this->parseBuildSteps());
   }
 
   /**
@@ -276,7 +284,7 @@ class JobDefinition {
   /**
    * Substitute DCI_* variables into the job definition template
    */
-  protected function substituteVariables() {
+  protected function substituteTemplateVariables() {
     // Generate our replacements array
     $replacements = [];
     $dci_variables = $this->getDCIVariables();
@@ -300,8 +308,19 @@ class JobDefinition {
 
     // Save our post-replacements job definition back to the object
     $this->setDefinition($definition);
-
   }
+
+  protected function parseBuildSteps() {
+    $definition = $this->getDefinition();
+    $build_steps = [];
+    foreach ($definition as $stage => $steps) {
+      foreach ($steps as $step => $data) {
+        $build_steps[$stage][] = $step;
+      }
+    }
+    return $build_steps;
+  }
+
 
   /**
    * @return \DrupalCI\Plugin\PluginManager
