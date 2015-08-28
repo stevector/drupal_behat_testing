@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "22427cfc61d12ac199c185f91bf6f098",
+    "hash": "51b27553f0e683db62608be489906983",
     "packages": [
         {
             "name": "composer/composer",
@@ -1082,12 +1082,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/herrera-io/php-json.git",
+                "url": "https://github.com/kherge-abandoned/php-json.git",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/herrera-io/php-json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
+                "url": "https://api.github.com/repos/kherge-abandoned/php-json/zipball/60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "reference": "60c696c9370a1e5136816ca557c17f82a6fa83f1",
                 "shasum": ""
             },
@@ -1143,12 +1143,12 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/herrera-io/php-phar-update.git",
+                "url": "https://github.com/kherge-abandoned/php-phar-update.git",
                 "reference": "00a79e1d5b8cf3c080a2e3becf1ddf7a7fea025b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/herrera-io/php-phar-update/zipball/00a79e1d5b8cf3c080a2e3becf1ddf7a7fea025b",
+                "url": "https://api.github.com/repos/kherge-abandoned/php-phar-update/zipball/00a79e1d5b8cf3c080a2e3becf1ddf7a7fea025b",
                 "reference": "00a79e1d5b8cf3c080a2e3becf1ddf7a7fea025b",
                 "shasum": ""
             },
@@ -1201,12 +1201,12 @@
             "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kherge-unmaintained/Version.git",
+                "url": "https://github.com/kherge-abandoned/Version.git",
                 "reference": "f07cf83f8ce533be8f93d2893d96d674bbeb7e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kherge-unmaintained/Version/zipball/f07cf83f8ce533be8f93d2893d96d674bbeb7e30",
+                "url": "https://api.github.com/repos/kherge-abandoned/Version/zipball/f07cf83f8ce533be8f93d2893d96d674bbeb7e30",
                 "reference": "f07cf83f8ce533be8f93d2893d96d674bbeb7e30",
                 "shasum": ""
             },
@@ -1715,16 +1715,16 @@
         },
         {
             "name": "stage1/docker-php",
-            "version": "v0.4.1",
+            "version": "dev-ryanaslett-rawstreams-1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stage1/docker-php.git",
-                "reference": "c518a2595b4fad43a9605c3d5cdd7305823841c3"
+                "url": "https://github.com/ryanaslett/docker-php.git",
+                "reference": "635ce033deed5bf389719d219b7ba6e61985fa89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stage1/docker-php/zipball/c518a2595b4fad43a9605c3d5cdd7305823841c3",
-                "reference": "c518a2595b4fad43a9605c3d5cdd7305823841c3",
+                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/635ce033deed5bf389719d219b7ba6e61985fa89",
+                "reference": "635ce033deed5bf389719d219b7ba6e61985fa89",
                 "shasum": ""
             },
             "require": {
@@ -1743,12 +1743,14 @@
                     "": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "A Docker PHP client",
-            "time": "2015-02-25 11:13:13"
+            "support": {
+                "source": "https://github.com/ryanaslett/docker-php/tree/ryanaslett-rawstreams-1"
+            },
+            "time": "2015-08-28 05:53:54"
         },
         {
             "name": "symfony/config",
