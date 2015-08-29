@@ -137,20 +137,6 @@ class RunCommand extends DrupalCICommandBase {
     // definition
     $definition = $job_definition->getDefinition();
 
-    if (!empty($definition['publish']['drupalci_results'])) {
-      $results_data = $job_definition['publish']['drupalci_results'];
-      // $data format:
-      // i) array('config' => '<configuration filename>'),
-      // ii) array('host' => '...', 'username' => '...', 'password' => '...')
-      // or a mixed array of the above
-      // iii) array(array(...), array(...))
-      // Normalize data to the third format, if necessary
-      $results_data = (count($results_data) == count($results_data, COUNT_RECURSIVE)) ? [$results_data] : $results_data;
-    }
-    else {
-      $results_data = array();
-    }
-
     // Iterate over the build stages
     foreach ($definition as $build_step => $step) {
       if (empty($step)) {

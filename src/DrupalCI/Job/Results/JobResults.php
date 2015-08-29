@@ -76,9 +76,26 @@ class JobResults {
 
   // TODO: Consider adding a 'job publisher' class for interim feedback and/or real-time display
   /*
-  public function publishProgressToServer() {
     // Pasting this code here for future reference, once we revisit interacting with a results API.
 
+  public function prepServerForPublishing(JobDefinition $jobDefinition) {
+    // If we are publishing this job to a results server (or multiple), prep the server
+      $definition = $jobDefinition->getDefinition();
+      if (!empty($definition['publish']['drupalci_results'])) {
+      $results_data = $job_definition['publish']['drupalci_results'];
+      // $data format:
+      // i) array('config' => '<configuration filename>'),
+      // ii) array('host' => '...', 'username' => '...', 'password' => '...')
+      // or a mixed array of the above
+      // iii) array(array(...), array(...))
+      // Normalize data to the third format, if necessary
+      $results_data = (count($results_data) == count($results_data, COUNT_RECURSIVE)) ? [$results_data] : $results_data;
+    }
+    else {
+      $results_data = array();
+    }
+
+  public function publishProgressToServer() {
     // If we are publishing this job to a results server (or multiple), update the progress on the server(s)
     // TODO: Check current state, and don't progress if already there.
     foreach ($results_data as $key => $instance) {
