@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Command class for run.
+ * Command class for Run.
  */
 
 namespace DrupalCI\Console\Command;
@@ -31,21 +31,13 @@ class RunCommand extends DrupalCICommandBase {
 
   /**
    * {@inheritdoc}
-   *
-   * Options:
-   *   Will probably be a combination of things taken from environment variables
-   *   and job specific options.
-   *   TODO: Sort out how to define job-specific options, and be able to import
-   *   them into the DrupalCI command. (Imported from a specially named file in
-   *   the job directory, perhaps?) Will need syntax to define required versus
-   *   optional options, and their defaults if not specified.
    */
   protected function configure() {
     $this
       ->setName('run')
       ->setDescription('Execute a given job run.')
+      // Argument may be the job type or a specific job definition file
       ->addArgument('definition', InputArgument::OPTIONAL, 'Job definition.');
-    // TODO: Add 'definition file name' as an option
   }
 
   /**
@@ -54,8 +46,8 @@ class RunCommand extends DrupalCICommandBase {
   public function execute(InputInterface $input, OutputInterface $output) {
     $arg = $input->getArgument('definition');
 
-    $confighelper = new ConfigHelper();
-    $local_overrides = $confighelper->getCurrentConfigSetParsed();
+    $config_helper = new ConfigHelper();
+    $local_overrides = $config_helper->getCurrentConfigSetParsed();
 
     // Determine the Job Type based on the first argument to the run command
     if ($arg) {
@@ -146,9 +138,10 @@ class RunCommand extends DrupalCICommandBase {
       // Iterate over the build steps
       foreach ($steps as $build_step => $data) {
         $job_results->updateStepStatus($build_stage, $build_step, 'Executing');
+        // Execute the build step
         $this->buildstepsPluginManager()->getPlugin($build_stage, $build_step)->run($job, $data);
 
-        // Check for errors / failures
+        // Check for errors / failures after build step execution
         $status = $job_results->getResultByStep($build_stage, $build_step);
         if ($status == 'Error') {
           // Step returned an error.  Halt execution.
