@@ -43,7 +43,8 @@ abstract class SetupBase extends PluginBase {
     // Validate that resulting directory is still within the working directory path.
     if (!strpos(realpath($directory), realpath($working_dir)) === 0) {
       // Invalid checkout directory
-      $job->errorOutput("Error", "The checkout directory <info>$directory</info> is invalid.");
+      Output::error("Directory error", "The checkout directory <info>$directory</info> is invalid.");
+      $job->error();
       return FALSE;
     }
 

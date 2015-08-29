@@ -137,16 +137,6 @@ interface JobInterface {
    */
   public function getDocker();
 
-
-  /**
-   * Sends an error message.
-   *
-   * @param string $type
-   * @param string $message
-   * @return mixed
-   */
-  public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.');
-
   /**
    * Execute a shell command.
    *

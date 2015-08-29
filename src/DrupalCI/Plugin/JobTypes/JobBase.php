@@ -153,8 +153,6 @@ class JobBase extends ContainerBase implements JobInterface {
 
 
 
-  // Error status
-  public $errorStatus = 0;
 
   /**
    * @var array
@@ -269,11 +267,6 @@ class JobBase extends ContainerBase implements JobInterface {
     $step = $results->getCurrentStep();
     $results->setResultByStage($stage, 'Fail');
     $results->setResultByStep($stage, $step, 'Fail');
-  }
-
-  public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.') {
-    Output::error($type, $message);
-    $this->errorStatus = -1;
   }
 
   public function shellCommand($cmd) {
@@ -473,7 +466,8 @@ class JobBase extends ContainerBase implements JobInterface {
   }
 
   public function getErrorState() {
-    return $this->errorStatus;
+    $results = $this->getJobResults();
+    return ($results->getResultByStep($results->getCurrentStage(), $results->getCurrentStep()) === "Error");
   }
 
   public function getArtifactList($include = array()) {

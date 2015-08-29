@@ -29,7 +29,8 @@ class Patch extends SetupBase {
     Output::writeLn("<info>Entering setup_patch().</info>");
     foreach ($data as $key => $details) {
       if (empty($details['patch_file'])) {
-        $job->errorOutput("Error", "No valid patch file provided for the patch command.");
+        Output::error("Patch error", "No valid patch file provided for the patch command.");
+        $job->error();
         return;
       }
       $workingdir = realpath($job->getJobCodebase()->getWorkingDir());
@@ -38,7 +39,8 @@ class Patch extends SetupBase {
       // Validate target directory.
       if (!($directory = $this->validateDirectory($job, $patchdir))) {
         // Invalid checkout directory
-        $job->errorOutput("Error", "The patch directory <info>$directory</info> is invalid.");
+        Output::error("Patch Error", "The patch directory <info>$directory</info> is invalid.");
+        $job->error();
         return;
       }
       $cmd = "patch -p1 -i $patchfile -d $directory";
@@ -46,8 +48,9 @@ class Patch extends SetupBase {
       $this->exec($cmd, $cmdoutput, $result);
       if ($result !== 0) {
         // The command threw an error.
-        $job->errorOutput("Patch failed", "The patch attempt returned an error.");
         Output::writeLn($cmdoutput);
+        Output::error("Patch Error", "The patch attempt returned an error.  Error code: $result");
+        $job->error();
         // TODO: Pass on the actual return value for the patch attempt
         return;
       }
