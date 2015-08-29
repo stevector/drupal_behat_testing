@@ -130,38 +130,44 @@ class RunCommand extends DrupalCICommandBase {
     $job_results = new JobResults($job);
     $job->setJobResults($job_results);
 
-
-
     // The job should now have a fully merged job definition file, including
     // any local or DrupalCI defaults not otherwise defined in the passed job
     // definition
     $definition = $job_definition->getDefinition();
 
     // Iterate over the build stages
-    foreach ($definition as $build_step => $step) {
-      if (empty($step)) {
-        $job_results->updateStageStatus($build_step, 'Skipped');
+    foreach ($definition as $build_stage => $steps) {
+      if (empty($steps)) {
+        $job_results->updateStageStatus($build_stage, 'Skipped');
         continue;
       }
-      $job_results->updateStageStatus($build_step, 'Executing');
+      $job_results->updateStageStatus($build_stage, 'Executing');
 
       // Iterate over the build steps
-      foreach ($step as $plugin => $data) {
-        $job_results->updateStepStatus($build_step, $plugin, 'Executing');
-        $this->buildstepsPluginManager()->getPlugin($build_step, $plugin)->run($job, $data);
+      foreach ($steps as $build_step => $data) {
+        $job_results->updateStepStatus($build_stage, $build_step, 'Executing');
+        $this->buildstepsPluginManager()->getPlugin($build_stage, $build_step)->run($job, $data);
 
-        // Check for error
-        if ($job_results->getResultByStep($build_step, $plugin) == 'Error') {
+        // Check for errors / failures
+        $status = $job_results->getResultByStep($build_stage, $build_step);
+        if ($status == 'Error') {
           // Step returned an error.  Halt execution.
-          Output::error("Execution Error", "Error encountered while executing job build step <options=bold>$build_step:$plugin</options=bold>");
+          Output::error("Execution Error", "Error encountered while executing job build step <options=bold>$build_stage:$plugin</options=bold>");
           break 2;
         }
-        $job_results->updateStepStatus($build_step, $plugin, 'Completed');
+        if ($status == 'Fail') {
+          // Step returned an failure.  Halt execution.
+          Output::error("Execution Failure", "Build step <options=bold>$build_stage:$plugin</options=bold> FAILED");
+          break 2;
+        }
+        $job_results->updateStepStatus($build_stage, $build_step, 'Completed');
       }
-      $job_results->updateStageStatus($build_step, 'Completed');
+      $job_results->updateStageStatus($build_stage, 'Completed');
     }
-    // TODO: Gather results.  This should be moved out of the 'build steps'
-    // logic, as an error in a build step halts execution of the entire loop.
+    // TODO: Gather results.
+    // This should be moved out of the 'build steps' logic, as an error in any
+    // build step halts execution of the entire loop, and the artifacts are not
+    // processed.
 
   }
 
