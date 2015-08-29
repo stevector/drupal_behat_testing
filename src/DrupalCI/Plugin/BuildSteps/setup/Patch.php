@@ -41,7 +41,7 @@ class Patch extends SetupBase {
         $job->errorOutput("Error", "The patch directory <info>$directory</info> is invalid.");
         return;
       }
-      $cmd = "patch -p1 -i $patchfile -d $directory";
+      $cmd = "cd $directory && git apply -v -p1 $patchfile && cd -";
 
       $this->exec($cmd, $cmdoutput, $result);
       if ($result !== 0) {
