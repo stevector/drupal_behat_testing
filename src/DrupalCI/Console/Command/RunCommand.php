@@ -139,7 +139,7 @@ class RunCommand extends DrupalCICommandBase {
       foreach ($steps as $build_step => $data) {
         $job_results->updateStepStatus($build_stage, $build_step, 'Executing');
         // Execute the build step
-        $this->buildstepsPluginManager()->getPlugin($build_stage, $build_step)->run($job, $data);
+        $this->buildStepsPluginManager()->getPlugin($build_stage, $build_step)->run($job, $data);
 
         // Check for errors / failures after build step execution
         $status = $job_results->getResultByStep($build_stage, $build_step);
@@ -167,7 +167,7 @@ class RunCommand extends DrupalCICommandBase {
   /**
    * @return \DrupalCI\Plugin\PluginManagerInterface
    */
-  protected function buildstepsPluginManager() {
+  protected function buildStepsPluginManager() {
     if (!isset($this->buildStepsPluginManager)) {
       $this->buildStepsPluginManager = new PluginManager('BuildSteps');
     }
