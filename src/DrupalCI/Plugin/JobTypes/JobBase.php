@@ -255,6 +255,22 @@ class JobBase extends ContainerBase implements JobInterface {
     $this->serviceContainers = $service_containers;
   }
 
+  public function error() {
+    $results = $this->getJobResults();
+    $stage = $results->getCurrentStage();
+    $step = $results->getCurrentStep();
+    $results->setResultByStage($stage, 'Error');
+    $results->setResultByStep($stage, $step, 'Error');
+  }
+
+  public function fail() {
+    $results = $this->getJobResults();
+    $stage = $results->getCurrentStage();
+    $step = $results->getCurrentStep();
+    $results->setResultByStage($stage, 'Fail');
+    $results->setResultByStep($stage, $step, 'Fail');
+  }
+
   public function errorOutput($type = 'Error', $message = 'DrupalCI has encountered an error.') {
     Output::error($type, $message);
     $this->errorStatus = -1;

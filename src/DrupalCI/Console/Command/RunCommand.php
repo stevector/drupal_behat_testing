@@ -127,10 +127,10 @@ class RunCommand extends DrupalCICommandBase {
     }
 
     // Create our job Results object and attach it to the job.
-    $job_results = new JobResults();
+    $job_results = new JobResults($job);
     $job->setJobResults($job_results);
 
-    // TODO: Consider adding a 'job publisher' class for interim feedback and/or real-time display
+
 
     // The job should now have a fully merged job definition file, including
     // any local or DrupalCI defaults not otherwise defined in the passed job
@@ -151,39 +151,32 @@ class RunCommand extends DrupalCICommandBase {
       $results_data = array();
     }
 
+    // Iterate over the build stages
     foreach ($definition as $build_step => $step) {
-      if (empty($step)) { continue; }
-      // If we are publishing this job to a results server (or multiple), update the progress on the server(s)
-      // TODO: Check current state, and don't progress if already there.
-      // TODO: Move this to a JobResults or JobPublisher object
-      foreach ($results_data as $key => $instance) {
-        $job->configureResultsAPI($instance);
-        $api = $job->getResultsAPI();
-        $url = $api->getUrl();
-        // Retrieve the results node ID for the results server
-        $host = parse_url($url, PHP_URL_HOST);
-        $states = $api->states();
-        $results_id = $job->getResultsServerID();
-
-        foreach ($states as $subkey => $state) {
-          if ($build_step == $subkey) {
-            $api->progress($results_id[$host], $state['id']);
-            break;
-          }
-        }
+      if (empty($step)) {
+        $job_results->updateStageStatus($build_step, 'Skipped');
+        continue;
       }
+      $job_results->updateStageStatus($build_step, 'Executing');
 
+      // Iterate over the build steps
       foreach ($step as $plugin => $data) {
+        $job_results->updateStepStatus($build_step, $plugin, 'Executing');
         $this->buildstepsPluginManager()->getPlugin($build_step, $plugin)->run($job, $data);
-        if ($job->getErrorState()) {
+
+        // Check for error
+        if ($job_results->getResultByStep($build_step, $plugin) == 'Error') {
           // Step returned an error.  Halt execution.
-          // TODO: Graceful handling of early exit states.
-          $output->writeln("<error>Job halted.</error>");
-          $output->writeln("<comment>Exiting job due to an invalid return code during job build step: <options=bold>'$build_step=>$plugin'</options=bold></comment>");
+          Output::error("Execution Error", "Error encountered while executing job build step <options=bold>$build_step:$plugin</options=bold>");
           break 2;
         }
+        $job_results->updateStepStatus($build_step, $plugin, 'Completed');
       }
+      $job_results->updateStageStatus($build_step, 'Completed');
     }
+    // TODO: Gather results.  This should be moved out of the 'build steps'
+    // logic, as an error in a build step halts execution of the entire loop.
+
   }
 
   /**

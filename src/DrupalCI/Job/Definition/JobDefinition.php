@@ -314,8 +314,11 @@ class JobDefinition {
     $definition = $this->getDefinition();
     $build_steps = [];
     foreach ($definition as $stage => $steps) {
-      foreach ($steps as $step => $data) {
-        $build_steps[$stage][] = $step;
+      $build_steps[$stage] = [];
+      if (!empty($steps)) {
+        foreach ($steps as $step => $data) {
+          $build_steps[$stage][$step] = "";
+        }
       }
     }
     return $build_steps;

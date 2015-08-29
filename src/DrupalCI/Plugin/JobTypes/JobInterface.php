@@ -214,5 +214,7 @@ interface JobInterface {
 
   public function generateBuildId();
 
+  public function error();
 
+  public function fail();
 }
