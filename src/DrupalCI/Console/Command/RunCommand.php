@@ -152,12 +152,12 @@ class RunCommand extends DrupalCICommandBase {
         $status = $job_results->getResultByStep($build_stage, $build_step);
         if ($status == 'Error') {
           // Step returned an error.  Halt execution.
-          Output::error("Execution Error", "Error encountered while executing job build step <options=bold>$build_stage:$plugin</options=bold>");
+          Output::error("Execution Error", "Error encountered while executing job build step <options=bold>$build_stage:$build_step</options=bold>");
           break 2;
         }
         if ($status == 'Fail') {
           // Step returned an failure.  Halt execution.
-          Output::error("Execution Failure", "Build step <options=bold>$build_stage:$plugin</options=bold> FAILED");
+          Output::error("Execution Failure", "Build step <options=bold>$build_stage:$build_step</options=bold> FAILED");
           break 2;
         }
         $job_results->updateStepStatus($build_stage, $build_step, 'Completed');
