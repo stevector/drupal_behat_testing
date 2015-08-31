@@ -36,8 +36,7 @@ execute:
     - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest 2>&1
     - sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
     - sudo -u www-data php %DCI_RunScript% --url http://localhost %DCI_RunOptions% %DCI_TestGroups%
-    - sudo -u www-data sh /tmp/dci-mysql2sqlite.sh -u drupaltestbot -pdrupaltestbotpw -h $(/.composer/vendor/drush/drush/drush -r /var/www/html st | grep "Database hostname" | awk '{print $4}') $(/.composer/vendor/drush/drush/drush -r /var/www/html st | grep "Database name" | awk '{print $4}') simpletest | sqlite3 /var/www/html/artifacts/simpletest.sqlite
-    #- sudo -u www-data sh /tmp/dci-mysql2sqlite.sh -u %DCI_DBUser% -p%DCI_DBPass% -h %DCI_DBHostname% %DCI_DBDatabase% simpletest | sqlite3 /var/www/html/artifacts/simpletest.sqlite
+    - sudo -u www-data sh /tmp/drush-mysql2sqlite.sh -u drupaltestbot -pdrupaltestbotpw -h $(/.composer/vendor/drush/drush/drush -r /var/www/html st | grep "Database hostname" | awk '{print $4}') $(/.composer/vendor/drush/drush/drush -r /var/www/html st | grep "Database name" | awk '{print $4}') simpletest | sqlite3 /var/www/html/artifacts/simpletest.sqlite
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip
