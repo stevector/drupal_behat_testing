@@ -36,6 +36,9 @@ class JunitXMLFormat extends PluginBase {
    */
   public function run(JobInterface $job, $output_directory) {
     // Set up initial variable to store tests
+    // Get DBVersion
+    $DBVersion = $job->getBuildVars()["DCI_DBVersion"];
+    $DBIp = $job->getServiceContainers()["db"][$DBVersion]["ip"];
     $tests = [];
 
     // Load the list of tests from the testgroups.txt build artifact

@@ -423,8 +423,10 @@ class JobBase extends ContainerBase implements JobInterface {
         $container = $manager->find($instances[$image['image']]);
         $container_id = $container->getID();
         $container_name = $container->getName();
+        $container_ip = $container->getRuntimeInformations()["NetworkSettings"]["IPAddress"];
         $this->serviceContainers[$container_type][$key]['id'] = $container_id;
         $this->serviceContainers[$container_type][$key]['name'] = $container_name;
+        $this->serviceContainers[$container_type][$key]['ip'] = $container_ip;
         continue;
       }
       // Container not running, so we'll need to create it.
