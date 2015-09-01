@@ -13,7 +13,7 @@ use Docker\Docker;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
-use SQLite3;
+use PDO;
 use DOMDocument;
 
 /**
@@ -73,11 +73,15 @@ class JunitXMLFormat extends PluginBase {
         $group = ucwords($output_line);
       }
     }
-
-    # TODO: get the sqlite dir from config.
-    $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
-    $db = new SQLite3($dbfile);
-    // Crack open the sqlite database.
+    if(strcmp($DBScheme,'sqlite') === 0){
+      // Crack open the sqlite database.
+      $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
+      $db = new PDO('sqlite:' . $dbfile);
+    } else {
+      $PDO_con = "$DBScheme:host=$DBIp;dbname=$DBDatabase";
+      var_dump($PDO_con);
+      $db = new PDO( $PDO_con, $DBUser, $DBPass);
+    }
 
     // query for simpletest results
     $results_map = array(
@@ -87,16 +91,16 @@ class JunitXMLFormat extends PluginBase {
       'debug' => 'Debug',
     );
 
-    $statement = $db->prepare('SELECT * FROM simpletest ORDER BY test_id, test_class, message_id;');
-    $q_result = $statement->execute();
+    $q_result = $db->query('SELECT * FROM simpletest ORDER BY test_id, test_class, message_id;');
+//    $q_result = $statement->execute();
 
     $results = array();
 
     $cases = 0;
     $errors = 0;
     $failures = 0;
-    while ($result = $q_result->fetchArray(SQLITE3_ASSOC)) {
 
+    while ($result = $q_result->fetchAll()) {
       if (isset($results_map[$result['status']])) {
         // Set the group from the lookup table
         $test_group = $test_groups[$result['test_class']];
