@@ -36,7 +36,7 @@ class JunitXMLFormat extends PluginBase {
    */
   public function run(JobInterface $job, $output_directory) {
     // Set up initial variable to store tests
-    // Get DBVersion
+    $CoreBranch = $job->getBuildVars()["DCI_CoreBranch"];
     $DBUrlArray = parse_url($job->getBuildVars()["DCI_DBUrl"]);
     $DBVersion = $job->getBuildVars()["DCI_DBVersion"];
     $DBScheme = $DBUrlArray["scheme"];
@@ -62,25 +62,38 @@ class JunitXMLFormat extends PluginBase {
     $group = 'nogroup';
     // Iterate through and process the test list
     $test_list = $this->getTestlist();
-    foreach ($test_list as $output_line) {
-      if (substr($output_line, 0, 3) == ' - ') {
-        // This is a class
-        $class = substr($output_line, 3);
-        $test_groups[$class] = $group;
+    if(strcmp($CoreBranch,'7.x') === 0 || strcmp($CoreBranch,'6.x') === 0){
+
+      foreach ($test_list as $output_line) {
+        if (substr($output_line, 0, 3) == ' - ') {
+          // This is a class
+          $class = str_replace(array('(',')'),'',end(explode(' ', $output_line)));
+          $test_groups[$class] = $group;
+        }
+        else {
+          // This is a group
+          $group = ucwords($output_line);
+        }
       }
-      else {
-        // This is a group
-        $group = ucwords($output_line);
+      $PDO_con = "$DBScheme:host=$DBIp;dbname=$DBDatabase";
+      $db = new PDO( $PDO_con, $DBUser, $DBPass);
+
+    } else {
+
+      foreach ($test_list as $output_line) {
+        if (substr($output_line, 0, 3) == ' - ') {
+          // This is a class
+          $class = substr($output_line, 3);
+          $test_groups[$class] = $group;
+        }
+        else {
+          // This is a group
+          $group = ucwords($output_line);
+        }
       }
-    }
-    if(strcmp($DBScheme,'sqlite') === 0){
       // Crack open the sqlite database.
       $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
       $db = new PDO('sqlite:' . $dbfile);
-    } else {
-      $PDO_con = "$DBScheme:host=$DBIp;dbname=$DBDatabase";
-      var_dump($PDO_con);
-      $db = new PDO( $PDO_con, $DBUser, $DBPass);
     }
 
     // query for simpletest results
@@ -92,7 +105,6 @@ class JunitXMLFormat extends PluginBase {
     );
 
     $q_result = $db->query('SELECT * FROM simpletest ORDER BY test_id, test_class, message_id;');
-//    $q_result = $statement->execute();
 
     $results = array();
 
@@ -100,7 +112,8 @@ class JunitXMLFormat extends PluginBase {
     $errors = 0;
     $failures = 0;
 
-    while ($result = $q_result->fetchAll()) {
+    //while ($result = $q_result->fetchAll()) {
+    while ($result = $q_result->fetch(PDO::FETCH_ASSOC)) {
       if (isset($results_map[$result['status']])) {
         // Set the group from the lookup table
         $test_group = $test_groups[$result['test_class']];
