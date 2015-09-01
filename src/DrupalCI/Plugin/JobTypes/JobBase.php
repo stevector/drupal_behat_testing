@@ -448,8 +448,10 @@ class JobBase extends ContainerBase implements JobInterface {
       }, [], true);
       $container_id = $container->getID();
       $container_name = $container->getName();
+      $container_ip = $container->getRuntimeInformations()["NetworkSettings"]["IPAddress"];
       $this->serviceContainers[$container_type][$key]['id'] = $container_id;
       $this->serviceContainers[$container_type][$key]['name'] = $container_name;
+      $this->serviceContainers[$container_type][$key]['ip'] = $container_ip;
       $short_id = substr($container_id, 0, 8);
       Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
       $needs_sleep = TRUE;
