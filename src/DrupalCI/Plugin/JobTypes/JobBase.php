@@ -453,8 +453,8 @@ class JobBase extends ContainerBase implements JobInterface {
       $needs_sleep = TRUE;
     }
     if ($needs_sleep) {
-      Output::writeln("Sleeping 10 seconds to allow services to start.");
-      sleep(10);
+      Output::writeln("Sleeping 62 seconds to allow services to start.");
+      sleep(62);
     }
   }
 
