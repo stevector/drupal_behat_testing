@@ -18,7 +18,7 @@ use DrupalCI\Console\Command\Init\InitAllCommand;
 use DrupalCI\Console\Command\Init\InitConfigCommand;
 use DrupalCI\Console\Command\BuildCommand;
 use DrupalCI\Console\Command\PullCommand;
-use DrupalCI\Console\Command\CleanCommand;
+use DrupalCI\Console\Command\DockerRemoveCommand;
 use DrupalCI\Console\Command\RunCommand;
 use DrupalCI\Console\Command\Config\ConfigListCommand;
 use DrupalCI\Console\Command\Config\ConfigLoadCommand;
@@ -44,7 +44,6 @@ class DrupalCIConsoleApp extends Application {
     $commands = [
       new BuildCommand(),
       new PullCommand(),
-      new CleanCommand(),
       new ConfigListCommand(),
       new ConfigLoadCommand(),
       new ConfigResetCommand(),
@@ -52,6 +51,7 @@ class DrupalCIConsoleApp extends Application {
       new ConfigSetCommand(),
       new ConfigShowCommand(),
       new ConfigClearCommand(),
+      new DockerRemoveCommand(),
       new InitAllCommand(),
       new InitBaseContainersCommand(),
       new InitDatabaseContainersCommand(),

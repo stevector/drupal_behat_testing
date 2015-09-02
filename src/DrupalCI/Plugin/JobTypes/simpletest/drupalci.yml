@@ -14,12 +14,14 @@ setup:
       branch: %DCI_CoreBranch%
       depth: %DCI_GitCheckoutDepth%
       checkout_dir: .
+      commit_hash: %DCI_GitCommitHash%
   # Create the directory where we will store our results
   mkdir:
     - /var/www/html/results
     - /var/www/html/artifacts
     - /var/www/html/sites/simpletest/xml
   command:
+    - ln -s /var/www/html /var/www/html/checkout
     - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
     - chmod 0777 /var/www/html/artifacts
     - chmod 0777 /tmp
@@ -30,7 +32,7 @@ execute:
   command:
     - php -v
     - php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
-    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --url http://localhost/checkout --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip

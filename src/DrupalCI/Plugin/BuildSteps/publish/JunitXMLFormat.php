@@ -187,7 +187,7 @@ class JunitXMLFormat extends PluginBase {
                 $total_failures++;
               }
             }
-            elseif (($assertion['status'] == 'pass') || ($assertion['status'] == 'debug')) {
+            elseif (($assertion['status'] == 'debug')) {
               $test_output .= $assertion_result;
             }
 

@@ -20,6 +20,12 @@
     "config": {
         "bin-dir" : "bin/"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ryanaslett/docker-php"
+        }
+    ],
     "require": {
         "symfony/console": "~2.5",
         "symfony/finder": "~2.5.3",
@@ -27,15 +33,15 @@
         "symfony/yaml": "2.5.*",
         "symfony/process": "2.5.*",
         "doctrine/common": "*.*",
-        "composer/composer": "1.0.*@dev"
+        "composer/composer": "1.0.*@dev",
+        "stage1/docker-php": "dev-ryanaslett-rawstreams-1"
     },
     "require-dev": {
         "phpunit/phpunit": "~3",
         "herrera-io/phar-update": "~1.0",
         "satooshi/php-coveralls": "v0.6.1",
-        "stage1/docker-php": "@dev",
         "drupalci/results-api": "dev-guzzle4 as master"
-        
+
     },
     "prefer-stable": true
 }
