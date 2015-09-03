@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Job class for SimpleTest jobs on DrupalCI.
+ * Job class for SimpleTest Legacy7 jobs on DrupalCI.
  */
 
-namespace DrupalCI\Plugin\JobTypes\simpletest;
+namespace DrupalCI\Plugin\JobTypes\simpletestlegacy7;
 
 use DrupalCI\Plugin\JobTypes\JobBase;
 
 /**
- * @PluginID("simpletest")
+ * @PluginID("simpletestlegacy7")
  */
 
-class SimpletestJob extends JobBase {
+class SimpletestLegacy7Job extends JobBase {
 
   /**
    * Job Type (jobType)
@@ -24,7 +24,7 @@ class SimpletestJob extends JobBase {
    * that others may want to reference the job type from the object itself at
    * some point in the future.
    */
-  public $jobType = 'simpletest';
+  public $jobType = 'simpletestlegacy7';
 
   /**
    * Default Arguments (defaultArguments)
@@ -38,21 +38,18 @@ class SimpletestJob extends JobBase {
    */
   public $defaultArguments = array(
     'DCI_DBVersion' => 'mysql-5.5',
-    'DCI_PHPVersion' => '5.5',
+    'DCI_PHPVersion' => '5.3',
     'DCI_CoreRepository' => 'git://drupalcode.org/project/drupal.git',
-    'DCI_CoreBranch' => '8.0.x',
+    'DCI_CoreBranch' => '7.x',
     'DCI_GitCheckoutDepth' => '1',
-    'DCI_RunScript' => '/var/www/html/core/scripts/run-tests.sh ',
+    'DCI_RunScript' => '/var/www/html/scripts/run-tests.sh ',
     'DCI_DBUser' => 'drupaltestbot',
     'DCI_DBPassword' => 'drupaltestbotpw',
     'DCI_DBUrl' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
     'DCI_TestGroups' => '--all',
-    'DCI_SQLite' => '/var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 4,
-    'DCI_GitCommitHash' => '',
-    // 'DCI_XMLOutput' => '/var/www/html/results/xml',
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
-    'DCI_RunOptions' => 'color;keep-results',
+    'DCI_RunOptions' => 'color',
   );
 
   /**
@@ -99,7 +96,7 @@ class SimpletestJob extends JobBase {
   public $availableArguments = array(
     // ***** Variables Available for any job type *****
     'DCI_UseLocalCodebase' => 'Used to define a local codebase to be cloned (instead of performing a Git checkout)',
-    'DCI_CheckoutDir' => 'Defines the location to be used in creating the local copy of the codebase, to be mapped into the container as a container volume.  Default: /tmp/simpletest-[random string]',
+    'DCI_CheckoutDir' => 'Defines the location to be used in creating the local copy of the codebase, to be mapped into the container as a container volume.  Default: /tmp/simpletestlegacy7-[random string]',
     'DCI_ResultsServer' => 'Specifies the url string of a DrupalCI results server for which to publish job results',
     'DCI_ResultsServerConfig' => 'Specifies the location of a configuration file on the test runner containg a DrupalCI Results Server configuration to use in publishing results.',
     'DCI_JobBuildId' => 'Specifies a unique build ID assigned to this job from an upstream server',
@@ -119,7 +116,6 @@ class SimpletestJob extends JobBase {
     'DCI_DBPassword' => 'Defines the default database password to be used on the site database.  Default: drupaltestbotpw',
     'DCI_DBUrl' => 'Define the --dburl parameter to be passed to the run script.  Default: dbtype://host (DBVersion, DBUser and DBPassword variable plugins will populate this).',
     'DCI_TestGroups' => 'Defines the target test groups to run.  Default: --all',
-    'DCI_SQLite' => 'Defines the location of the sqlite database used to store test results.  Default: /var/www/html/results/simpletest.sqlite',
     'DCI_Concurrency' => 'Defines the value to pass to the --concurrency argument of the run script.  Default: 4',
     'DCI_XMLOutput' => 'Defines the directory where xml results will be stored.  Default: output/var/www/html/results/xml',
     'DCI_PHPInterpreter' => 'Defines the php interpreter to be passed to the Run Script in the --php argument.  Default: /opt/phpenv/shims/php',
@@ -127,7 +123,6 @@ class SimpletestJob extends JobBase {
 
     // ***** Optional arguments *****
     'DCI_DieOnFail' => 'Defines whether to include the --die-on-fail flag in the Run Script options',
-    'DCI_SQLite' => 'Defines whether to include the --sqlite flag in the Run Script options',
     'DCI_Fetch' => 'Used to specify any files which should be downloaded while building out the codebase.',
     // Syntax: 'url1,relativelocaldirectory1;url2,relativelocaldirectory2;...'
     'DCI_Patch' => 'Defines any patches which should be applied while building out the codebase.',
@@ -135,7 +130,6 @@ class SimpletestJob extends JobBase {
     'DCI_ResultsDirectory' => 'Defines the local directory within the container where the xml results file should be written.',
     'DCI_RunScriptArguments' => 'An array of other build script options which will be added to the runScript command when executing a job.',
     // Syntax: 'argkey1,argvalue1;argkey2,argvalue2;argkey3;argkey4,argvalue4;'
-    'DCI_GitCommitHash' => 'This allows to checkout specific core commits, useful for regression testing',
   );
 
   /**
@@ -177,7 +171,6 @@ class SimpletestJob extends JobBase {
   protected $buildArtifacts = array(
     array('testgroups', '/var/www/html/artifacts/testgroups.txt'),
     // array('run_tests_xml', '/var/www/html/results/xml', 'directory'),
-    array('sqlite_test_db', '/var/www/html/results/simpletest.sqlite'),
     // array('php_error_log', 'TODO: Locate'),
     // array('apache_access_log', 'TODO: Locate'),
     // array('apache_error_log', 'TODO: Locate'),
