@@ -20,6 +20,7 @@ setup:
     - /var/www/html/artifacts
     - /var/www/html/sites/simpletest/xml
   command:
+    - ln -s /var/www/html /var/www/html/checkout
     - chown -fR www-data:www-data /var/www/html
     - chmod 0777 /var/www/html/artifacts
     - chmod 0777 /tmp
@@ -28,17 +29,17 @@ setup:
 install:
 execute:
   command:
-    - cd /var/www/html
-    - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html si -y --db-url=%DCI_DBurl% --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
-    - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
-    - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
-    - sudo -u www-data wget -O /var/www/html/D6-core-simpletest.patch http://cgit.drupalcode.org/project_issue_file_review/plain/review/simpletest/D6-core-simpletest.patch
-    - sudo -u www-data patch -d /var/www/html -p1 < /var/www/html/D6-core-simpletest.patch
-    - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html dl -y simpletest-6.x-2.x-dev  2>&1
-    - sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest  2>&1
-    - sudo -u www-data cp /var/www/html/sites/all/modules/simpletest/run-tests.sh /var/www/html/scripts/
-    - sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
-    - sudo -u www-data php %DCI_RunScript% --url http://localhost %DCI_RunOptions% %DCI_TestGroups%
+    - sudo -u www-data %DCI_PHPInterpreter% -v
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html si -y --db-url=%DCI_DBurl% --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
+    - cd /var/www/html && sudo -u www-data wget -O /var/www/html/D6-core-simpletest.patch http://cgit.drupalcode.org/project_issue_file_review/plain/review/simpletest/D6-core-simpletest.patch
+    - cd /var/www/html && sudo -u www-data git apply ./D6-core-simpletest.patch
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html dl -y simpletest-6.x-2.x-dev  2>&1
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest  2>&1
+    - cd /var/www/html && sudo -u www-data cp /var/www/html/sites/all/modules/simpletest/run-tests.sh /var/www/html/scripts/
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --url http://localhost/checkout %DCI_RunOptions% %DCI_TestGroups%
 publish:
   gather_artifacts: /var/www/html/artifacts
   # archive: /var/www/html/results/artifacts.zip
