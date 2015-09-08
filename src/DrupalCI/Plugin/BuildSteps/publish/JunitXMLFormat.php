@@ -13,7 +13,7 @@ use Docker\Docker;
 use DrupalCI\Console\Output;
 use DrupalCI\Plugin\JobTypes\JobInterface;
 use DrupalCI\Plugin\PluginBase;
-use SQLite3;
+use PDO;
 use DOMDocument;
 
 /**
@@ -36,6 +36,14 @@ class JunitXMLFormat extends PluginBase {
    */
   public function run(JobInterface $job, $output_directory) {
     // Set up initial variable to store tests
+    $CoreBranch = $job->getBuildVars()["DCI_CoreBranch"];
+    $DBUrlArray = parse_url($job->getBuildVars()["DCI_DBUrl"]);
+    $DBVersion = $job->getBuildVars()["DCI_DBVersion"];
+    $DBScheme = $DBUrlArray["scheme"];
+    $DBUser   = $DBUrlArray["user"];
+    $DBPass   = $DBUrlArray["pass"];
+    $DBDatabase = str_replace('/','',$DBUrlArray["path"]);
+    $DBIp = $job->getServiceContainers()["db"][$DBVersion]["ip"];
     $tests = [];
 
     // Load the list of tests from the testgroups.txt build artifact
@@ -54,22 +62,39 @@ class JunitXMLFormat extends PluginBase {
     $group = 'nogroup';
     // Iterate through and process the test list
     $test_list = $this->getTestlist();
-    foreach ($test_list as $output_line) {
-      if (substr($output_line, 0, 3) == ' - ') {
-        // This is a class
-        $class = substr($output_line, 3);
-        $test_groups[$class] = $group;
-      }
-      else {
-        // This is a group
-        $group = ucwords($output_line);
-      }
-    }
+    if(strcmp($CoreBranch,'7.x') === 0 || strcmp($CoreBranch,'6.x') === 0){
 
-    # TODO: get the sqlite dir from config.
-    $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
-    $db = new SQLite3($dbfile);
-    // Crack open the sqlite database.
+      foreach ($test_list as $output_line) {
+        if (substr($output_line, 0, 3) == ' - ') {
+          // This is a class
+          $class = str_replace(array('(',')'),'',end(explode(' ', $output_line)));
+          $test_groups[$class] = $group;
+        }
+        else {
+          // This is a group
+          $group = ucwords($output_line);
+        }
+      }
+      $PDO_con = "$DBScheme:host=$DBIp;dbname=$DBDatabase";
+      $db = new PDO( $PDO_con, $DBUser, $DBPass);
+
+    } else {
+
+      foreach ($test_list as $output_line) {
+        if (substr($output_line, 0, 3) == ' - ') {
+          // This is a class
+          $class = substr($output_line, 3);
+          $test_groups[$class] = $group;
+        }
+        else {
+          // This is a group
+          $group = ucwords($output_line);
+        }
+      }
+      // Crack open the sqlite database.
+      $dbfile = $source_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . basename($job->getBuildVar('DCI_SQLite'));
+      $db = new PDO('sqlite:' . $dbfile);
+    }
 
     // query for simpletest results
     $results_map = array(
@@ -79,16 +104,16 @@ class JunitXMLFormat extends PluginBase {
       'debug' => 'Debug',
     );
 
-    $statement = $db->prepare('SELECT * FROM simpletest ORDER BY test_id, test_class, message_id;');
-    $q_result = $statement->execute();
+    $q_result = $db->query('SELECT * FROM simpletest ORDER BY test_id, test_class, message_id;');
 
     $results = array();
 
     $cases = 0;
     $errors = 0;
     $failures = 0;
-    while ($result = $q_result->fetchArray(SQLITE3_ASSOC)) {
 
+    //while ($result = $q_result->fetchAll()) {
+    while ($result = $q_result->fetch(PDO::FETCH_ASSOC)) {
       if (isset($results_map[$result['status']])) {
         // Set the group from the lookup table
         $test_group = $test_groups[$result['test_class']];

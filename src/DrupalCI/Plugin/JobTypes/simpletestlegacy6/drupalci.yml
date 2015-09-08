@@ -1,0 +1,48 @@
+# Job Definition Template for the DrupalCI 'SimpletestLegacy' Job Type
+environment:
+  db:
+    - %DCI_DBVersion%
+  web:
+    - %DCI_PHPVersion%
+setup:
+  checkout:
+    # DCI_UseLocalCodebase plugin can override the checkout array to look like:
+    # - protocol: local
+    #   source_dir: %DCI_SourceDirectory%
+    - protocol: git
+      repo: %DCI_CoreRepository%
+      branch: %DCI_CoreBranch%
+      depth: %DCI_GitCheckoutDepth%
+      checkout_dir: .
+  # Create the directory where we will store our results
+  mkdir:
+    - /var/www/html/results
+    - /var/www/html/artifacts
+    - /var/www/html/sites/simpletest/xml
+  command:
+    - ln -s /var/www/html /var/www/html/checkout
+    - chown -fR www-data:www-data /var/www/html
+    - chmod 0777 /var/www/html/artifacts
+    - chmod 0777 /tmp
+# The 'install' key is currently required for the dbcreate plugin
+# TODO: make dbcreate consistent with other commands and place in pre-install
+install:
+execute:
+  command:
+    - sudo -u www-data %DCI_PHPInterpreter% -v
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html si -y --db-url=%DCI_DBurl% --clean-url=0 --account-name=admin --account-pass=drupal --account-mail=admin@example.com
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
+    - cd /var/www/html && sudo -u www-data wget -O /var/www/html/D6-core-simpletest.patch http://cgit.drupalcode.org/project_issue_file_review/plain/review/simpletest/D6-core-simpletest.patch
+    - cd /var/www/html && sudo -u www-data git apply ./D6-core-simpletest.patch
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html dl -y simpletest-6.x-2.x-dev  2>&1
+    - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest  2>&1
+    - cd /var/www/html && sudo -u www-data cp /var/www/html/sites/all/modules/simpletest/run-tests.sh /var/www/html/scripts/
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
+    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --php %DCI_PHPInterpreter% --url http://localhost/checkout %DCI_RunOptions% %DCI_TestGroups%
+publish:
+  gather_artifacts: /var/www/html/artifacts
+  # archive: /var/www/html/results/artifacts.zip
+  # junit_xmlformat:
+#  drupalci_results:
+#    config: %HOME%/.drupalci/drupalci.yml

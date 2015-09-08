@@ -473,6 +473,124 @@
             "time": "2014-09-09 13:34:57"
         },
         {
+            "name": "guzzlehttp/guzzle",
+            "version": "4.1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "e196b8f44f9492a11261ea8f7b9724613a198daf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e196b8f44f9492a11261ea8f7b9724613a198daf",
+                "reference": "e196b8f44f9492a11261ea8f7b9724613a198daf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/streams": "~1.4",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "~4.0",
+                "psr/log": "~1.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2014-08-14 20:29:51"
+        },
+        {
+            "name": "guzzlehttp/streams",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "fb0d1ee29987c2bdc59867bffaade6fc88c2675f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/streams/zipball/fb0d1ee29987c2bdc59867bffaade6fc88c2675f",
+                "reference": "fb0d1ee29987c2bdc59867bffaade6fc88c2675f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Stream\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "Guzzle",
+                "stream"
+            ],
+            "time": "2014-08-10 23:57:01"
+        },
+        {
             "name": "justinrainbow/json-schema",
             "version": "1.4.1",
             "source": {
@@ -628,6 +746,45 @@
             "time": "2015-01-04 21:18:15"
         },
         {
+            "name": "stage1/docker-php",
+            "version": "dev-ryanaslett-rawstreams-1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ryanaslett/docker-php.git",
+                "reference": "407d302604240880c019d49267ede461b2206df3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/407d302604240880c019d49267ede461b2206df3",
+                "reference": "407d302604240880c019d49267ede461b2206df3",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~4.1",
+                "guzzlehttp/streams": "~1.3",
+                "php": ">=5.4",
+                "symfony/filesystem": "~2.3",
+                "symfony/process": "~2.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Docker PHP client",
+            "support": {
+                "source": "https://github.com/ryanaslett/docker-php/tree/ryanaslett-rawstreams-1"
+            },
+            "time": "2015-09-04 23:47:09"
+        },
+        {
             "name": "symfony/console",
             "version": "v2.5.3",
             "target-dir": "Symfony/Component/Console",
@@ -681,6 +838,56 @@
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
             "time": "2014-08-05 09:00:40"
+        },
+        {
+            "name": "symfony/filesystem",
+            "version": "v2.6.8",
+            "target-dir": "Symfony/Component/Filesystem",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Filesystem.git",
+                "reference": "1f8429f72a5bfa58b33fd96824bea146fc4b3f49"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/1f8429f72a5bfa58b33fd96824bea146fc4b3f49",
+                "reference": "1f8429f72a5bfa58b33fd96824bea146fc4b3f49",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.6-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Filesystem\\": ""
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Filesystem Component",
+            "homepage": "https://symfony.com",
+            "time": "2015-05-15 13:32:45"
         },
         {
             "name": "symfony/finder",
@@ -958,124 +1165,6 @@
                 "web service"
             ],
             "time": "2015-03-18 18:23:50"
-        },
-        {
-            "name": "guzzlehttp/guzzle",
-            "version": "4.1.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "e196b8f44f9492a11261ea8f7b9724613a198daf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/e196b8f44f9492a11261ea8f7b9724613a198daf",
-                "reference": "e196b8f44f9492a11261ea8f7b9724613a198daf",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "guzzlehttp/streams": "~1.4",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
-            },
-            "suggest": {
-                "ext-curl": "Guzzle will use specific adapters if cURL is present"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.1-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "client",
-                "curl",
-                "framework",
-                "http",
-                "http client",
-                "rest",
-                "web service"
-            ],
-            "time": "2014-08-14 20:29:51"
-        },
-        {
-            "name": "guzzlehttp/streams",
-            "version": "1.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/guzzle/streams.git",
-                "reference": "fb0d1ee29987c2bdc59867bffaade6fc88c2675f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/streams/zipball/fb0d1ee29987c2bdc59867bffaade6fc88c2675f",
-                "reference": "fb0d1ee29987c2bdc59867bffaade6fc88c2675f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.5-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Stream\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                }
-            ],
-            "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
-            "homepage": "http://guzzlephp.org/",
-            "keywords": [
-                "Guzzle",
-                "stream"
-            ],
-            "time": "2014-08-10 23:57:01"
         },
         {
             "name": "herrera-io/json",
@@ -1714,45 +1803,6 @@
             "time": "2013-05-04 08:07:33"
         },
         {
-            "name": "stage1/docker-php",
-            "version": "dev-ryanaslett-rawstreams-1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ryanaslett/docker-php.git",
-                "reference": "2196695941f03ae0ff6c148fe0604d2c1bc1caaa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/635ce033deed5bf389719d219b7ba6e61985fa89",
-                "reference": "2196695941f03ae0ff6c148fe0604d2c1bc1caaa",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "~4.1",
-                "guzzlehttp/streams": "~1.3",
-                "php": ">=5.4",
-                "symfony/filesystem": "~2.3",
-                "symfony/process": "~2.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "description": "A Docker PHP client",
-            "support": {
-                "source": "https://github.com/ryanaslett/docker-php/tree/ryanaslett-rawstreams-1"
-            },
-            "time": "2015-08-28 05:53:54"
-        },
-        {
             "name": "symfony/config",
             "version": "v2.6.8",
             "target-dir": "Symfony/Component/Config",
@@ -1861,56 +1911,6 @@
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
             "time": "2015-05-02 15:18:45"
-        },
-        {
-            "name": "symfony/filesystem",
-            "version": "v2.6.8",
-            "target-dir": "Symfony/Component/Filesystem",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "1f8429f72a5bfa58b33fd96824bea146fc4b3f49"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/1f8429f72a5bfa58b33fd96824bea146fc4b3f49",
-                "reference": "1f8429f72a5bfa58b33fd96824bea146fc4b3f49",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Filesystem\\": ""
-                }
-            },
-            "notification-url": "http://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony Filesystem Component",
-            "homepage": "https://symfony.com",
-            "time": "2015-05-15 13:32:45"
         },
         {
             "name": "symfony/stopwatch",
