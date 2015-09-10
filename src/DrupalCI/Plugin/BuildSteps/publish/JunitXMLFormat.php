@@ -190,6 +190,8 @@ class JunitXMLFormat extends PluginBase {
           $test_case_exceptions = 0;
           $test_case_failures = 0;
           $test_output = '';
+          $fail_output = '';
+          $exception_output = '';
           foreach ($method_results as $assertion) {
             $assertion_result = $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
             $assertion_result = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $assertion_result);
