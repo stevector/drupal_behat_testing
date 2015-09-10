@@ -201,20 +201,19 @@ class JunitXMLFormat extends PluginBase {
               $assertion_counter[$assertion['status']] = 0;
             }
             $assertion_counter[$assertion['status']]++;
-              if ($assertion['status'] == 'exception') {
-                $test_case_exceptions++;
-                $group_exceptions++;
-                $total_exceptions++;
-                $test_case_status = 'failed';
-                $exception_output .= $assertion_result;
-              } else if ($assertion['status'] == 'fail'){
-                $test_case_failures++;
-                $group_failures++;
-                $total_failures++;
-                $test_case_status = 'failed';
-                $fail_output .= $assertion_result;
-              }
-
+            if ($assertion['status'] == 'exception') {
+              $test_case_exceptions++;
+              $group_exceptions++;
+              $total_exceptions++;
+              $test_case_status = 'failed';
+              $exception_output .= $assertion_result;
+            } else if ($assertion['status'] == 'fail'){
+              $test_case_failures++;
+              $group_failures++;
+              $total_failures++;
+              $test_case_status = 'failed';
+              $fail_output .= $assertion_result;
+            }
             elseif (($assertion['status'] == 'debug')) {
               $test_output .= $assertion_result;
             }
