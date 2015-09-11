@@ -28,6 +28,7 @@ class RunOptions extends PluginBase {
     $expanded = explode(';', $arguments);
     $parsed = "";
     foreach ($expanded as $argument_string) {
+      if (empty($argument_string)) { continue; }
       if (strpos($argument_string, ',') === FALSE) {
         $parsed .= " --" . $argument_string;
       }

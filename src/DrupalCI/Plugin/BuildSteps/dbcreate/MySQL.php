@@ -18,7 +18,7 @@ class MySQL extends ContainerCommand {
    * {@inheritdoc}
    */
   public function run(JobInterface $job, $data) {
-    $parts = parse_url($job->getBuildvar('DCI_DBUrl'));
+    $parts = parse_url($job->getBuildVar('DCI_DBUrl'));
     $host = $parts['host'];
     $user = $parts['user'];
     $pass = $parts['pass'];

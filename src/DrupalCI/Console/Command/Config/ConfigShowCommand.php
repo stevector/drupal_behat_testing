@@ -19,7 +19,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *   show <configset>  Outputs the testing default configuration overrides from
  *                       a given ~/.drupalci/configs/<configset> config set, or
  *                       if <configset> is not specified, the current
- *                       configuration (a combination of drupalci defaults,
+ *                       configuration (a combination of DrupalCI defaults,
  *                       config set overrides, and manual overrides established
  *                       via the 'set' command).
  */

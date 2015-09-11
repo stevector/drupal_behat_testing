@@ -23,7 +23,7 @@ class DbEnvironment extends EnvironmentBase {
    */
   public function run(JobInterface $job, $data) {
     // We don't need to initialize any service container for SQLite.
-    if (strpos($job->getBuildvar('DCI_DBVersion'), 'sqlite') === 0) {
+    if (strpos($job->getBuildVar('DCI_DBVersion'), 'sqlite') === 0) {
       return;
     }
 
@@ -33,8 +33,7 @@ class DbEnvironment extends EnvironmentBase {
     $data = is_array($data) ? $data : [$data];
     Output::writeLn("<info>Parsing required database container image names ...</info>");
     $containers = $this->buildImageNames($data, $job);
-    $valid = $this->validateImageNames($containers, $job);
-    if (!empty($valid)) {
+    if ($valid = $this->validateImageNames($containers, $job)) {
       $service_containers = $job->getServiceContainers();
       $service_containers['db'] = $containers;
       $job->setServiceContainers($service_containers);

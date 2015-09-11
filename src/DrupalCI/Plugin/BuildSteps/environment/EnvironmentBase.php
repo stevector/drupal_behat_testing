@@ -27,8 +27,8 @@ abstract class EnvironmentBase extends PluginBase {
         $image = $manager->find($name);
       }
       catch (ImageNotFoundException $e) {
-        $job->errorOutput("Failed", "Required container image <options=bold>'$name'</options=bold> not found.");
-        // TODO: Robust error handling.
+        Output::error("Missing Image", "Required container image <options=bold>'$name'</options=bold> not found.");
+        $job->error();
         return FALSE;
       }
       $id = substr($image->getID(), 0, 8);

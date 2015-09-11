@@ -18,7 +18,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  *   reset <setting>   Clears local default overrides by resetting the value of
- *                       the associated environment variable to the drupalci
+ *                       the associated environment variable to the DrupalCI
  *                       defaults.  Also supports 'ALL'.
  */
 class ConfigResetCommand extends DrupalCICommandBase {

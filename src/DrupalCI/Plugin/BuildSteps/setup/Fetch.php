@@ -37,15 +37,17 @@ class Fetch extends SetupBase {
       // URL and target directory
       // TODO: Ensure $details contains all required parameters
       if (empty($details['url'])) {
-        $job->errorOutput("Error", "No valid target file provided for fetch command.");
+        Output::error("Fetch error", "No valid target file provided for fetch command.");
+        $job->error();
         return;
       }
       $url = $details['url'];
-      $workingdir = $job->getWorkingDir();
+      $workingdir = $job->getJobCodebase()->getWorkingDir();
       $fetchdir = (!empty($details['fetch_directory'])) ? $details['fetch_directory'] : $workingdir;
       if (!($directory = $this->validateDirectory($job, $fetchdir))) {
         // Invalid checkout directory
-        $job->errorOutput("Error", "The fetch directory <info>$directory</info> is invalid.");
+        Output:error("Fetch error", "The fetch directory <info>$directory</info> is invalid.");
+        $job->error();
         return;
       }
       $info = pathinfo($url);
@@ -57,7 +59,8 @@ class Fetch extends SetupBase {
           ->send();
       }
       catch (\Exception $e) {
-        $job->errorOutput("Error", "An error was encountered while attempting to write <info>$url</info> to <info>$directory</info>");
+        Output::error("Write error", "An error was encountered while attempting to write <info>$url</info> to <info>$directory</info>");
+        $job->error();
         return;
       }
       Output::writeLn("<comment>Fetch of <options=bold>$url</options=bold> to <options=bold>$destination_file</options=bold> complete.</comment>");

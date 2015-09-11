@@ -22,7 +22,7 @@ class PrepResults extends PluginBase {
    */
   public function run(JobInterface $job, $data = NULL) {
     // Retrieve job definition array
-    $definition = $job->getDefinition();
+    $definition = $job->getJobDefinition->getDefinition();
     // We only need to prep the results site if there is a publish['drupalci_results'] build step.
     if (empty($definition['publish']['drupalci_results'])) {
       return;
@@ -30,10 +30,10 @@ class PrepResults extends PluginBase {
 
     // The results node could be defined further upstream, and passed in to us
     // in an environment variable (DCI_JobID);
-    $upstream_id = $job->getBuildvar('DCI_JobID');
+    $upstream_id = $job->getBuildVar('DCI_JobID');
     // If we have a job ID, we also need a results server URL or config file location.
-    $results_server = $job->getBuildvar('DCI_ResultsServer');
-    $results_server_config = $job->getBuildvar('DCI_ResultsServerConfig');
+    $results_server = $job->getBuildVar('DCI_ResultsServer');
+    $results_server_config = $job->getBuildVar('DCI_ResultsServerConfig');
     if (!empty($upstream_id)) {
       // Job ID found.  Results node is assumed to already have been created.
       if (!empty($results_server_config)) {

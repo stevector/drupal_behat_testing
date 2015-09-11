@@ -17,7 +17,7 @@ class ContainerHelper extends DrupalCIHelperBase {
    * {@inheritdoc}
    */
   public function getContainers($type){
-    // TODO: Make sure we're starting from the drupalci root
+    // TODO: Make sure we're starting from the DrupalCI root
     $option = array();
     $containers = glob('containers/'.$type.'/*', GLOB_ONLYDIR);
     foreach ($containers as $container) {
