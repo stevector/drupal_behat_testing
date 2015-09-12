@@ -20,6 +20,9 @@ use Docker\Docker;
 use Docker\Http\DockerClient as Client;
 use Symfony\Component\Yaml\Yaml;
 use Docker\Container;
+use PDO;
+use Symfony\Component\Console\Event\ConsoleExceptionEvent;
+use Symfony\Component\Console\ConsoleEvents;
 
 class JobBase extends ContainerBase implements JobInterface {
 
@@ -454,12 +457,46 @@ class JobBase extends ContainerBase implements JobInterface {
       $this->serviceContainers[$container_type][$key]['ip'] = $container_ip;
       $short_id = substr($container_id, 0, 8);
       Output::writeln("<comment>Created new <options=bold>${image['image']}</options=bold> container instance with ID <options=bold>$short_id</options=bold></comment>");
-      $needs_sleep = TRUE;
     }
-    if ($needs_sleep) {
-      Output::writeln("Sleeping 62 seconds to allow services to start.");
-      sleep(62);
+
+    $dburl_parts = parse_url($this->buildVars['DCI_DBUrl']);
+    $dburl_parts['host'] = $container_ip;
+    if(!strpos('sqlite', $dburl_parts['scheme'])){
+      $counter = 0;
+      $increment = 10;
+      $max_sleep = 120;
+      while($counter < $max_sleep ){
+        if ($this->checkDBStatus($dburl_parts)){
+          Output::writeln("<comment>Database is active.</comment>");
+          break;
+        }
+        if ($counter >= $max_sleep){
+          Output::writeln("<error>Max retries reached, exiting promgram.</error>");
+          exit(1);
+        }
+        Output::writeln("<comment>Sleeping " . $increment . " seconds to allow service to start.</comment>");
+        sleep($increment);
+        $counter += $increment;
+
+      }
     }
+  }
+  
+  public function checkDBStatus($dburl_parts)
+  {
+    if(strcmp('mariadb',$dburl_parts['scheme']) === 1){
+      $dburl_parts['scheme'] = 'mysql';
+    }
+    try {
+      $conn_string = $dburl_parts['scheme'] . ':host=' . $dburl_parts['host'];
+      Output::writeln("<comment>Attempting to connect to database server.</comment>");
+      $conn = new PDO($conn_string, $dburl_parts['user'], $dburl_parts['pass']);
+    Output::writeln("<comment>PDO::errorCode(): ", $conn->errorCode()."</comment>");
+    } catch (\PDOException $e) {
+      Output::writeln("<comment>Could not connect to database server.</comment>");
+      return FALSE;
+    }
+    return TRUE;
   }
 
   public function getErrorState() {
