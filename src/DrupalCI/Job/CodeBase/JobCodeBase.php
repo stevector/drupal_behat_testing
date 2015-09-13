@@ -63,6 +63,19 @@ class JobCodebase {
     $this->setRepositories($repository);
   }
 
+  /**
+   * A storage variable for any modified files
+   */
+  protected $modified_files;
+  public function getModifiedFiles() {  return $this->modified_files;  }
+  public function addModifiedFile($filename) {
+    if (!is_array($this->modified_files)) { $this->modified_files = []; }
+    if (!in_array($filename, $this->modified_files)) { $this->modified_files[] = $filename;  }
+  }
+
+  /**
+   * @param JobDefinition $job_definition
+   */
   public function setupProject(JobDefinition $job_definition) {
     // Core Project
     // For future compatibility.  In the future, we could potentially add
