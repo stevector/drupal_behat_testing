@@ -64,6 +64,20 @@ class JobCodebase {
   }
 
   /**
+   * Any patches used to generate this codebase
+   *
+   * #var \DrupalCI\Job\Codebase\Patch
+   */
+  protected $patches;
+  public function getPatches() { return $this->patches;  }
+  public function setPatches($patches) {  $this->patches = $patches;  }
+  public function addPatch(Patch $patch) {
+    if (!in_array($patch, $this->patches)) {
+      $this->patches[] = $patch;
+    }
+  }
+
+  /**
    * A storage variable for any modified files
    */
   protected $modified_files;
