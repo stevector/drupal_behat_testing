@@ -481,7 +481,7 @@ class JobBase extends ContainerBase implements JobInterface {
       }
     }
   }
-  
+
   public function checkDBStatus($dburl_parts)
   {
     if(strcmp('mariadb',$dburl_parts['scheme']) === 1){
@@ -491,7 +491,6 @@ class JobBase extends ContainerBase implements JobInterface {
       $conn_string = $dburl_parts['scheme'] . ':host=' . $dburl_parts['host'];
       Output::writeln("<comment>Attempting to connect to database server.</comment>");
       $conn = new PDO($conn_string, $dburl_parts['user'], $dburl_parts['pass']);
-    Output::writeln("<comment>PDO::errorCode(): ", $conn->errorCode()."</comment>");
     } catch (\PDOException $e) {
       Output::writeln("<comment>Could not connect to database server.</comment>");
       return FALSE;
