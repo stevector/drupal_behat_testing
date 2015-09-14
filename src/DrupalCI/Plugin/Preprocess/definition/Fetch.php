@@ -38,7 +38,12 @@ class Fetch {
       $definition['setup']['fetch'] = [];
     }
     foreach (explode(';', $value) as $fetch_string) {
-      list($fetch['url'], $fetch['fetch_directory']) = explode(',', $fetch_string);
+      if (strpos($fetch_string, ',') === FALSE) {
+        list($fetch['url'], $fetch['fetch_directory']) = array($fetch_string, '.');
+      }
+      else {
+        list($fetch['url'], $fetch['fetch_directory']) = explode(',', $fetch_string);
+      }
       $definition['setup']['fetch'][] = $fetch;
     }
     if (!empty($patch_step)){
