@@ -43,15 +43,38 @@ class Patch extends SetupBase {
         $job->error();
         return;
       }
-      $cmd = "cd $directory && git apply -v -p1 $patchfile && cd -";
+      $cmd = "cd $directory && git apply -v -p1 $patchfile 2>&1 && cd -";
 
-      $this->exec($cmd, $cmdoutput, $result);
+      exec($cmd, $cmdoutput, $result);
       if ($result !== 0) {
         // The command threw an error.
         Output::writeLn($cmdoutput);
         Output::error("Patch Error", "The patch attempt returned an error.  Error code: $result");
         $job->error();
         // TODO: Pass on the actual return value for the patch attempt
+        // Save an xmlfile to the jenkins artifact directory.
+        // find jenkins artifact dir
+        //
+        $source_dir = $job->getBuildVar('DCI_CheckoutDir');
+        // TODO: Temporary hack.  Strip /checkout off the directory
+        $artifact_dir = preg_replace('#/checkout$#', '', $source_dir);
+
+        // Set up output directory (inside working directory)
+        $output_directory = $artifact_dir . DIRECTORY_SEPARATOR . 'artifacts' . DIRECTORY_SEPARATOR . $job->getBuildVar('DCI_JunitXml');
+
+        mkdir($output_directory, 0777, TRUE);
+        $output = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', implode("\n", $cmdoutput));
+
+        $xml_error = '<?xml version="1.0"?>
+
+                      <testsuite errors="1" failures="0" name="Error: Patch failed to apply" tests="1">
+                        <testcase classname="Apply Patch" name="' . $patchfile . '">
+                          <error message="Patch Failed to apply" type="PatchFailure">Patch failed to apply</error>
+                        </testcase>
+                        <system-out><![CDATA[' . $output . ']]></system-out>
+                      </testsuite>';
+        file_put_contents($output_directory . "/patchfailure.xml", $xml_error);
+
         return;
       }
       Output::writeLn("<comment>Patch <options=bold>$patchfile</options=bold> applied to directory <options=bold>$directory</options=bold></comment>");
