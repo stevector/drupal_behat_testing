@@ -187,30 +187,32 @@ class JunitXMLFormat extends PluginBase {
           $test_case->setAttribute('name', $test_method);
           $test_case_status = 'pass';
           $test_case_assertions = 0;
+          $test_case_exceptions = 0;
+          $test_case_failures = 0;
           $test_output = '';
+          $fail_output = '';
+          $exception_output = '';
           foreach ($method_results as $assertion) {
             $assertion_result = $assertion['status'] . ": [" . $assertion['type'] . "] Line " . $assertion['line'] . " of " . $assertion['file'] . ":\n" . $assertion['message'] . "\n\n";
             $assertion_result = preg_replace('/[^\x{0009}\x{000A}\x{000D}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}\x{10000}-\x{10FFFF}]/u', '�', $assertion_result);
 
+            // Keep track of overall assersions counts
             if (!isset($assertion_counter[$assertion['status']])) {
               $assertion_counter[$assertion['status']] = 0;
             }
             $assertion_counter[$assertion['status']]++;
-
-            if ($assertion['status'] == 'exception' || $assertion['status'] == 'fail') {
-              $element = $doc->createElement($element_map[$assertion['status']]);
-              $element->setAttribute('message', $assertion_result);
-              $element->setAttribute('type', $assertion['status']);
-              // Assume that exceptions and fails are failed tests.
+            if ($assertion['status'] == 'exception') {
+              $test_case_exceptions++;
+              $group_exceptions++;
+              $total_exceptions++;
               $test_case_status = 'failed';
-              $test_case->appendChild($element);
-              if ($assertion['status'] == 'exception'){
-                $group_exceptions++;
-                $total_exceptions++;
-              } else if ($assertion['status'] == 'fail'){
-                $group_failures++;
-                $total_failures++;
-              }
+              $exception_output .= $assertion_result;
+            } else if ($assertion['status'] == 'fail'){
+              $test_case_failures++;
+              $group_failures++;
+              $total_failures++;
+              $test_case_status = 'failed';
+              $fail_output .= $assertion_result;
             }
             elseif (($assertion['status'] == 'debug')) {
               $test_output .= $assertion_result;
@@ -220,6 +222,19 @@ class JunitXMLFormat extends PluginBase {
             $group_tests++;
             $total_tests++;
 
+          }
+          if ($test_case_failures > 0) {
+            $element = $doc->createElement("failure");
+            $element->setAttribute('message', $fail_output);
+            $element->setAttribute('type', "fail");
+            $test_case->appendChild($element);
+          }
+
+          if ($test_case_exceptions > 0 ) {
+            $element = $doc->createElement("error");
+            $element->setAttribute('message', $exception_output);
+            $element->setAttribute('type', "exception");
+            $test_case->appendChild($element);
           }
           $std_out = $doc->createElement('system-out');
           $output = $doc->createCDATASection($test_output);
