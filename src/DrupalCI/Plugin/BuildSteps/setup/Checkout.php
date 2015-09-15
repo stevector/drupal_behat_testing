@@ -71,7 +71,7 @@ class Checkout extends SetupBase {
     Output::writeln("<comment>Copying files from <options=bold>$source_dir</options=bold> to the local checkout directory <options=bold>$directory</options=bold> ... </comment>");
     // TODO: Make sure target directory is empty
 #    $this->exec("cp -r $source_dir/. $directory", $cmdoutput, $result);
-    $exclude_var = isset($details['DCI_EXCLUDE']) ? "" : "--exclude=\".git\"";
+    $exclude_var = isset($details['DCI_EXCLUDE']) ? '--exclude="' . $details['DCI_EXCLUDE'] . '"' : "";
     $this->exec("rsync -a $exclude_var  $source_dir/. $directory", $cmdoutput, $result);
     if ($result !== 0) {
       Output::error("Copy error", "Error encountered while attempting to copy code to the local checkout directory.");
