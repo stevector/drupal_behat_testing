@@ -22,17 +22,20 @@ abstract class EnvironmentBase extends PluginBase {
     $docker = $job->getDocker();
     $manager = $docker->getImageManager();
     foreach ($containers as $key => $image_name) {
-      $name = $image_name['image'];
+      $container_string = explode(':', $image_name['image']);
+      $name = $container_string[0];
+      $tag = empty($container_string[1]) ? 'latest' : $container_string[1];
+
       try {
-        $image = $manager->find($name);
+        $image = $manager->find($name,$tag);
       }
       catch (ImageNotFoundException $e) {
-        Output::error("Missing Image", "Required container image <options=bold>'$name'</options=bold> not found.");
+        Output::error("Missing Image", "Required container image <options=bold>'$name:$tag'</options=bold> not found.");
         $job->error();
         return FALSE;
       }
       $id = substr($image->getID(), 0, 8);
-      Output::writeLn("<comment>Found image <options=bold>$name</options=bold> with ID <options=bold>$id</options=bold></comment>");
+      Output::writeLn("<comment>Found image <options=bold>$name:$tag</options=bold> with ID <options=bold>$id</options=bold></comment>");
     }
     return TRUE;
   }

@@ -403,7 +403,13 @@ class JobBase extends ContainerBase implements JobInterface {
     $configs = [];
     foreach ($directory as $file) {
       if (!$file->isDir() && $file->isReadable() && $file->getExtension() === 'yml') {
-        $image_name = 'drupalci/' . $file->getBasename('.yml');
+        $container_name = $file->getBasename('.yml');
+        $dev_suffix = '-dev';
+        $isdev = strpos($container_name, $dev_suffix);
+        if ( !$isdev == 0) {
+          $container_name = str_replace('-dev', ':dev', $container_name);
+        }
+        $image_name = 'drupalci/' . $container_name;
         if (!empty($image) && $image_name != $image) {
           continue;
         }
@@ -422,8 +428,9 @@ class JobBase extends ContainerBase implements JobInterface {
     $instances = array();
     foreach ($manager->findAll() as $running) {
       $repo = $running->getImage()->getRepository();
+      $tag = $running->getImage()->getTag();
       $id = substr($running->getID(), 0, 8);
-      $instances[$repo] = $id;
+      $instances[$repo.':'.$tag] = $id;
     };
     foreach ($this->serviceContainers[$container_type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {
