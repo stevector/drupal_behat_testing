@@ -751,12 +751,12 @@
             "version": "dev-ryanaslett-rawstreams-1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/drupalci/docker-php.git",
+                "url": "https://github.com/ryanaslett/docker-php.git",
                 "reference": "18b2f0ed51d82d2f7407ee504bf16569fbd82d17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drupalci/docker-php/zipball/18b2f0ed51d82d2f7407ee504bf16569fbd82d17",
+                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/18b2f0ed51d82d2f7407ee504bf16569fbd82d17",
                 "reference": "18b2f0ed51d82d2f7407ee504bf16569fbd82d17",
                 "shasum": ""
             },
