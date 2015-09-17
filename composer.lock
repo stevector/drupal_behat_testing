@@ -751,12 +751,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ryanaslett/docker-php.git",
-                "reference": "407d302604240880c019d49267ede461b2206df3"
+                "reference": "18b2f0ed51d82d2f7407ee504bf16569fbd82d17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/407d302604240880c019d49267ede461b2206df3",
-                "reference": "407d302604240880c019d49267ede461b2206df3",
+                "url": "https://api.github.com/repos/ryanaslett/docker-php/zipball/18b2f0ed51d82d2f7407ee504bf16569fbd82d17",
+                "reference": "18b2f0ed51d82d2f7407ee504bf16569fbd82d17",
                 "shasum": ""
             },
             "require": {
@@ -782,7 +782,7 @@
             "support": {
                 "source": "https://github.com/ryanaslett/docker-php/tree/ryanaslett-rawstreams-1"
             },
-            "time": "2015-09-04 23:47:09"
+            "time": "2015-09-16 23:03:19"
         },
         {
             "name": "symfony/console",
