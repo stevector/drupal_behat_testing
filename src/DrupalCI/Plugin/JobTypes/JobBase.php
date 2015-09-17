@@ -430,7 +430,8 @@ class JobBase extends ContainerBase implements JobInterface {
       $repo = $running->getImage()->getRepository();
       $tag = $running->getImage()->getTag();
       $id = substr($running->getID(), 0, 8);
-      $instances[$repo.':'.$tag] = $id;
+      $instance_key = !strcmp('latest',$tag) ? $repo : $repo . ':' . $tag;
+      $instances[$instance_key] = $id;
     };
     foreach ($this->serviceContainers[$container_type] as $key => $image) {
       if (in_array($image['image'], array_keys($instances))) {

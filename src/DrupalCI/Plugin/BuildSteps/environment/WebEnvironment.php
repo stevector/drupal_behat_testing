@@ -41,7 +41,7 @@ class WebEnvironment extends PhpEnvironment {
     $images = [];
     foreach ($data as $key => $php_version) {
       $images["web-$php_version"]['image'] = "drupalci/web-$php_version";
-      Output::writeLn("<comment>Adding image: <options=bold>drupalci/$php_version</options=bold></comment>");
+      Output::writeLn("<comment>Adding image: <options=bold>drupalci/web-$php_version</options=bold></comment>");
     }
     return $images;
   }
