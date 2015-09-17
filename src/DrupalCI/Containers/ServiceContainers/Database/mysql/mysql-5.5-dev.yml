@@ -1,5 +1,5 @@
 # Docker image to use for this container
-Image:            "drupalci/mysql-5.5-dev"
+Image:            "drupalci/mysql-5.5:dev"
 
 # Docker name to use for this container
 name:             drupaltestbot-db-mysql-5-5-dev

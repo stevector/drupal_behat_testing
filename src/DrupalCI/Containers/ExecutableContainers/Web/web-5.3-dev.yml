@@ -1,5 +1,5 @@
 # Docker image to use for this container
-Image:            "drupalci/web-5.3-dev"
+Image:            "drupalci/web-5.3:dev"
 
 # Docker command to use as the container PID 1
 Cmd:              ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

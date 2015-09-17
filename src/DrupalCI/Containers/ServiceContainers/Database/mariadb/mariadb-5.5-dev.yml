@@ -1,5 +1,5 @@
 # Docker image to use for this container
-Image:            "drupalci/mariadb-5.5-dev"
+Image:            "drupalci/mariadb-5.5:dev"
 
 # Docker name to use for this container
 name:             drupaltestbot-db-mariadb-5-5-dev
