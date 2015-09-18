@@ -95,7 +95,7 @@ ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 # Adding with-gettext flag
 ##
 RUN echo "--with-gettext=shared" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
-   echo "--with-freetype-dir=/usr/lib/x86_64-linux-gnu" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options
+   echo "--with-freetype-dir=/usr/lib/x86_64-linux-gnu" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
    echo "--with-pdo-pgsql" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
    /opt/phpenv/plugins/php-build/install.sh
 
