@@ -50,7 +50,7 @@ class PullCommand extends DrupalCICommandBase {
         {
           $tag = 'latest';
         }
-        Output::writeln("<comment>Pulling <options=bold>$container</options=bold> container</comment>");
+        Output::writeln("<comment>Pulling <options=bold>$container:$tag</options=bold> container</comment>");
         $this->pull($container ,$tag , $input);
     }
   }
