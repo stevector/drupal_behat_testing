@@ -23,7 +23,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/ryanaslett/docker-php"
+            "url": "https://github.com/drupalci/docker-php"
         }
     ],
     "require": {
