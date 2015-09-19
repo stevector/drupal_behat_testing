@@ -1,0 +1,33 @@
+# Docker image to use for this container
+Image:            "drupalci/web-7:dev"
+
+# Docker command to use as the container PID 1
+Cmd:              ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+
+# Mount point within the container for mounting the codebase directory / git checkout
+Mountpoint:       "/var/www/html"
+HostConfig:
+  "Binds":
+    - "/var/lib/drupalci/artifacts:/var/www/html/sites/simpletest"
+    - "/var/lib/drupalci/docker-tmp:/tmp"
+
+# -----------------------------------------------------------------------------
+# Exposing container ports to the host
+# -----------------------------------------------------------------------------
+# e.g. Map Container port 80 to Host port 80
+#ExposedPorts:
+#  80/tcp: []
+#HostConfig:
+#  "PortBindings":
+#    "80/tcp":
+#      - "HostPort": "80"
+#        "HostIP": "0.0.0.0"
+
+# e.g. Map Container port 80 to any available port
+#ExposedPorts:
+#  80/tcp: []
+#HostConfig:
+#  "PortBindings":
+#    "80/tcp":
+#      - "HostPort": []
+#        "HostIP": "0.0.0.0"
