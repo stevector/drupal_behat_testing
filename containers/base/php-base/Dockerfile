@@ -28,12 +28,9 @@ RUN apt-get clean && apt-get update && \
     libcurl4-openssl-dev \
     libdb5.1-dev \
     libfreetype6-dev \
-    libfreetype6-dev \
     libgmp3-dev \
     libicu-dev \
     libjpeg-dev \
-    libjpeg-dev \
-    libldap2-dev \
     libldap2-dev \
     libmcrypt-dev \
     libmhash-dev \
@@ -41,20 +38,16 @@ RUN apt-get clean && apt-get update && \
     libmysqlclient15-dev \
     libpcre3-dev \
     libpng-dev \
-    libpng-dev \
     libpq-dev \
     libreadline6-dev \
     librecode-dev \
     libsnmp-dev \
     libsqlite-dev \
     libt1-dev \
-    libt1-dev \
     libtidy-dev \
     libxml2-dev \
-    libxml2-dev libssl-dev \
+    libssl-dev \
     libxpm-dev \
-    libXpm-dev \
-    libxslt-dev \
     libxslt-dev \
     libz-dev \
     make \
@@ -67,10 +60,9 @@ RUN apt-get clean && apt-get update && \
     software-properties-common \
     sqlite3 \
     sudo \
-    unixODBC-dev \
-    unzip \
     supervisor \
-    sqlite3 && \
+    unixODBC-dev \
+    unzip && \
    apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
 
