@@ -12,8 +12,8 @@ HostConfig:
 # Exposing container ports to the host
 # -----------------------------------------------------------------------------
 # e.g. Map Container port 3306 to Host port 3306
-ExposedPorts:
-  3306/tcp: []
+#ExposedPorts:
+#  3306/tcp: []
 #HostConfig:
 #  "PortBindings":
 #    "3306/tcp":
