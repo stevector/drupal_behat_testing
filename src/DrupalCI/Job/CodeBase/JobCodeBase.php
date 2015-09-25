@@ -80,7 +80,7 @@ class JobCodebase {
   /**
    * A storage variable for any modified files
    */
-  protected $modified_files;
+  protected $modified_files = [];
   public function getModifiedFiles() {  return $this->modified_files;  }
   public function addModifiedFile($filename) {
     if (!is_array($this->modified_files)) { $this->modified_files = []; }
