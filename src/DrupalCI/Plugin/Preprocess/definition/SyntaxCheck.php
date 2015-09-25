@@ -18,7 +18,7 @@ class SyntaxCheck {
    *
    * DCI_SyntaxCheck_Preprocessor
    *
-   * If set, run php link on committed code.
+   * If set, run php lint on committed code.
    *
    * Input format: (bool) $value = "true"
    */
