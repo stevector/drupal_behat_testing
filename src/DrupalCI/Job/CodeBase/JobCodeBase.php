@@ -19,8 +19,14 @@ class JobCodebase {
    * @var string
    */
   protected $working_dir;
-  public function setWorkingDir($working_dir) {  $this->working_dir = $working_dir;  }
-  public function getWorkingDir() {  return $this->working_dir;  }
+
+  public function setWorkingDir($working_dir) {
+    $this->working_dir = $working_dir;
+  }
+
+  public function getWorkingDir() {
+    return $this->working_dir;
+  }
 
   /**
    * The core project for this job (e.g. Drupal)
@@ -28,8 +34,14 @@ class JobCodebase {
    * @var string
    */
   protected $core_project;
-  public function getCoreProject()  {  return $this->core_project;  }
-  public function setCoreProject($core_project) { $this->core_project = $core_project; }
+
+  public function getCoreProject() {
+    return $this->core_project;
+  }
+
+  public function setCoreProject($core_project) {
+    $this->core_project = $core_project;
+  }
 
   /**
    * The specific version of the core project (e.g. 8.0.x)
@@ -37,8 +49,14 @@ class JobCodebase {
    * @var string
    */
   protected $core_version;
-  public function getCoreVersion() {  return $this->core_version;  }
-  public function setCoreVersion($core_version) {  $this->core_version = $core_version;  }
+
+  public function getCoreVersion() {
+    return $this->core_version;
+  }
+
+  public function setCoreVersion($core_version) {
+    $this->core_version = $core_version;
+  }
 
   /**
    * The major version of the core project (e.g. 8)
@@ -46,8 +64,14 @@ class JobCodebase {
    * @var string
    */
   protected $core_major_version;
-  public function getCoreMajorVersion() {  return $this->core_major_version;  }
-  public function setCoreMajorVersion($core_major_version) {  $this->core_major_version = $core_major_version;  }
+
+  public function getCoreMajorVersion() {
+    return $this->core_major_version;
+  }
+
+  public function setCoreMajorVersion($core_major_version) {
+    $this->core_major_version = $core_major_version;
+  }
 
   /**
    * The repositories used to generate this codebase
@@ -55,8 +79,15 @@ class JobCodebase {
    * @var \DrupalCI\Job\CodeBase\Repository
    */
   protected $repositories;
-  public function setRepositories($repositories) {  $this->repositories = $repositories;  }
-  public function getRepositories() {  return $this->repositories;  }
+
+  public function setRepositories($repositories) {
+    $this->repositories = $repositories;
+  }
+
+  public function getRepositories() {
+    return $this->repositories;
+  }
+
   public function addRepository(Repository $repository) {
     $repositories = $this->getRepositories();
     $repositories[] = $repository;
@@ -69,8 +100,15 @@ class JobCodebase {
    * #var \DrupalCI\Job\Codebase\Patch
    */
   protected $patches;
-  public function getPatches() { return $this->patches;  }
-  public function setPatches($patches) {  $this->patches = $patches;  }
+
+  public function getPatches() {
+    return $this->patches;
+  }
+
+  public function setPatches($patches) {
+    $this->patches = $patches;
+  }
+
   public function addPatch(Patch $patch) {
     if (!empty($this->patches) && !in_array($patch, $this->patches)) {
       $this->patches[] = $patch;
@@ -81,11 +119,20 @@ class JobCodebase {
    * A storage variable for any modified files
    */
   protected $modified_files;
-  public function getModifiedFiles() {  return $this->modified_files;  }
-  public function addModifiedFile($filename) {
-    if (!is_array($this->modified_files)) { $this->modified_files = []; }
-    if (!in_array($filename, $this->modified_files)) { $this->modified_files[] = $filename;  }
+
+  public function getModifiedFiles() {
+    return $this->modified_files;
   }
+
+  public function addModifiedFile($filename) {
+    if (!is_array($this->modified_files)) {
+      $this->modified_files = [];
+    }
+    if (!in_array($filename, $this->modified_files)) {
+      $this->modified_files[] = $filename;
+    }
+  }
+
   public function addModifiedFiles($files) {
     foreach ($files as $file) {
       $this->addModifiedFile($file);
