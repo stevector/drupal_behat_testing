@@ -40,8 +40,8 @@ class JunitXMLFormat extends PluginBase {
     $DBUrlArray = parse_url($job->getBuildVars()["DCI_DBUrl"]);
     $DBVersion = $job->getBuildVars()["DCI_DBVersion"];
     $DBScheme = $DBUrlArray["scheme"];
-    $DBUser   = $DBUrlArray["user"];
-    $DBPass   = $DBUrlArray["pass"];
+    $DBUser   = (!empty($DBUrlArray["user"])) ? $DBUrlArray["user"] : "";
+    $DBPass   = (!empty($DBUrlArray["pass"])) ? $DBUrlArray["pass"] : "";
     $DBDatabase = str_replace('/','',$DBUrlArray["path"]);
     $DBIp = $job->getServiceContainers()["db"][$DBVersion]["ip"];
     $tests = [];
