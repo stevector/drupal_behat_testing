@@ -47,6 +47,7 @@ class SimpletestJob extends JobBase {
     // 'DCI_XMLOutput' => '/var/www/html/results/xml',
     'DCI_PHPInterpreter' => '/opt/phpenv/shims/php',
     'DCI_RunOptions' => 'color;keep-results',
+    'DCI_SyntaxCheck' => TRUE,
   );
 
   /**

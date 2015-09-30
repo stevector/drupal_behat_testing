@@ -28,6 +28,7 @@ class InitWebContainersCommand extends DrupalCICommandBase {
       ->setDescription('Build initial DrupalCI web containers')
       ->addArgument('container_name', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Docker container image(s) to build.')
       ->addOption('forcebuild', null, InputOption::VALUE_NONE, 'Force Building Environments locally rather than pulling the fslayers')
+      ->addOption('all', null, InputOption::VALUE_NONE, 'Pull/Build all web containers')
     ;
   }
 
@@ -70,6 +71,9 @@ class InitWebContainersCommand extends DrupalCICommandBase {
         {
           $names = array($this->default_build['web']);
         }
+      }
+      else if ($input->getOption('all')) {
+        $names = $container_names;
       }
       else {
         $names = $this->getWebContainerNames($container_names, $input, $output);
