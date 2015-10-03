@@ -25,7 +25,8 @@ setup:
     - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
     - chmod 0777 /var/www/html/artifacts
     - chmod 0777 /tmp
-    - pecl install yaml
+    - apt-get install libyaml-dev -y
+    - pecl install yaml < /usr/lib/x86_64-linux-gnu
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:
