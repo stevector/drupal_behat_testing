@@ -49,6 +49,7 @@ RUN apt-get clean && apt-get update && \
     libssl-dev \
     libxpm-dev \
     libxslt-dev \
+    libyaml-dev \
     libz-dev \
     make \
     mysql-client \
