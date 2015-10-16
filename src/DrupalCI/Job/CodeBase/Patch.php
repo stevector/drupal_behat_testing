@@ -257,7 +257,7 @@ class Patch
     $source = realpath($this->getLocalSource());
     $target = realpath($this->getApplyDir());
 
-    $cmd = "git apply -p1 $source --directory $target 2>&1";
+    $cmd = "cd $target && git apply -p1 $source 2>&1";
 
     exec($cmd, $cmdoutput, $result);
     if ($result !== 0) {
