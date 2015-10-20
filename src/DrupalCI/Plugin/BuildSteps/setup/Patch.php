@@ -66,7 +66,7 @@ class Patch extends SetupBase {
         $xml_error = '<?xml version="1.0"?>
 
                       <testsuite errors="1" failures="0" name="Error: Patch failed to apply" tests="1">
-                        <testcase classname="Apply Patch" name="' . $patchfile . '">
+                        <testcase classname="Apply Patch" name="' . $patch->getLocalSource() . '">
                           <error message="Patch Failed to apply" type="PatchFailure">Patch failed to apply</error>
                         </testcase>
                         <system-out><![CDATA[' . $output . ']]></system-out>
