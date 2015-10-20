@@ -110,6 +110,20 @@ class Patch
   }
 
   /**
+   * @return string
+   */
+  public function getPatchApplyResults() {
+    return $this->patch_apply_results;
+  }
+
+  /**
+   * @param string $patch_apply_results
+   */
+  public function setPatchApplyResults($patch_apply_results) {
+    $this->patch_apply_results = $patch_apply_results;
+  }
+
+  /**
    * "Patch has been applied" flag
    *
    * @var bool
@@ -129,6 +143,13 @@ class Patch
    * @var string
    */
   protected $working_dir;
+
+  /**
+   * Results from applying a patch
+   *
+   * @var string
+   */
+  protected $patch_apply_results;
 
   /**
    * @param string $working_dir
@@ -260,6 +281,7 @@ class Patch
     $cmd = "cd $target && git apply -p1 $source 2>&1";
 
     exec($cmd, $cmdoutput, $result);
+    $this->setPatchApplyResults($cmdoutput);
     if ($result !== 0) {
       // The command threw an error.
       Output::writeLn($cmdoutput);
