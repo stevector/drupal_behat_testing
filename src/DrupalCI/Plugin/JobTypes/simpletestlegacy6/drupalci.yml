@@ -34,7 +34,7 @@ execute:
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
     - cd /var/www/html && sudo -u www-data wget -O /var/www/html/D6-core-simpletest.patch http://cgit.drupalcode.org/project_issue_file_review/plain/review/simpletest/D6-core-simpletest.patch
-    - cd /var/www/html && sudo -u www-data git apply ./D6-core-simpletest.patch
+    - cd /var/www/html && git apply ./D6-core-simpletest.patch
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html dl -y simpletest-6.x-2.x-dev  2>&1
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest  2>&1
     - sudo -u www-data wget -O /var/www/html/sites/all/modules/simpletest/2598676-add-directory-option-to-runtests.patch https://www.drupal.org/files/issues/2598676-add-directory-option-to-runtests.patch
