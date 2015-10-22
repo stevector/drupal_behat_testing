@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - entity_reference
     - user
 id: user.field_post_reference
 field_name: field_post_reference
@@ -9,7 +10,7 @@ entity_type: user
 type: entity_reference
 settings:
   target_type: node
-module: core
+module: entity_reference
 locked: false
 cardinality: -1
 translatable: true

@@ -80,7 +80,7 @@ class AddressFieldFormatter extends FormatterBase implements ContainerFactoryPlu
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $language) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = [];
 
     foreach ($items as $delta => $item) {

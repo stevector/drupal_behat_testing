@@ -5,7 +5,7 @@ The Drupal Extension is an integration layer between [Behat](http://behat.org),
 provides step definitions for common testing scenarios specific to Drupal
 sites.
 
-[![Build Status](https://travis-ci.org/jhedstrom/drupalextension.png?branch=master)](https://travis-ci.org/jhedstrom/drupalextension)
+[![Build Status](https://travis-ci.org/jhedstrom/drupalextension.png?branch=3.1)](https://travis-ci.org/jhedstrom/drupalextension)
 
 The Drupal Extension 3 supports Drupal 6, 7 and 8, and utilizes Behat 3.
 
@@ -13,7 +13,7 @@ The Drupal Extension 3 supports Drupal 6, 7 and 8, and utilizes Behat 3.
 [![Total Downloads](https://poser.pugx.org/drupal/drupal-extension/downloads.svg)](https://packagist.org/packages/drupal/drupal-extension)
 [![Latest Unstable Version](https://poser.pugx.org/drupal/drupal-extension/v/unstable.svg)](https://packagist.org/packages/drupal/drupal-extension)
 [![License](https://poser.pugx.org/drupal/drupal-extension/license.svg)](https://packagist.org/packages/drupal/drupal-extension)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jhedstrom/drupalextension/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jhedstrom/drupalextension/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jhedstrom/drupalextension/badges/quality-score.png?b=3.1)](https://scrutinizer-ci.com/g/jhedstrom/drupalextension/?branch=3.1)
 
 
 
@@ -22,7 +22,7 @@ The Drupal Extension 3 supports Drupal 6, 7 and 8, and utilizes Behat 3.
 If you're new to the Drupal Extension, we recommend starting with 
 the [Full documentation](https://behat-drupal-extension.readthedocs.org)
 
-[![Documentation Status](https://readthedocs.org/projects/behat-drupal-extension/badge/?version=master)](https://behat-drupal-extension.readthedocs.org)
+[![Documentation Status](https://readthedocs.org/projects/behat-drupal-extension/badge/?version=3.1)](https://behat-drupal-extension.readthedocs.org)
 
 ### Quick start
 
@@ -32,7 +32,7 @@ the [Full documentation](https://behat-drupal-extension.readthedocs.org)
     mkdir projectdir
     cd projectdir
     curl -sS https://getcomposer.org/installer | php
-    COMPOSER_BIN_DIR=bin php composer.phar require drupal/drupal-extension='~3.0'
+    php composer.phar require drupal/drupal-extension='~3.0'
     ```
 
 1.  In the projectdir, create a file called `behat.yml`. Below is the

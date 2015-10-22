@@ -1082,16 +1082,16 @@
         },
         {
             "name": "drupal/drupal-extension",
-            "version": "dev-master",
+            "version": "v3.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jhedstrom/drupalextension.git",
-                "reference": "3e88a47c9b355b6a7e61221a033ce47c7464602b"
+                "reference": "d07879aa125b7991dc4c2719b333734b8110562e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jhedstrom/drupalextension/zipball/3e88a47c9b355b6a7e61221a033ce47c7464602b",
-                "reference": "3e88a47c9b355b6a7e61221a033ce47c7464602b",
+                "url": "https://api.github.com/repos/jhedstrom/drupalextension/zipball/d07879aa125b7991dc4c2719b333734b8110562e",
+                "reference": "d07879aa125b7991dc4c2719b333734b8110562e",
                 "shasum": ""
             },
             "require": {
@@ -1108,11 +1108,6 @@
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "behat-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.2.x-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Drupal\\Drupal": "src/",
@@ -1137,7 +1132,7 @@
                 "test",
                 "web"
             ],
-            "time": "2015-10-08 16:26:16"
+            "time": "2015-09-16 19:51:36"
         },
         {
             "name": "easyrdf/easyrdf",
@@ -4236,7 +4231,7 @@
         "symfony/psr-http-message-bridge": 0,
         "zendframework/zend-diactoros": 0,
         "composer/semver": 0,
-        "drupal/drupal-extension": 20,
+        "drupal/drupal-extension": 0,
         "behat/mink": 0,
         "behat/mink-goutte-driver": 0,
         "mikey179/vfsstream": 0,
