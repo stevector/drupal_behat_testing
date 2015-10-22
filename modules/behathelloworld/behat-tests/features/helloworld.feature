@@ -1,5 +1,4 @@
-@api
-  Feature: Hello World
+ Feature: Hello World
 
     Scenario: Drupal on the homepage
       Given I am an anonymous user
