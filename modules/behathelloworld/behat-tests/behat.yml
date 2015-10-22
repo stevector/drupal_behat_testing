@@ -14,7 +14,7 @@ default:
       base_url: http://localhost:8008
     Drupal\DrupalExtension:
       blackbox: ~
-      api_driver: 'drush'
+      api_driver: 'drupal'
       drush:
         root: '../../..'
       drupal:
