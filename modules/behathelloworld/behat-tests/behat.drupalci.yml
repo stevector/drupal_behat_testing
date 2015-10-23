@@ -4,4 +4,4 @@ imports:
 default:
   extensions:
     Behat\MinkExtension:
-      base_url: http://localhost/checkout
+      base_url: http://localhost:8008
