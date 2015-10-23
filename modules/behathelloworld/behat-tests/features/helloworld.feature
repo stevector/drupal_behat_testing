@@ -4,3 +4,4 @@
       Given I am an anonymous user
       And I visit "/"
       Then I should see "Drupal"
+      Then print last response
