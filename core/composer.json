@@ -30,7 +30,8 @@
     "symfony/psr-http-message-bridge": "v0.2",
     "zendframework/zend-diactoros": "~1.1",
     "composer/semver": "~1.0",
-    "drupal/drupal-extension": "~3.0"
+    "drupal/drupal-extension": "~3.0",
+    "drush/drush": "dev-master"
   },
   "require-dev": {
     "behat/mink": "~1.6",
