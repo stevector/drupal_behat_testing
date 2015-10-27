@@ -37,7 +37,7 @@ class SyntaxCheck extends SetupBase {
 
       // TODO: Remove hardcoded /var/www/html.
       // This should be come JobCodeBase->getLocalDir() or similar
-      $cmd = "cd /var/www/html && i=0; for file in $bash_array; do php -l \$file; ((i+=\$?)); done; return i;";
+      $cmd = "cd /var/www/html && i=0; for file in $bash_array; do php -l \$file; ((i+=\$?)); done; exit \$i;";
       $command = new ContainerCommand();
       $command->run($job, $cmd);
     }

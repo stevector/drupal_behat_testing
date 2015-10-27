@@ -176,7 +176,7 @@ class Patch
 
     // Set source and apply_dir properties
     $this->setSource($patch_details['patch_file']);
-    $this->setApplyDir((!empty($patch_details['patch_dir'])) ? $working_dir . DIRECTORY_SEPARATOR . $patch_details['patch_dir'] : $working_dir);
+    $this->setApplyDir($patch_details['patch_dir']);
 
     // Determine whether passed a URL or local file
     $type = filter_var($patch_details['patch_file'], FILTER_VALIDATE_URL) ? "remote" : "local";
@@ -190,7 +190,7 @@ class Patch
       $local_source = $this->download();
     } else {
       // If a local file, we already know the local source location
-      $local_source = $this->working_dir . DIRECTORY_SEPARATOR . $patch_details['patch_file'];
+      $local_source = $this->working_dir . DIRECTORY_SEPARATOR . $patch_details['patch_dir'] . DIRECTORY_SEPARATOR . $patch_details['patch_file'];
     }
     $this->setLocalSource($local_source);
 
@@ -258,7 +258,7 @@ class Patch
    */
   public function validate_target()
   {
-    $apply_dir = $this->getApplyDir();
+    $apply_dir = $this->working_dir . DIRECTORY_SEPARATOR . $this->getApplyDir();
     $real_directory = realpath($apply_dir);
     if ($real_directory === FALSE) {
       // Invalid target directory
@@ -276,9 +276,9 @@ class Patch
   public function apply()
   {
     $source = realpath($this->getLocalSource());
-    $target = realpath($this->getApplyDir());
+    $target = realpath($this->working_dir . DIRECTORY_SEPARATOR . $this->getApplyDir());
 
-    $cmd = "git apply -p1 $source --directory $target 2>&1";
+    $cmd = "cd $target && git apply -p1 $source 2>&1";
 
     exec($cmd, $cmdoutput, $result);
     $this->setPatchApplyResults($cmdoutput);
@@ -307,7 +307,7 @@ class Patch
     }
     if (empty($this->modified_files)) {
       // Calculate modified files
-      $apply_dir = $this->getApplyDir();
+      $apply_dir = $this->working_dir . DIRECTORY_SEPARATOR . $this->getApplyDir();
       $cmd = "cd $apply_dir && git diff --name-only";
       exec($cmd, $cmdoutput, $return);
       if ($return !== 0) {
@@ -315,7 +315,11 @@ class Patch
         Output::writeln("<error>Git diff command returned a non-zero code while attempting to parse modified files. (Return Code: $return)</error>");
         return FALSE;
       }
-      $this->modified_files = $cmdoutput;
+      $files = $cmdoutput;
+      $this->modified_files = array();
+      foreach ($files as $file) {
+        $this->modified_files[] = $this->getApplyDir(). DIRECTORY_SEPARATOR . $file;
+      }
     }
     return $this->modified_files;
   }

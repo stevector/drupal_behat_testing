@@ -7,6 +7,7 @@ MAINTAINER drupalci
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
+ENV DRUPALCI TRUE
 
 # Saves us from stale repository issues.
 # Build packages.
@@ -61,9 +62,10 @@ RUN apt-get clean && apt-get update && \
     software-properties-common \
     sqlite3 \
     sudo \
-    supervisor \
     unixODBC-dev \
-    unzip && \
+    unzip \
+    supervisor \
+    sqlite3 && \
    apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
 

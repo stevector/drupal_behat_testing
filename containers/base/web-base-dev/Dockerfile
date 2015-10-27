@@ -7,6 +7,7 @@ MAINTAINER drupalci
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
+ENV DRUPALCI TRUE
 
 # Saves us from stale repository issues.
 RUN apt-get clean && apt-get update && \
