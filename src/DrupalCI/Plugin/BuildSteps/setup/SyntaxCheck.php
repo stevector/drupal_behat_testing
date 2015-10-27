@@ -32,12 +32,14 @@ class SyntaxCheck extends SetupBase {
 
       $bash_array = "";
       foreach ($modified_files as $file) {
-        $bash_array .= "$file ";
+        if (!strpos( $file, "vendor")) {
+          $bash_array .= "$file ";
+        }
       }
 
       // TODO: Remove hardcoded /var/www/html.
       // This should be come JobCodeBase->getLocalDir() or similar
-      $cmd = "cd /var/www/html && i=0; for file in $bash_array; do php -l \$file; ((i+=\$?)); done; exit \$i;";
+      $cmd = "cd /var/www/html && i=0; for file in $bash_array; do [[ -e \$file ]] && php -l \$file; ((i+=\$?)); done; exit \$i;";
       $command = new ContainerCommand();
       $command->run($job, $cmd);
     }
