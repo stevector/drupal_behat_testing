@@ -29,6 +29,12 @@ class Patch {
    *       ...   ]
    */
   public function process(array &$definition, $value, $dci_variables) {
+    // Stash the patch definition so that we can make sure it happens after the fetch.
+    // TODO: unhack.
+    if (!empty($definition['setup']['composer'])) {
+      $composer_step = $definition['setup']['composer'];
+      unset($definition['setup']['composer']);
+    }
     if (empty($definition['setup']['patch'])) {
       $definition['setup']['patch'] = [];
     }
@@ -41,6 +47,8 @@ class Patch {
       }
       $definition['setup']['patch'][] = $patch;
     }
+    if (!empty($composer_step)){
+          $definition['setup']['composer'] = $composer_step;
+    }
   }
 }
-
