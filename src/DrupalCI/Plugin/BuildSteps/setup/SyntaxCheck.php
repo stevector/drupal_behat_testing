@@ -26,20 +26,23 @@ class SyntaxCheck extends SetupBase {
 
       $codebase = $job->getJobCodebase();
       $modified_files = $codebase->getModifiedFiles();
+
       if (empty($modified_files)) {
         return;
       }
 
+      $workingdir = $codebase->getWorkingDir();
+      $jobconcurrency = $job->getJobDefinition()->getDCIVariable('DCI_Concurrency');
       $bash_array = "";
       foreach ($modified_files as $file) {
         if (!strpos( $file, "vendor")) {
-          $bash_array .= "$file ";
+          $bash_array .= "$file\n";
         }
       }
-
+      file_put_contents($workingdir . "/artifacts/modified_files.txt", $bash_array);
       // TODO: Remove hardcoded /var/www/html.
       // This should be come JobCodeBase->getLocalDir() or similar
-      $cmd = "cd /var/www/html && i=0; for file in $bash_array; do [[ -e \$file ]] && php -l \$file; ((i+=\$?)); done; exit \$i;";
+      $cmd = "cd /var/www/html && xargs -P $jobconcurrency -a artifacts/modified_files.txt -I {} -i bash -c '[[ -e '{}' ]] && [[ \$(head -n 1 '{}') = *php* ]] && php -l '{}''";
       $command = new ContainerCommand();
       $command->run($job, $cmd);
     }
