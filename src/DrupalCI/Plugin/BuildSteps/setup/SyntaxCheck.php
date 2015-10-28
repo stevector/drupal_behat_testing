@@ -35,16 +35,24 @@ class SyntaxCheck extends SetupBase {
       $jobconcurrency = $job->getJobDefinition()->getDCIVariable('DCI_Concurrency');
       $bash_array = "";
       foreach ($modified_files as $file) {
-        if (!strpos( $file, "vendor")) {
+        $file_path = $workingdir . "/" . $file;
+        // Checking for: if in a vendor dir, if the file still exists, or if the first 32 (length - 1) bytes of the file contain <?php
+        if (!strpos( $file, '/vendor/') && file_exists($file_path) && strpos(fgets(fopen($file_path, 'r'), 33), '<?php')) {
           $bash_array .= "$file\n";
         }
       }
-      file_put_contents($workingdir . "/artifacts/modified_files.txt", $bash_array);
-      // TODO: Remove hardcoded /var/www/html.
-      // This should be come JobCodeBase->getLocalDir() or similar
-      $cmd = "cd /var/www/html && xargs -P $jobconcurrency -a artifacts/modified_files.txt -I {} -i bash -c '[[ -e '{}' ]] && [[ \$(head -n 1 '{}') = *php* ]] && php -l '{}''";
-      $command = new ContainerCommand();
-      $command->run($job, $cmd);
+      $lintable_files = 'artifacts/lintable_files.txt';
+      Output::writeLn("<info>" . $workingdir . "/" . $lintable_files . "</info>");
+      file_put_contents($workingdir . "/" . $lintable_files, $bash_array);
+      // Make sure
+      if (0 < filesize($workingdir . "/" . $lintable_files)) {
+        // TODO: Remove hardcoded /var/www/html.
+        // This should be come JobCodeBase->getLocalDir() or similar
+        // Use xargs to concurrently run linting on file.
+        $cmd = "cd /var/www/html && xargs -P $jobconcurrency -a $lintable_files -I {} php -l '{}'";
+        $command = new ContainerCommand();
+        $command->run($job, $cmd);
+      }
     }
   }
 }
