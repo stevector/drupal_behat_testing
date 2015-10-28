@@ -37,7 +37,7 @@ class SyntaxCheck extends SetupBase {
       foreach ($modified_files as $file) {
         $file_path = $workingdir . "/" . $file;
         // Checking for: if in a vendor dir, if the file still exists, or if the first 32 (length - 1) bytes of the file contain <?php
-        if (!strpos( $file, '/vendor/') && file_exists($file_path) && strpos(fgets(fopen($file_path, 'r'), 33), '<?php')) {
+        if ((strpos( $file, '/vendor/') === FALSE) && file_exists($file_path) && (strpos(fgets(fopen($file_path, 'r'), 33), '<?php') !== FALSE)) {
           $bash_array .= "$file\n";
         }
       }
