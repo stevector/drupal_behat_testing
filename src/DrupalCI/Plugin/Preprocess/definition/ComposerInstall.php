@@ -20,7 +20,6 @@ class ComposerInstall {
    */
   public function process(array &$definition, $value, $dci_variables) {
     // Check to see if Composer Install is set and true
-    print "value: $value";
     if (strtolower($value) !== 'true') {
       return;
     }
