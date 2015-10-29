@@ -19,8 +19,9 @@ class ComposerInstall {
    * {@inheritdoc}
    */
   public function process(array &$definition, $value, $dci_variables) {
-    // Presence of the DCI_ComposerInstall variable infers we want to run it.
-    if ($value == FALSE) {
+    // Check to see if Composer Install is set and true
+    print "value: $value";
+    if (strtolower($value) !== 'true') {
       return;
     }
 
