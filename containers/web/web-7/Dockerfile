@@ -18,6 +18,8 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
 # RUN echo | pecl install mongo
 # TODO: test apcu on php 7
 # RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7
+# TODO: no pecl yaml on php 7
+# RUN pecl install yaml < /usr/lib/x86_64-linux-gnu
 
 ## Upgrade curl to version 7.38
 RUN apt-get update && \

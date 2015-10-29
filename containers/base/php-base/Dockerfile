@@ -50,6 +50,7 @@ RUN apt-get clean && apt-get update && \
     libssl-dev \
     libxpm-dev \
     libxslt-dev \
+    libyaml-dev \
     libz-dev \
     make \
     mysql-client \
@@ -61,9 +62,10 @@ RUN apt-get clean && apt-get update && \
     software-properties-common \
     sqlite3 \
     sudo \
-    supervisor \
     unixODBC-dev \
-    unzip && \
+    unzip \
+    supervisor \
+    sqlite3 && \
    apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
 
