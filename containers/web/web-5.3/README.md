@@ -1,9 +1,9 @@
-containers/web/web-5.4
+containers/web/web-5.3
 ====
 
 ### Overview
 
-This container is responsible for providing an Apache + PHP 5.4 executable
+This container is responsible for providing an Apache + PHP 5.3 executable
 container environment for direct job execution.
 
 ### Usage
