@@ -104,8 +104,5 @@ RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
     /.composer/vendor/drush/drush/drush --version
 
 # Scripts.
-COPY ./conf/scripts/start.sh /start.sh
 COPY ./conf/mongodb.settings.php /mongodb.settings.php
 
-# Make start.sh executable.
-RUN chmod 755 /start.sh
