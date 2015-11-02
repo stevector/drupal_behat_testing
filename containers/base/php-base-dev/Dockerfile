@@ -64,7 +64,6 @@ RUN apt-get clean && apt-get update && \
     sudo \
     unixODBC-dev \
     unzip \
-    supervisor \
     sqlite3 && \
    apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
@@ -104,14 +103,9 @@ RUN bash -c "wget http://getcomposer.org/composer.phar && chmod 775 composer.pha
 RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
     /.composer/vendor/drush/drush/drush --version
 
-# supervisor
-COPY ./conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Scripts.
 COPY ./conf/scripts/start.sh /start.sh
 COPY ./conf/mongodb.settings.php /mongodb.settings.php
-COPY ./conf/scripts/foreground.sh /etc/apache2/foreground.sh
-COPY daemon.sh /daemon.sh
 
 # Make start.sh executable.
-RUN chmod 755 /start.sh /daemon.sh
+RUN chmod 755 /start.sh
