@@ -55,6 +55,7 @@ RUN apt-get clean && apt-get update && \
     make \
     mysql-client \
     ncurses-dev \
+    phantomjs \
     php5-dev \
     postgresql-client \
     postgresql-client-common \
@@ -105,4 +106,3 @@ RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
 
 # Scripts.
 COPY ./conf/mongodb.settings.php /mongodb.settings.php
-
