@@ -29,7 +29,8 @@ RUN echo | pecl install apc
 ##
 # Upgrade curl to version 7.38
 ##
-RUN apt-get -y install software-properties-common && \
+RUN apt-get update && \
+    apt-get -y install software-properties-common && \
     add-apt-repository -y ppa:n-muench/programs-ppa2 && \
     apt-get update && \
     apt-get install -y curl && \

@@ -17,8 +17,11 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
 RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
     pecl install yaml < /usr/lib/x86_64-linux-gnu
 
-## Upgrade curl to version 7.38
-RUN apt-get -y install software-properties-common && \
+##
+# Upgrade curl to version 7.38
+##
+RUN apt-get update && \
+    apt-get -y install software-properties-common && \
     add-apt-repository -y ppa:n-muench/programs-ppa2 && \
     apt-get update && \
     apt-get install -y curl && \
