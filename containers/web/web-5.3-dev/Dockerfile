@@ -13,6 +13,7 @@ RUN apt-get clean && apt-get update && \
 
 RUN mkdir /usr/include/freetype2/freetype && \
     ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h
+
 ##
 # PHP 5.3.29
 ##

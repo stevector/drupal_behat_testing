@@ -10,7 +10,7 @@ RUN apt-get clean && apt-get update && \
   /.composer/vendor/drush/drush/drush --version && \
   apt-get -y remove php5-cli && \
   apt-get clean && apt-get -y autoremove
-  
+
 RUN mkdir /usr/include/freetype2/freetype && \
     ln -s /usr/include/freetype2/freetype.h /usr/include/freetype2/freetype/freetype.h
 
