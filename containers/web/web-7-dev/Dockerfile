@@ -14,8 +14,6 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
     rm -rf /tmp/pear /tmp/php-build*
 
-# TODO: pecl mongo not working yet
-# RUN echo | pecl install mongo
 # TODO: test apcu on php 7
 # RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7
 # TODO: no pecl yaml on php 7

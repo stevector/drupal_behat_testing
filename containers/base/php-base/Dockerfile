@@ -103,6 +103,3 @@ RUN bash -c "wget http://getcomposer.org/composer.phar && chmod 775 composer.pha
 # Drush and dependencies.
 RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
     /.composer/vendor/drush/drush/drush --version
-
-# Scripts.
-COPY ./conf/mongodb.settings.php /mongodb.settings.php

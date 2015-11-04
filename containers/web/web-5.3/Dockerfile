@@ -24,8 +24,7 @@ RUN sudo php-build -i development --pear 5.3.29 /opt/phpenv/versions/5.3.29 && \
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
     rm -rf /tmp/pear /tmp/php-build*
 
-RUN echo | pecl install mongo && \
-    echo | pecl install apc
+RUN echo | pecl install apc
 
 ##
 # Upgrade curl to version 7.38

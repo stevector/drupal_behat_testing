@@ -72,7 +72,7 @@ class DockerRemoveCommand extends DrupalCICommandBase {
     case 'containers':
       break;
     case 'db':
-      $image_type = 'mysql|pgsql|mariadb|mongodb';
+      $image_type = 'mysql|pgsql|mariadb';
       break;
     case 'web':
       $image_type = 'web';
@@ -128,7 +128,7 @@ class DockerRemoveCommand extends DrupalCICommandBase {
       exec($cmd_docker_psa, $remove_check);
 
       if (!empty($remove_check)) {
-        Output::writeln('<error>Error:</error>'); 
+        Output::writeln('<error>Error:</error>');
         Output::writeln($remove_check);
       }
       else {

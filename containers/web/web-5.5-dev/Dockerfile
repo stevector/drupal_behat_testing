@@ -16,11 +16,9 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
     rm -rf /tmp/pear /tmp/php-build*
 
 RUN phpenv global 5.5.9 && \
-    echo | pecl install mongo && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
     pecl install yaml < /usr/lib/x86_64-linux-gnu && \
     phpenv global 5.5.23 && \
-    echo | pecl install mongo && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
     pecl install yaml < /usr/lib/x86_64-linux-gnu
 
