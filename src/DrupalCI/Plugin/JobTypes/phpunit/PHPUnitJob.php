@@ -36,7 +36,7 @@ class PHPUnitJob extends JobBase {
     'DCI_CoreBranch' => '8.0.x',
     'DCI_GitCheckoutDepth' => '1',
     'DCI_RunScript' => "/var/www/html/core/vendor/phpunit/phpunit/phpunit",
-    'DCI_RunOptions' => "--bootstrap /var/www/html/core/tests/bootstrap.php",
+    'DCI_RunOptions' => "bootstrap /var/www/html/core/tests/bootstrap.php",
     'DCI_RunTarget' => "/var/www/html/core/tests/Drupal/Tests"
   );
 

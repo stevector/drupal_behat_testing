@@ -34,6 +34,10 @@ class Fetch {
       $patch_step = $definition['setup']['patch'];
       unset($definition['setup']['patch']);
     }
+    if (!empty($definition['setup']['composer'])) {
+      $composer_step = $definition['setup']['composer'];
+      unset($definition['setup']['composer']);
+    }
     if (empty($definition['setup']['fetch'])) {
       $definition['setup']['fetch'] = [];
     }
@@ -49,6 +53,8 @@ class Fetch {
     if (!empty($patch_step)){
       $definition['setup']['patch'] = $patch_step;
     }
+    if (!empty($composer_step)){
+          $definition['setup']['composer'] = $composer_step;
+    }
   }
 }
-

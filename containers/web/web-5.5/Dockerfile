@@ -18,9 +18,11 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
 RUN phpenv global 5.5.9 && \
     echo | pecl install mongo && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
+    pecl install yaml < /usr/lib/x86_64-linux-gnu && \
     phpenv global 5.5.23 && \
     echo | pecl install mongo && \
-    echo | pecl install channel://pecl.php.net/APCu-4.0.7
+    echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
+    pecl install yaml < /usr/lib/x86_64-linux-gnu
 
 ## Set the default php version
 Run phpenv global 5.5.23
@@ -47,4 +49,4 @@ COPY ./conf/opt-apcu.ini /opt/phpenv/versions/5.5.23/etc/conf.d/apcu.ini
 COPY ./conf/opt-gettext.ini /opt/phpenv/versions/5.5.23/etc/conf.d/gettext.ini
 COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/5.5.23/etc/conf.d/xdebug.ini
 
-CMD ["/bin/bash", "/start.sh"]
+CMD ["/bin/bash", "/usr/sbin/apache2ctl", "-D", "FOREGROUND"]

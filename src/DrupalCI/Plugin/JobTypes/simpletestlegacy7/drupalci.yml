@@ -34,6 +34,8 @@ execute:
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_clear_results '0' 2>&1
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html vset simpletest_verbose '0' 2>&1
     - cd /var/www/html && sudo -u www-data /.composer/vendor/drush/drush/drush -r /var/www/html en -y simpletest 2>&1
+    - cd /var/www/html && sudo -u www-data wget -O /var/www/html/2551981-21-add-directory-option-to-run-tests.patch https://www.drupal.org/files/issues/2551981-21-add-directory-option-to-run-tests.patch
+    - cd /var/www/html && git apply ./2551981-21-add-directory-option-to-run-tests.patch
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --list --php %DCI_PHPInterpreter% > /var/www/html/artifacts/testgroups.txt
     - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --php %DCI_PHPInterpreter% --url http://localhost/checkout %DCI_RunOptions% %DCI_TestGroups%
 publish:

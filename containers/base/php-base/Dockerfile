@@ -7,6 +7,7 @@ MAINTAINER drupalci
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV HOME /root
+ENV DRUPALCI TRUE
 
 # Saves us from stale repository issues.
 # Build packages.
@@ -49,10 +50,12 @@ RUN apt-get clean && apt-get update && \
     libssl-dev \
     libxpm-dev \
     libxslt-dev \
+    libyaml-dev \
     libz-dev \
     make \
     mysql-client \
     ncurses-dev \
+    phantomjs \
     php5-dev \
     postgresql-client \
     postgresql-client-common \
@@ -60,9 +63,9 @@ RUN apt-get clean && apt-get update && \
     software-properties-common \
     sqlite3 \
     sudo \
-    supervisor \
     unixODBC-dev \
-    unzip && \
+    unzip \
+    sqlite3 && \
    apt-get clean && apt-get autoremove -y && \
     rm /etc/cron.d/php5
 
@@ -101,14 +104,5 @@ RUN bash -c "wget http://getcomposer.org/composer.phar && chmod 775 composer.pha
 RUN HOME=/ /usr/local/bin/composer global require drush/drush:dev-master && \
     /.composer/vendor/drush/drush/drush --version
 
-# supervisor
-COPY ./conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-
 # Scripts.
-COPY ./conf/scripts/start.sh /start.sh
 COPY ./conf/mongodb.settings.php /mongodb.settings.php
-COPY ./conf/scripts/foreground.sh /etc/apache2/foreground.sh
-COPY daemon.sh /daemon.sh
-
-# Make start.sh executable.
-RUN chmod 755 /start.sh /daemon.sh
