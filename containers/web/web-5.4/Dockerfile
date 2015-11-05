@@ -14,11 +14,13 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
     rm -rf /tmp/pear /tmp/php-build*
 
-RUN echo | pecl install mongo && \
-    echo | pecl install apc
+RUN echo | pecl install apc
 
-## Upgrade curl to version 7.38
-RUN apt-get -y install software-properties-common && \
+##
+# Upgrade curl to version 7.38
+##
+RUN apt-get update && \
+    apt-get -y install software-properties-common && \
     add-apt-repository -y ppa:n-muench/programs-ppa2 && \
     apt-get update && \
     apt-get install -y curl && \
