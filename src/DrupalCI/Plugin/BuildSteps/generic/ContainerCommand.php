@@ -54,14 +54,24 @@ class ContainerCommand extends PluginBase {
             $result->getBody()->getContents();
             Output::writeLn((string) $result);
             $inspection = $manager->execinspect($exec_id);
-            if ($inspection->ExitCode !==0) {
-              Output::error('Error', "Received a non-zero return code from the last command executed on the container.  (Return status: " . $inspection->ExitCode . ")");
-              $job->error();
+
+            if ($this->checkCommandStatus($inspection->ExitCode) !==0) {
               break 3;
             }
           }
         }
       }
+    }
+  }
+
+  protected function checkCommandStatus($signal) {
+    if ($signal !==0) {
+      Output::error('Error', "Received a non-zero return code from the last command executed on the container.  (Return status: " . $inspection->ExitCode . ")");
+      $job->error();
+      return 1;
+    }
+    else {
+      return 0;
     }
   }
 }
