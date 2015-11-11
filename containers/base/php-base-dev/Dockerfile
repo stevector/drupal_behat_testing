@@ -20,6 +20,7 @@ RUN apt-get clean && apt-get update && \
     bison \
     ccache \
     curl \
+    daemon \
     freetds-dev \
     git \
     libaspell-dev \
