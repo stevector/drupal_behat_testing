@@ -32,7 +32,8 @@ setup:
 install:
 execute:
   command:
-    - phantomjs --ssl-protocol=any --ignore-ssl-errors=true /var/www/html/vendor/jcalderonzumba/gastonjs/src/Client/main.js 8510 1024 768 2>&1 >> /dev/null &
+    - daemon -- nohup phantomjs --ssl-protocol=any --ignore-ssl-errors=true /var/www/html/vendor/jcalderonzumba/gastonjs/src/Client/main.js 8510 1024 768
+    - sleep 5
     - php -v
     - php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
   testcommand:
