@@ -25,8 +25,7 @@ class ContainerTestingCommand extends ContainerCommand {
    */
   protected function checkCommandStatus($signal) {
     if ($signal > 1) {
-      Output::error('Error', "Received a failed return code from the last command executed on the container.  (Return status: " . $inspection->ExitCode . ")");
-      $job->error();
+      Output::error('Error', "Received a failed return code from the last command executed on the container.  (Return status: " . $signal . ")");
       return 1;
     }
     else {
