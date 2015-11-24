@@ -36,6 +36,6 @@ COPY ./conf/cli-php.ini /etc/php5/cli/php.ini
 COPY ./conf/opt-php.ini /opt/phpenv/versions/7.0snapshot/etc/php.ini
 COPY ./conf/opt-apcu.ini /opt/phpenv/versions/7.0snapshot/etc/conf.d/apcu.ini
 COPY ./conf/opt-gettext.ini /opt/phpenv/versions/7.0snapshot/etc/conf.d/gettext.ini
-#COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/7.0snapshot/etc/conf.d/xdebug.ini
+COPY ./conf/opt-xdebug.ini /opt/phpenv/versions/7.0snapshot/etc/conf.d/xdebug.ini
 
 CMD ["/bin/bash", "/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
