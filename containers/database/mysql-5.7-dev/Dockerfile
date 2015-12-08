@@ -1,4 +1,4 @@
-FROM drupalci/db-base
+FROM drupalci/db-base:dev
 MAINTAINER drupalci
 
 # Add MySQL APT repository.

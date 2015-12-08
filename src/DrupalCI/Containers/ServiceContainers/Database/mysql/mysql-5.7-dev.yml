@@ -1,11 +1,11 @@
 # Docker image to use for this container
-Image:            "drupalci/mysql-5.7"
+Image:            "drupalci/mysql-5.7-dev"
 
 # Docker name to use for this container
-name:             drupaltestbot-db-mysql-5-7
+name:             drupaltestbot-db-mysql-5-7-dev
 HostConfig:
   "Binds":
-    - "/var/lib/drupalci/database/mysql-5-7:/var/lib/mysql"
+    - "/var/lib/drupalci/database/mysql-5-7-dev:/var/lib/mysql"
 
 
 # -----------------------------------------------------------------------------
