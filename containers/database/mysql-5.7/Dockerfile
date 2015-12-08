@@ -10,7 +10,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5 \
     && apt-get -y install mysql-server netcat \
     && apt-get clean \
     && apt-get autoclean \
-    && apt-get -y autoremove
+    && apt-get -y autoremove \
     && rm -rf /var/lib/mysql/*
 
 USER root
