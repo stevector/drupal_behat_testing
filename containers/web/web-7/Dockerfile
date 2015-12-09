@@ -7,7 +7,7 @@ MAINTAINER drupalci
 RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     /opt/phpenv/plugins/php-build/install.sh && \
-    sudo php-build -i development --pear 7.0snapshot /opt/phpenv/versions/7.0snapshot && \
+    sudo php-build -i development 7.0snapshot /opt/phpenv/versions/7.0snapshot && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
     phpenv global 7.0snapshot && \
