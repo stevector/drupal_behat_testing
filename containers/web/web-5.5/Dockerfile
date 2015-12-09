@@ -7,13 +7,13 @@ MAINTAINER drupalci
 RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     echo "--enable-wddx" >> /opt/phpenv/plugins/php-build/share/php-build/default_configure_options && \
     /opt/phpenv/plugins/php-build/install.sh && \
-    sudo php-build -i development --pear 5.5.9 /opt/phpenv/versions/5.5.9 && \
-    sudo php-build -i development --pear 5.5.23 /opt/phpenv/versions/5.5.23 && \
+    sudo php-build -i development 5.5.9 /opt/phpenv/versions/5.5.9 && \
+    sudo php-build -i development 5.5.23 /opt/phpenv/versions/5.5.23 && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
     phpenv global 5.5.9 && \
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
-    rm -rf /tmp/pear /tmp/php-build*
+    rm -rf /tmp/php-build*
 
 RUN phpenv global 5.5.9 && \
     echo | pecl install channel://pecl.php.net/APCu-4.0.7 && \
