@@ -78,7 +78,9 @@ RUN git clone --depth 1 https://github.com/CHH/phpenv.git /tmp/phpenv && \
     PHPENV_ROOT="/opt/phpenv" /tmp/phpenv/bin/phpenv-install.sh && \
     scp /tmp/phpenv/extensions/* /opt/phpenv/libexec/ && \
     echo 'eval "$(phpenv init -)"' >> /root/.bashrc && \
-    git clone --depth 1 https://github.com/CHH/php-build.git /opt/phpenv/plugins/php-build
+    git clone https://github.com/php-build/php-build.git /opt/phpenv/plugins/php-build
+WORKDIR /opt/phpenv/plugins/php-build
+RUN    git reset --hard 2b1928b7ef7b3def9966db12eaf56d7966f834cd
 ENV PATH /opt/phpenv/shims:/opt/phpenv/bin:$PATH
 
 
