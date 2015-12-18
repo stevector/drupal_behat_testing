@@ -17,12 +17,12 @@ RUN mkdir /usr/include/freetype2/freetype && \
 ##
 # PHP 5.3.29
 ##
-RUN sudo php-build -i development 5.3.29 /opt/phpenv/versions/5.3.29 && \
+RUN sudo php-build -i development --pear 5.3.29 /opt/phpenv/versions/5.3.29 && \
     sudo chown -R root:root /opt/phpenv && \
     phpenv rehash && \
     phpenv global 5.3.29 && \
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
-    rm -rf /tmp/php-build*
+    rm -rf /tmp/pear /tmp/php-build*
 
 RUN echo | pecl install apc
 

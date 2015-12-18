@@ -12,7 +12,7 @@ RUN echo "--enable-intl" >> /opt/phpenv/plugins/php-build/share/php-build/defaul
     phpenv rehash && \
     phpenv global 7.0snapshot && \
     ln -s /opt/phpenv/shims/php /usr/bin/php && \
-    rm -rf /tmp/php-build*
+    rm -rf /tmp/pear /tmp/php-build*
 
 # TODO: test apcu on php 7
 # RUN echo | pecl install channel://pecl.php.net/APCu-4.0.7
