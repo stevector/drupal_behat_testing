@@ -9,6 +9,8 @@
  * @see http://drupal.org/node/670460
  */
 
+use Drush\Log\LogLevel;
+
 /**
  * Check to see if the user specified an alias
  * in an arguement, or via site-set.  If so, return
@@ -125,7 +127,7 @@ function drush_sitealias_simplify_names($site_list) {
 /**
  * Given an array of site specifications, resolve each one in turn and
  * return an array of alias records.  If you only want a single record,
- * it is preferable to simply call drush_sitealias_get_record directly.
+ * it is preferable to simply call drush_sitealias_get_record() directly.
  *
  * @param $site_specifications
  *   One of:
@@ -546,7 +548,7 @@ function _drush_sitealias_find_and_load_all_aliases() {
       $aliases = $options = array();
       // silently ignore files we can't include
       if ((@include $filename) === FALSE) {
-        drush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
+        drush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), LogLevel::BOOTSTRAP);
         continue;
       }
       unset($options['site-aliases']); // maybe unnecessary
@@ -633,7 +635,7 @@ function _drush_sitealias_find_alias_files($aliasname = NULL, $alias_path_contex
   foreach ($alias_path as $path) {
     // Find all of the matching files in this location
     foreach ($alias_files as $file_pattern_to_search_for) {
-      drush_log(dt('Scanning into @path for @pattern', array('@path' => $path, '@pattern' => $file_pattern_to_search_for)), 'sitealias');
+      drush_log(dt('Scanning into @path for @pattern', array('@path' => $path, '@pattern' => $file_pattern_to_search_for)), LogLevel::DEBUG);
       $alias_files_to_consider = array_merge($alias_files_to_consider, array_keys(drush_scan_directory($path, $file_pattern_to_search_for, $blacklist, 0, TRUE)));
     }
   }
@@ -691,7 +693,7 @@ function _drush_sitealias_find_and_load_alias_from_file($aliasname, $alias_files
       $aliases = $options = array();
       // silently ignore files we can't include
       if ((@include $filename) === FALSE) {
-        drush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), 'bootstrap');
+        drush_log(dt('Cannot open alias file "!alias", ignoring.', array('!alias' => realpath($filename))), LogLevel::BOOTSTRAP);
         continue;
       }
       unset($options['site-aliases']); // maybe unnecessary
@@ -801,7 +803,7 @@ function _drush_sitealias_add_inherited_values(&$aliases) {
 function _drush_sitealias_add_inherited_values_to_record(&$alias_value) {
   drush_command_invoke_all_ref('drush_sitealias_alter', $alias_value);
   if (isset($alias_value['parent'])) {
-    drush_log(dt("Using deprecated 'parent' element '!parent' in '!name'.", array('!parent' => $alias_value['parent'], '!name' => $alias_value['#name'])), 'debug');
+    drush_log(dt("Using deprecated 'parent' element '!parent' in '!name'.", array('!parent' => $alias_value['parent'], '!name' => $alias_value['#name'])), LogLevel::DEBUG);
     // Fetch and merge in each parent
     foreach (explode(',', $alias_value['parent']) as $parent) {
       $parent_record = drush_sitealias_get_record($parent);
@@ -2157,14 +2159,18 @@ function drush_sitealias_site_get() {
  *   Returns the full path to temp file if possible, or FALSE if not.
  */
 function drush_sitealias_get_envar_filename($filename_prefix = 'drush-drupal-site-') {
-  if (!function_exists('posix_getppid')) {
+  $shell_pid = getenv('DRUSH_SHELL_PID');
+  if (!$shell_pid && function_exists('posix_getppid')) {
+    $shell_pid = posix_getppid();
+  }
+  if (!$shell_pid) {
     return FALSE;
   }
 
   $tmp = getenv('TMPDIR') ? getenv('TMPDIR') : '/tmp';
   $username = drush_get_username();
 
-  return "{$tmp}/drush-env-{$username}/{$filename_prefix}" . posix_getppid();
+  return "{$tmp}/drush-env-{$username}/{$filename_prefix}" . $shell_pid;
 }
 
 /**
@@ -2259,4 +2265,28 @@ function drush_sitealias_quick_lookup_cached_alias_by_path($path) {
  */
 function drush_sitealias_get_root($alias_record) {
   return array_key_exists('root', $alias_record) ? $alias_record['root'] : NULL;
+}
+
+/**
+ * Decide on which side to run a core-rsync.
+ *
+ * @param $source
+ * @param $destination
+ * @return mixed
+ */
+function drush_get_runner($source, $destination) {
+// Try run to rsync locally so that aliases always resolve. https://github.com/drush-ops/drush/issues/668
+// Return @self when possible instead of $source or $destination so that @self in a core-rsync argument resolves properly.
+  if (drush_sitealias_is_remote_site($source) === FALSE) {
+    $runner = '@self';
+  }
+  elseif (drush_sitealias_is_remote_site($destination) === FALSE) {
+    $runner = '@self';
+  }
+  else {
+    // Both are remote. Arbitrarily run rsync on destination. Aliases must be defined there (for now).
+    // @todo Add an option for choosing runner? Resolve aliases before rsync?
+    $runner = $destination;
+  }
+  return $runner;
 }

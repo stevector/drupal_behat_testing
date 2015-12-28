@@ -1,5 +1,7 @@
 <?php
 
+use Drush\Log\LogLevel;
+
 /*
  * Implements COMMAND hook init.
  */
@@ -72,6 +74,7 @@ function drush_core_rsync($source, $destination, $additional_options = array()) 
     }
   }
 
+  drush_backend_set_result($destination_path);
   // Go ahead and call rsync with the paths we determined
   return drush_core_exec_rsync($source_path, $destination_path, $options);
 }
@@ -183,7 +186,7 @@ function _drush_build_rsync_options($additional_options, $include_settings_is_de
     if ($test_option == 'remove-source-files') {
       if (version_compare($rsync_version, '2.6.4', '<')) {
         $test_option = NULL;
-        drush_log('Rsync does not support --remove-sent-files prior to version 2.6.4; some temporary files may remain undeleted.', 'warning');
+        drush_log('Rsync does not support --remove-sent-files prior to version 2.6.4; some temporary files may remain undeleted.', LogLevel::WARNING);
       }
       elseif (version_compare($rsync_version, '2.6.9', '<')) {
         $test_option = 'remove-sent-files';

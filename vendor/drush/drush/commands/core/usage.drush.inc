@@ -6,6 +6,8 @@
  *   to assure that no sensitive data is shared. See http://drupal.org/node/1246738.
  */
 
+use Drush\Log\LogLevel;
+
 /**
  * To send usage data, add the following to a .drushrc.php file:
  * $options['drush_usage_log'] = TRUE;
@@ -18,6 +20,7 @@ function usage_drush_command() {
   $items['usage-show'] = array(
     'bootstrap' => DRUSH_BOOTSTRAP_NONE,
     'description' => 'Show Drush usage information that has been logged but not sent.  ' . $disclaimer,
+    'hidden' => TRUE,
     'examples' => array(
       'drush usage-show' => 'Show cached usage statistics.',
       '$options[\'drush_usage_log\']  = TRUE;' => 'Specify in a .drushrc.php file that usage information should be logged locally in a usage statistics file.',
@@ -26,6 +29,7 @@ function usage_drush_command() {
   );
   $items['usage-send'] = array(
     'bootstrap' => DRUSH_BOOTSTRAP_NONE,
+    'hidden' => TRUE,
     'description' => 'Send anonymous Drush usage information to statistics logging site.  ' . $disclaimer,
     'examples' => array(
       'drush usage-send' => 'Immediately send cached usage statistics.',
@@ -134,10 +138,10 @@ function _drush_usage_log($command, $file) {
   );
   $prequel = (file_exists($file)) ? ",\n" : "";
   if (file_put_contents($file, $prequel . json_encode($record), FILE_APPEND)) {
-    drush_log(dt('Logged command and option names to local cache.'), 'debug');
+    drush_log(dt('Logged command and option names to local cache.'), LogLevel::DEBUG);
   }
   else {
-    drush_log(dt('Failed to log command and option names to local cache.'), 'debug');
+    drush_log(dt('Failed to log command and option names to local cache.'), LogLevel::DEBUG);
   }
 }
 
@@ -155,11 +159,11 @@ function _drush_usage_mongolab($file, $min_size_to_send) {
     $header = 'Content-Type: application/json';
     if (!drush_shell_exec("wget -q -O - --no-check-certificate --timeout=20 --header=\"$header\" --post-data %s %s", $json, $url)) {
       if (!drush_shell_exec("curl -s --connect-timeout 20 --header \"$header\" --data %s %s", $json, $url)) {
-        drush_log(dt('Drush usage statistics failed to post.'), 'debug');
+        drush_log(dt('Drush usage statistics failed to post.'), LogLevel::DEBUG);
         return FALSE;
       }
     }
-    drush_log(dt('Drush usage statistics successfully posted.'), 'debug');
+    drush_log(dt('Drush usage statistics successfully posted.'), LogLevel::DEBUG);
     // Empty the usage.txt file.
     unlink($file);
     return TRUE;

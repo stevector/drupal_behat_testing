@@ -57,6 +57,8 @@
  * drush_backend_get_result().
  */
 
+use Drush\Log\LogLevel;
+
 /**
  * Identify the JSON encoded output from a command.
  *
@@ -544,13 +546,13 @@ function drush_backend_parse_packets(&$string, &$remainder, $backend_options) {
           $function($entry, $backend_options);
         }
         else {
-          drush_log(dt("Unknown backend packet @packet", array('@packet' => $entry['packet'])), 'notice');
+          drush_log(dt("Unknown backend packet @packet", array('@packet' => $entry['packet'])), LogLevel::NOTICE);
         }
       }
       else {
-        drush_log(dt("Malformed backend packet"), 'error');
-        drush_log(dt("Bad packet: @packet", array('@packet' => print_r($entry, TRUE))), 'debug');
-        drush_log(dt("String is: @str", array('@str' => $packet_data), 'debug'));
+        drush_log(dt("Malformed backend packet"), LogLevel::ERROR);
+        drush_log(dt("Bad packet: @packet", array('@packet' => print_r($entry, TRUE))), LogLevel::DEBUG);
+        drush_log(dt("String is: @str", array('@str' => $packet_data), LogLevel::DEBUG));
       }
     }
     $string = preg_replace("/$packet_regex/s", '', $string);
@@ -757,7 +759,7 @@ function drush_backend_invoke_concurrent($invocations, $common_options = array()
       $site_record_to_dispatch = '';
     }
     if (array_key_exists('backend-simulate', $backend_options)) {
-      $commandline_options['simulate'] = TRUE;
+      $drush_global_options['simulate'] = TRUE;
     }
     $site_record += array('path-aliases' => array(), '#env-vars' => array());
     $site_record['path-aliases'] += array(
