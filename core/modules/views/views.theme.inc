@@ -547,18 +547,18 @@ function template_preprocess_views_view_table(&$variables) {
       $column_reference['attributes'] = new Attribute($column_reference['attributes']);
     }
 
-    // Remove columns if the option is hide empty column is checked and the
-    // field is not empty.
+    // Remove columns if the "empty_column" option is checked and the
+    // field is empty.
     if (!empty($options['info'][$field]['empty_column'])) {
       $empty = TRUE;
       foreach ($variables['rows'] as $columns) {
-        $empty &= empty($columns[$column]);
+        $empty &= empty($columns['columns'][$column]['content']);
       }
       if ($empty) {
         foreach ($variables['rows'] as &$column_items) {
-          unset($column_items[$column]);
-          unset($variables['header'][$column]);
+          unset($column_items['columns'][$column]);
         }
+        unset($variables['header'][$column]);
       }
     }
   }
@@ -740,8 +740,7 @@ function template_preprocess_views_view_unformatted(&$variables) {
   foreach ($rows as $id => $row) {
     $variables['rows'][$id] = array();
     $variables['rows'][$id]['content'] = $row;
-    $variables['rows'][$id]['attributes'] = array();
-    $variables['rows'][$id]['attributes'] = new Attribute($variables['rows'][$id]['attributes']);
+    $variables['rows'][$id]['attributes'] = new Attribute();
     if ($row_class = $view->style_plugin->getRowClass($id)) {
       $variables['rows'][$id]['attributes']->addClass($row_class);
     }
