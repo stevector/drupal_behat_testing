@@ -25,6 +25,7 @@ setup:
     - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
     - chmod 0777 /var/www/html/artifacts
     - chmod 0777 /tmp
+#    - cd /var/www/html/checkout && ./vendor/bin/drush site-install  --db-url=sqlite://sites/default/files/.ht.sqlite --uri=http://localhost/checkout    -y
     # - mkdir /var/www/html/sites/default/files
     # @todo Drupal actually needs to get installed!
   #  - cd /var/www/html/checkout && ./vendor/bin/drush site-install  --db-url=sqlite://sites/example.com/files/.ht.sqlite -y
@@ -34,10 +35,18 @@ setup:
 install:
 execute:
   command:
-    - php -v
-    - php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
-    - cd /var/www/html && sudo -u www-data php %DCI_RunScript% --url http://localhost/checkout --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
-    - cd /var/www/html/checkout && ./vendor/bin/drush site-install  --db-url=sqlite://sites/example.com/files/.ht.sqlite -y
+  #  - apt-get install -y daemon
+  #  - daemon -- nohup phantomjs --ssl-protocol=any --ignore-ssl-errors=true /var/www/html/vendor/jcalderonzumba/gastonjs/src/Client/main.js 8510 1024 768
+  #  - sleep 5
+  #  - php -v
+#execute:
+#  command:
+#    - php -v
+    #- php %DCI_RunScript% --list --php /opt/phpenv/shims/php > /var/www/html/artifacts/testgroups.txt
+    #- cd /var/www/html && sudo -u www-data php %DCI_RunScript% --url http://localhost/checkout --dburl %DCI_DBurl% %DCI_RunOptions% %DCI_TestGroups%
+    - cd /var/www/html/checkout && ./vendor/bin/drush site-install  --db-url=%DCI_DBUrl% --uri=http://localhost/checkout    -y
+    #- cd /var/www/html/checkout && nohup       php -S localhost:8008  router.php         > phpd.log 2>&1 &
+    - curl http://localhost/checkout/
     - %DCI_RunScriptBehat%
 
 publish:
