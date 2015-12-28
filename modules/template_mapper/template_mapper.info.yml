@@ -1,0 +1,5 @@
+name: Template Mapper
+type: module
+description: Maps existing theme hook suggestions to your template files
+core: 8.x
+package: Other
