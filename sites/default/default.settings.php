@@ -714,9 +714,6 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
 # }
 
 
-
-error_reporting(-1);
-$conf['error_level'] = 2;
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+# @todo, this change should not have to be done here.
+$settings['extension_discovery_scan_tests'] = TRUE;
 
