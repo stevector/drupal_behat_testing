@@ -11,6 +11,7 @@
 namespace Wikimedia\Composer;
 
 use Wikimedia\Composer\Merge\ExtraPackage;
+use Wikimedia\Composer\Merge\MissingFileException;
 use Wikimedia\Composer\Merge\PluginState;
 
 use Composer\Composer;
@@ -23,7 +24,7 @@ use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
-use Composer\Package\RootPackage;
+use Composer\Package\RootPackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -144,7 +145,8 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->state->loadSettings();
         $this->state->setDevMode($event->isDevMode());
-        $this->mergeIncludes($this->state->getIncludes());
+        $this->mergeFiles($this->state->getIncludes(), false);
+        $this->mergeFiles($this->state->getRequires(), true);
 
         if ($event->getName() === ScriptEvents::PRE_AUTOLOAD_DUMP) {
             $this->state->setDumpAutoloader(true);
@@ -159,16 +161,29 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
      * Find configuration files matching the configured glob patterns and
      * merge their contents with the master package.
      *
-     * @param array $includes List of files/glob patterns
+     * @param array $patterns List of files/glob patterns
+     * @param bool $required Are the patterns required to match files?
+     * @throws MissingFileException when required and a pattern returns no
+     *      results
      */
-    protected function mergeIncludes(array $includes)
+    protected function mergeFiles(array $patterns, $required = false)
     {
-        $root = $this->state->getRootPackage();
-        foreach (array_reduce(
-            array_map('glob', $includes),
-            'array_merge',
-            array()
-        ) as $path) {
+        $root = $this->composer->getPackage();
+
+        $files = array_map(
+            function ($files, $pattern) use ($required) {
+                if ($required && !$files) {
+                    throw new MissingFileException(
+                        "merge-plugin: No files matched required '{$pattern}'"
+                    );
+                }
+                return $files;
+            },
+            array_map('glob', $patterns),
+            $patterns
+        );
+
+        foreach (array_reduce($files, 'array_merge', array()) as $path) {
             $this->mergeFile($root, $path);
         }
     }
@@ -176,26 +191,25 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     /**
      * Read a JSON file and merge its contents
      *
-     * @param RootPackage $root
+     * @param RootPackageInterface $root
      * @param string $path
      */
-    protected function mergeFile(RootPackage $root, $path)
+    protected function mergeFile(RootPackageInterface $root, $path)
     {
         if (isset($this->loadedFiles[$path])) {
-            $this->logger->debug(
-                "Skipping duplicate <comment>$path</comment>..."
-            );
+            $this->logger->debug("Already merged <comment>$path</comment>");
             return;
         } else {
             $this->loadedFiles[$path] = true;
         }
-        $this->logger->debug("Loading <comment>{$path}</comment>...");
+        $this->logger->info("Loading <comment>{$path}</comment>...");
 
         $package = new ExtraPackage($path, $this->composer, $this->logger);
         $package->mergeInto($root, $this->state);
 
         if ($this->state->recurseIncludes()) {
-            $this->mergeIncludes($package->getIncludes());
+            $this->mergeFiles($package->getIncludes(), false);
+            $this->mergeFiles($package->getRequires(), true);
         }
     }
 
@@ -211,14 +225,14 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
     {
         $request = $event->getRequest();
         foreach ($this->state->getDuplicateLinks('require') as $link) {
-            $this->logger->debug(
+            $this->logger->info(
                 "Adding dependency <comment>{$link}</comment>"
             );
             $request->install($link->getTarget(), $link->getConstraint());
         }
         if ($this->state->isDevMode()) {
             foreach ($this->state->getDuplicateLinks('require-dev') as $link) {
-                $this->logger->debug(
+                $this->logger->info(
                     "Adding dev dependency <comment>{$link}</comment>"
                 );
                 $request->install($link->getTarget(), $link->getConstraint());
@@ -238,7 +252,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         if ($op instanceof InstallOperation) {
             $package = $op->getPackage()->getName();
             if ($package === self::PACKAGE_NAME) {
-                $this->logger->debug('composer-merge-plugin installed');
+                $this->logger->info('composer-merge-plugin installed');
                 $this->state->setFirstInstall(true);
                 $this->state->setLocked(
                     $event->getComposer()->getLocker()->isLocked()
@@ -259,7 +273,7 @@ class MergePlugin implements PluginInterface, EventSubscriberInterface
         // @codeCoverageIgnoreStart
         if ($this->state->isFirstInstall()) {
             $this->state->setFirstInstall(false);
-            $this->logger->debug(
+            $this->logger->info(
                 '<comment>' .
                 'Running additional update to apply merge settings' .
                 '</comment>'

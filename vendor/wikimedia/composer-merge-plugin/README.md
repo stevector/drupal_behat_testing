@@ -1,6 +1,6 @@
-[![Latest Stable Version](https://img.shields.io/packagist/v/wikimedia/composer-merge-plugin.svg?style=flat)](https://packagist.org/packages/wikimedia/composer-merge-plugin) [![License](https://img.shields.io/packagist/l/wikimedia/composer-merge-plugin.svg?style=flat)](https://github.com/wikimedia/composer-merge-plugin/blob/master/LICENSE)
-[![Build Status](https://img.shields.io/travis/wikimedia/composer-merge-plugin.svg?style=flat)](https://travis-ci.org/wikimedia/composer-merge-plugin)
-[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/wikimedia/composer-merge-plugin/master.svg?style=flat)](https://scrutinizer-ci.com/g/wikimedia/composer-merge-plugin/?branch=master)
+[![Latest Stable Version]](https://packagist.org/packages/wikimedia/composer-merge-plugin) [![License]](https://github.com/wikimedia/composer-merge-plugin/blob/master/LICENSE)
+[![Build Status]](https://travis-ci.org/wikimedia/composer-merge-plugin)
+[![Code Coverage]](https://scrutinizer-ci.com/g/wikimedia/composer-merge-plugin/?branch=master)
 
 Composer Merge Plugin
 =====================
@@ -43,8 +43,12 @@ Usage
                 "composer.local.json",
                 "extensions/*/composer.json"
             ],
+            "require": [
+                "submodule/composer.json"
+            ],
             "recurse": true,
             "replace": false,
+            "merge-dev": true,
             "merge-extra": false
         }
     }
@@ -73,16 +77,23 @@ in the top-level composer.json file:
 
 * [autoload](https://getcomposer.org/doc/04-schema.md#autoload)
 * [autoload-dev](https://getcomposer.org/doc/04-schema.md#autoload-dev)
+  (optional, see [merge-dev](#merge-dev) below)
 * [conflict](https://getcomposer.org/doc/04-schema.md#conflict)
 * [provide](https://getcomposer.org/doc/04-schema.md#provide)
 * [replace](https://getcomposer.org/doc/04-schema.md#replace)
 * [repositories](https://getcomposer.org/doc/04-schema.md#repositories)
 * [require](https://getcomposer.org/doc/04-schema.md#require)
 * [require-dev](https://getcomposer.org/doc/04-schema.md#require-dev)
+  (optional, see [merge-dev](#merge-dev) below)
 * [suggest](https://getcomposer.org/doc/04-schema.md#suggest)
-* [extra](https://getcomposer.org/doc/04-schema.md#extra) (optional, see
-  [merge-extra](#merge-extra) below)
+* [extra](https://getcomposer.org/doc/04-schema.md#extra)
+  (optional, see [merge-extra](#merge-extra) below)
 
+
+### require
+
+The `require` setting is identical to `[include](#include)` except when
+a pattern fails to match at least one file then it will cause an error.
 
 ### recurse
 
@@ -100,6 +111,12 @@ version specified wins" conflict resolution strategy. In this mode, duplicate
 package declarations found in merged files will overwrite the declarations
 made by earlier files. Files are loaded in the order specified by the
 `include` setting with globbed files being processed in alphabetical order.
+
+
+### merge-dev
+
+By default, `autoload-dev` and `require-dev` sections of included files are
+merged. A `"merge-dev": false` setting will disable this behavior.
 
 
 ### merge-extra
@@ -160,3 +177,7 @@ file for more details.
 [GitHub project]: https://github.com/wikimedia/composer-merge-plugin
 [PSR-2 Coding Standard]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PHP Code Sniffer]: http://pear.php.net/package/PHP_CodeSniffer
+[Latest Stable Version]: https://img.shields.io/packagist/v/wikimedia/composer-merge-plugin.svg?style=flat
+[License]: https://img.shields.io/packagist/l/wikimedia/composer-merge-plugin.svg?style=flat
+[Build Status]: https://img.shields.io/travis/wikimedia/composer-merge-plugin.svg?style=flat
+[Code Coverage]: https://img.shields.io/scrutinizer/coverage/g/wikimedia/composer-merge-plugin/master.svg?style=flat
