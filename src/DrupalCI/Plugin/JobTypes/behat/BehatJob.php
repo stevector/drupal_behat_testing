@@ -37,7 +37,7 @@ class BehatJob extends JobBase {
     'DCI_CoreBranch' => '8.0.x--behat',
     'DCI_GitCheckoutDepth' => '1',
     'DCI_RunScript' => '/var/www/html/core/scripts/run-tests.sh ',
-    'DCI_RunScriptBehat' => 'cd /var/www/html/modules/behathelloworld/behat-tests/ && ./../../../vendor/bin/behat --config behat.drupalci.yml',
+    'DCI_RunScriptBehat' => 'cd /var/www/html/modules/template_mapper/tests/behat/ && ./../../../../vendor/bin/behat --config behat.drupalci.yml',
     'DCI_DBUser' => 'drupaltestbot',
     'DCI_DBPassword' => 'drupaltestbotpw',
     'DCI_DBUrl' => 'dbtype://host', // DBVersion, DBUser and DBPassword variable plugins will change this.
