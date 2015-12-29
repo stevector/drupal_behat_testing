@@ -34,7 +34,7 @@ class BehatJob extends JobBase {
     'DCI_DBVersion' => 'mysql-5.5',
     'DCI_PHPVersion' => '5.5',
     'DCI_CoreRepository' => 'https://github.com/stevector/drupal_behat_testing.git',
-    'DCI_CoreBranch' => '8.0.x--behat',
+    'DCI_CoreBranch' => '8.0.x--behat-simple',
     'DCI_GitCheckoutDepth' => '1',
     'DCI_RunScript' => '/var/www/html/core/scripts/run-tests.sh ',
     'DCI_RunScriptBehat' => 'cd /var/www/html/modules/template_mapper/tests/behat/ && ./../../../../vendor/bin/behat --config behat.drupalci.yml',
