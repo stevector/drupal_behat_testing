@@ -712,8 +712,3 @@ $settings['container_yamls'][] = __DIR__ . '/services.yml';
 # if (file_exists(__DIR__ . '/settings.local.php')) {
 #   include __DIR__ . '/settings.local.php';
 # }
-
-
-# @todo, this change should not have to be done here.
-$settings['extension_discovery_scan_tests'] = TRUE;
-
