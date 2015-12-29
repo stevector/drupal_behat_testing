@@ -25,13 +25,30 @@ setup:
     - chown -fR www-data:www-data /var/www/html/sites /var/www/html/results
     - chmod 0777 /var/www/html/artifacts
     - chmod 0777 /tmp
+    # - /.composer/vendor/bin/behat --version
+    # @todo, remove or change these two lines.
+    # This script runs faster if drush and the drupal extension are already
+    # in the Drupal core repo. These lines are here now so that this script
+    # can run with git://drupalcode.org/project/drupal.git
+    # instead of a fork like https://github.com/stevector/drupal_behat_testing
+    # - cd /var/www/html/checkout/core && composer require drupal/drupal-extension
+    # - cd /var/www/html/checkout/core && composer require drush/drush
   syntaxcheck: true
 # The 'install' key is currently required for the dbcreate plugin
 # TODO: make dbcreate consistent with other commands and place in pre-install
 install:
 execute:
   command:
-    - cd /var/www/html/checkout && ./vendor/bin/drush site-install  --db-url=%DCI_DBUrl% --uri=http://localhost/checkout    -y
+    - ls -al ~
+    - ls -al ~/.drush
+    # - cd / composer update
+    - cd /var/www/html/checkout && /.composer/vendor/drush/drush/drush site-install  --db-url=%DCI_DBUrl% --uri=http://localhost/checkout    -y
+    # @todo this change seems hacky. There's probably a better way to ensure
+    # test themes are available.
+    # taken from https://github.com/stevector/template_mapper/blob/8.x-1.x/.travis.yml
+    - chmod 777 /var/www/html/checkout/sites/default
+    - chmod 777 /var/www/html/checkout/sites/default/settings.php
+    - sed -i '$ a\ $settings['extension_discovery_scan_tests'] = TRUE;' /var/www/html/checkout/sites/default/settings.php
     - %DCI_RunScriptBehat%
 
 publish:
