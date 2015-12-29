@@ -10,7 +10,7 @@
 
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
 $autoloader = require_once 'autoload.php';
 
 $kernel = new DrupalKernel('prod', $autoloader);
@@ -20,4 +20,3 @@ $response = $kernel->handle($request);
 $response->send();
 
 $kernel->terminate($request, $response);
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
